@@ -1,4 +1,6 @@
-com/mygdx/game/MyGdxGame.java
- com.mygdx.game.MyGdxGame
 com/mygdx/game/Entity.java
  com.mygdx.game.Entity
+com/mygdx/game/Player.java
+ com.mygdx.game.Player
+com/mygdx/game/MyGdxGame.java
+ com.mygdx.game.MyGdxGame
