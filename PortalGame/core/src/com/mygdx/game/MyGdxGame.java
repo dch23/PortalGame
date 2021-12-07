@@ -54,8 +54,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 
 		ScreenUtils.clear(1, 1, 1, 1);
-
-		batch.setProjectionMatrix(camera.combined);
 //		batch.begin();
 //		batch.draw(img, 0, 0);
 //		batch.end();
@@ -63,16 +61,16 @@ public class MyGdxGame extends ApplicationAdapter {
 //		floor.applyForce(new Vector2(1,0), 10000f);
 //		floor.render(camera);
 
-		debugRenderer.render(world, camera.combined);
+//		debugRenderer.render(world, camera.combined);
 
-		camera.update();
+//		camera.update();
 		stepWorld();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+//		batch.dispose();
+//		img.dispose();
 		Entity.dispose();
 		world.dispose();
 	}
