@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Entity {
+    protected Map<String,Boolean> tags;
     protected Body body;
     protected Vector2 gravity;
 
@@ -29,7 +30,7 @@ public class Entity {
     PolygonSprite polygonSprite;
 
 
-    private Map<String,Boolean> tags;
+
 
     private Vector2 size;
 
@@ -38,69 +39,40 @@ public class Entity {
 
 
     public Entity(World world, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled) {
-//        this.shape = new Rectangle(position.x, position.y, size.x, size.y);
-//        this.shape = shape;
-//        this.color = color;
-//
-//        this.shape.setAsBox(size.x, size.y);
-
-        gravity = world.getGravity();
+        // Initialize Variables
+        this.gravity = world.getGravity();
+        this.color = color;
+        this.size = size;
 
 
-        // Create a BodyDef and apply to private body variable
-
+        // Create a BodyDef and apply to Body Object
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.x = position.x;
         bodyDef.position.y = position.y;
-//        System.out.println(bodyDef.position);
 //        bodyDef.fixedRotation = true;
         bodyDef.type = bodyType;
         this.body = world.createBody(bodyDef);
 
-
-
-        // set the polygon box shape
+        // Set the Polygon Box shape
         PolygonShape shape = new PolygonShape();
-//        Vector2[] vertices = new Vector2[]{
-//                position,
-//                new Vector2(position.x + size.x, position.y),
-//                new Vector2(position.x, position.y + size.y),
-//                new Vector2(position.x + size.x, position.y + size.y),
-//        };
-//        shape.set(vertices);
+        shape.setAsBox(this.size.x/2f,this.size.y/2f);
 
-        shape.setAsBox(size.x/2f,size.y/2f);
-
-
-        // Set size for drawing later on
-        this.size = size;
-
-        // Shape and collision of the physics body
+        // Fixture is used as a collision mesh for the Physics Body Object
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = density;
         fixtureDef.friction = friction;
         this.body.createFixture(fixtureDef);
-        if (!gravityEnabled) this.body.setGravityScale(0f);
 
+        // Free memory
         shape.dispose();
 
-
-        body.setAwake(true);
-        // color of render
-        this.color = color;
+        // Creating an Floating Dynamic Object
+        if (!gravityEnabled) this.body.setGravityScale(0f);
     }
 
-//    public Entity(ArrayList<String> tags) {
-//        this.tags = tags;
-//    }
-
-    public void initialize() {
-//
-    }
-
+    // Attempt to Gather the verticies that make up the FIRST Fixture of the Physics Body Object
     private float[] getVertices() {
-
         PolygonShape shape = (PolygonShape) this.body.getFixtureList().first().getShape();
         float[] vertices = new float[shape.getVertexCount()*2];
         for (int i=0; i<shape.getVertexCount(); i++) {
@@ -116,6 +88,8 @@ public class Entity {
         return polygon.getTransformedVertices();
     }
 
+
+    // Render: NEEDS WORK
     public void render(Camera camera) {
 //        System.out.println(this.body.getPosition());
 //        PolygonShape polygonShape = (PolygonShape) this.body.getFixtureList().first().getShape();
@@ -135,26 +109,17 @@ public class Entity {
 
     }
 
+    // Tag System
     public void addTag(String tag) {
         this.tags.put(tag, true);
     }
 
-    public void add2Position(Vector2 vector2) {
-//        this.shape.setPosition(this.shape.x + vector2.x, this.shape.y + vector2.y);
-    }
-
-    public void move(Vector2 direction, float magnitude) {
-//        Vector2 moveVector = new Vector2().mulAdd(direction, magnitude);
-//        this.shape.setPosition(this.shape.x + moveVector.x, this.shape.y + moveVector.y);
-
-    }
-
+    // Adding a Force to the Physics Body Object
     public void applyForce(Vector2 direction, float magnitude) {
         Vector2 forceVector = new Vector2().mulAdd(direction, magnitude);
 //        System.out.println("Apply Force: " + forceVector);
         this.body.applyForceToCenter(forceVector, true);
     }
-
     public void applyForce(Vector2 forceVector) {
         this.body.applyForceToCenter(forceVector, true);
     }
@@ -163,18 +128,18 @@ public class Entity {
 
 
 
-
-//    public Vector2 getPosition() {
-//        return this.shape.getPosition(Vector2.Zero);
-//    }
-//    public Vector2 getSize() {
-//        return this.shape.getSize(Vector2.Zero);
-//    }
-
+    // Accessor Methods
     public Body getBody() {
         return this.body;
     }
+    public Vector2 getPosition() {
+        return this.body.getPosition();
+    }
+//    public Vector2 getSize() {
+//        return this.body.getFixtureList().first().getShape().;
+//    }
 
+    // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
     static void dispose() {
         // MUST DISPOSE ALL SHAPE RENDERERS
 //        shapeRenderer.dispose();
