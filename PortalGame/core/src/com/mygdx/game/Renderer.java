@@ -22,7 +22,7 @@ public class Renderer {
         sprite.setSize(size.x,size.y);
 
         sprite.setPosition(position.x-offset.x, position.y-offset.y);
-        sprite.setOrigin(0,0);
+        sprite.setOriginCenter();
         sprite.setRotation(degrees);
 
 
