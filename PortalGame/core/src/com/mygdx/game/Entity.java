@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Entity {
+    protected World world;
     protected Map<String,Boolean> tags;
     protected Body body;
     protected Vector2 gravity;
@@ -36,6 +37,7 @@ public class Entity {
     public Entity(World world, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         sprite = new Sprite(sprite);
         // Initialize Variables
+        this.world = world;
         this.gravity = world.getGravity();
         this.color = color;
         this.size = size;

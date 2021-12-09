@@ -35,7 +35,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// Physics World
 	private World world;
-	Vector2 gravity = new Vector2(0,-4);
+	Vector2 gravity = new Vector2(0f,-6);
 
 	// Camera
 	OrthographicCamera camera;
@@ -79,12 +79,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, new Vector2(1.5f,3f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.6f, 0.1f, true, squareSprite);
+		player = new Player(world, new Vector2(1.5f, 0.5f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.6f, 0.1f, true, squareSprite);
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		for (int i=0; i<5; i++) {
+		for (int i=0; i<2; i++) {
 			addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
 			addBox(new Vector2(1.4f ,3f), new Vector2(0.4f, 0.4f));
 		}

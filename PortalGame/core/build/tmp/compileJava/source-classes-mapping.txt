@@ -8,5 +8,6 @@ com/mygdx/game/Entity.java
 com/mygdx/game/Player.java
  com.mygdx.game.Player
  com.mygdx.game.Player$1
+ com.mygdx.game.Player$2
 com/mygdx/game/MyGdxGame.java
  com.mygdx.game.MyGdxGame
