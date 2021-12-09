@@ -3,10 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
-import com.badlogic.gdx.graphics.g2d.PolygonSprite;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -28,22 +25,20 @@ public class Entity {
     PolygonRegion polygonRegion;
     TextureRegion textureRegion;
     PolygonSprite polygonSprite;
+    Sprite sprite;
+    protected Vector2 size;
 
-
-
-
-    private Vector2 size;
 
     private Color color;
 
 
 
-    public Entity(World world, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled) {
+    public Entity(World world, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // Initialize Variables
         this.gravity = world.getGravity();
         this.color = color;
         this.size = size;
-
+        this.sprite = sprite;
 
         // Create a BodyDef and apply to Body Object
         BodyDef bodyDef = new BodyDef();
@@ -90,7 +85,8 @@ public class Entity {
 
 
     // Render: NEEDS WORK
-    public void render(Camera camera) {
+    public void render(Renderer renderer, Camera camera) {
+        renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
 //        System.out.println(this.body.getPosition());
 //        PolygonShape polygonShape = (PolygonShape) this.body.getFixtureList().first().getShape();
 

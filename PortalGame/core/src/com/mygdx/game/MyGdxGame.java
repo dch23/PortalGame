@@ -46,8 +46,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Entity> boxes;
 
 	// Rendered variables
-	SpriteBatch batch;
+	Renderer entityRenderer;
 	Texture img;
+	Texture squareTexture;
+	Sprite squareSprite;
 
 	// Rendering Debug Objects
 	Box2DDebugRenderer debugRenderer;
@@ -59,8 +61,12 @@ public class MyGdxGame extends ApplicationAdapter {
 //		img = new Texture("badlogic.jpg");
 //		textureAtlas = new TextureAtlas();
 
+		// Sprite Render Initialization
+		squareTexture = new Texture("shapes/square.jpeg");
+		squareSprite = new Sprite(squareTexture);
+
 		// Initialize Sprite Renderer Variables
-		batch = new SpriteBatch();
+		entityRenderer = new Renderer(new SpriteBatch());
 
 		// Initialize Camera
 		camera = new OrthographicCamera(scale(SCENE_WIDTH), scale(SCENE_HEIGHT));
@@ -71,19 +77,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, new Vector2(1.5f,3f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(0,0,0,1), 0.1f, 0.1f, true);
-		floor = new Entity(world, new Vector2(1.5f,0.15f), new Vector2(3f,0.3f), BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false);
+		player = new Player(world, new Vector2(1.5f,3f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(0,0,0,1), 0.1f, 0.1f, true, squareSprite);
+		floor = new Entity(world, new Vector2(1.5f,0.15f), new Vector2(3f,0.3f), BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
 		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
 		addBox(new Vector2(1.4f ,3f), new Vector2(0.4f, 0.4f));
+		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
+		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
+		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
+
 
 //		box = new Entity(world, new Vector2(1.5f ,1.5f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 1f);
 	}
 
 	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, position, size, BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.1f, 0.1f, true);
+		Entity newBox = new Entity(world, position, size, BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.1f, 0.1f, true, squareSprite);
 		boxes.add(newBox);
 	}
 
@@ -109,7 +119,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		ScreenUtils.clear(1, 1, 1, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
-		batch.setProjectionMatrix(camera.combined);
+		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
 
 		// Sprite Batch Draws Sprite/Texture
 //		batch.begin();
@@ -125,9 +135,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.operate();
 
 		// Render Boxes
+		entityRenderer.getBatch().begin();
 		for (Entity box : boxes) {
-			box.render(camera);
+			box.render(entityRenderer, camera);
 		}
+		entityRenderer.getBatch().end();
 
 		// Render Debug Lines for Physics Obeject in Physics World
 		debugRenderer.render(world, camera.combined);
@@ -155,10 +167,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	// This Scale Methods ARE NECESSARY because of libGDXs poor physics scale. Makes everything small with a small camera to enable uses of small force magnitudes
-	private float scale(float x) {
+	float scale(float x) {
 		return x*GAME_SCALE;
 	}
-	private Vector2 scale(Vector2 v) {
+	Vector2 scale(Vector2 v) {
 		return Vector2.Zero.mulAdd(v,GAME_SCALE);
 	}
 

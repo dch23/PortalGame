@@ -4,3 +4,5 @@ com/mygdx/game/MyGdxGame.java
  com.mygdx.game.MyGdxGame
 com/mygdx/game/Entity.java
  com.mygdx.game.Entity
+com/mygdx/game/Renderer.java
+ com.mygdx.game.Renderer
