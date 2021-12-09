@@ -44,6 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Player player;
 	Entity floor;
 	ArrayList<Entity> boxes;
+	ArrayList<Entity> walls;
 
 	// Rendered variables
 	Renderer entityRenderer;
@@ -56,6 +57,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+
 		// Initialize Debug Renderer
 		debugRenderer = new Box2DDebugRenderer();
 //		img = new Texture("badlogic.jpg");
@@ -77,30 +79,34 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, new Vector2(1.5f,3f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(0,0,0,1), 0.1f, 0.1f, true, squareSprite);
-		floor = new Entity(world, new Vector2(1.5f,0.15f), new Vector2(3f,0.3f), BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
+		player = new Player(world, new Vector2(1.5f,3f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.6f, 0.1f, true, squareSprite);
+		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.4f ,3f), new Vector2(0.4f, 0.4f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
+		for (int i=0; i<5; i++) {
+			addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
+			addBox(new Vector2(1.4f ,3f), new Vector2(0.4f, 0.4f));
+		}
+
+		// Add walls and floor
+		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
+		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+
 
 
 //		box = new Entity(world, new Vector2(1.5f ,1.5f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 1f);
 	}
 
 	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, position, size, BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.1f, 0.1f, true, squareSprite);
+		Entity newBox = new Entity(world, position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 0.1f, 0.1f, true, squareSprite);
 		boxes.add(newBox);
+	}
+
+	private void addWall(Vector2 position, Vector2 size) {
+		Entity newWall = new Entity(world, position, size, BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
+		walls.add(newWall);
 	}
 
 //	private void addSprites() {
@@ -145,6 +151,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (Entity box : boxes) {
 			box.render(entityRenderer, camera);
 		}
+		for (Entity wall : walls) {
+			wall.render(entityRenderer, camera);
+		}
+		player.render(entityRenderer, camera);
 		entityRenderer.getBatch().end();
 
 		// Render Debug Lines for Physics Obeject in Physics World
@@ -165,6 +175,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Entity.dispose();
 		world.dispose();
 		for (Entity box : boxes) box.dispose();
+		for (Entity wall : walls) wall.dispose();
+		player.dispose();
 	}
 
 	private void stepWorld() {
