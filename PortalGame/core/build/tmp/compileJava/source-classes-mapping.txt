@@ -1,3 +1,5 @@
+com/mygdx/game/GameMap.java
+ com.mygdx.game.GameMap
 com/mygdx/game/PMath.java
  com.mygdx.game.PMath
 com/mygdx/game/Player.java

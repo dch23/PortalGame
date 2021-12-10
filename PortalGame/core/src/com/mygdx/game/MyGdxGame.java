@@ -1,9 +1,6 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,10 +25,13 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
-	static final float GAME_SCALE = 0.005f;
+	static final float GAME_SCALE = 0.0025f;
 
 	private static final float SCENE_WIDTH = 1024f;
 	private static final float SCENE_HEIGHT = 768f;
+
+	// Maps
+	GameMap map1;
 
 	// Physics World
 	private World world;
@@ -74,6 +74,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera = new OrthographicCamera(scale(SCENE_WIDTH), scale(SCENE_HEIGHT));
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 
+		//Maps
+		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
