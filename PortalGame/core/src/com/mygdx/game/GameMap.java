@@ -18,8 +18,8 @@ public class GameMap {
         this.camera = camera;
         this.tiledMap = (new TmxMapLoader()).load(tiledMapDirectory);
 
-        renderer = new OrthogonalTiledMapRenderer(tiledMap);
-        renderer.setView(this.camera);
+//        renderer = new OrthogonalTiledMapRenderer(tiledMap);
+//        renderer.setView(this.camera);
     }
 
     public void render () {
