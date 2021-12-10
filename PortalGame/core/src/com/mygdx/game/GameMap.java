@@ -16,7 +16,7 @@ public class GameMap {
 
     public GameMap(OrthographicCamera camera, String tiledMapDirectory) {
         this.camera = camera;
-        this.tiledMap = new TmxMapLoader().load(tiledMapDirectory);
+        this.tiledMap = (new TmxMapLoader()).load(tiledMapDirectory);
 
         renderer = new OrthogonalTiledMapRenderer(tiledMap);
         renderer.setView(this.camera);

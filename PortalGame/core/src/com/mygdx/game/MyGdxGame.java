@@ -25,7 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
-	static final float GAME_SCALE = 0.0025f;
+	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
 
 	private static final float SCENE_WIDTH = 1024f;
 	private static final float SCENE_HEIGHT = 768f;
@@ -75,20 +75,20 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 
 		//Maps
-		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
+//		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, "Player", new Vector2(1.5f, 0.5f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 2f, 0.0f, true, squareSprite);
+		player = new Player(world, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		for (int i=0; i<2; i++) {
-			addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-			addBox(new Vector2(1.4f ,3f), new Vector2(0.4f, 0.4f));
+		for (int i=0; i<10; i++) {
+			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
+			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
 		}
 
 		// Add walls and floor
@@ -102,7 +102,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 0.1f, 0.1f, true, squareSprite);
+		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 0.1f, true, squareSprite);
 		boxes.add(newBox);
 	}
 
