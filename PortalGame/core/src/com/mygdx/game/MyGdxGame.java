@@ -79,7 +79,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, new Vector2(1.5f, 0.5f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.6f, 0.1f, true, squareSprite);
+		player = new Player(world, "Player", new Vector2(1.5f, 0.5f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.6f, 0.1f, true, squareSprite);
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
@@ -100,12 +100,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 0.1f, 0.1f, true, squareSprite);
+		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 0.1f, 0.1f, true, squareSprite);
 		boxes.add(newBox);
 	}
 
 	private void addWall(Vector2 position, Vector2 size) {
-		Entity newWall = new Entity(world, position, size, BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
+		Entity newWall = new Entity(world, "Wall", position, size, BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
 		walls.add(newWall);
 	}
 

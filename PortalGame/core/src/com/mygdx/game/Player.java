@@ -17,22 +17,31 @@ public class Player extends Entity {
     private float airResistanceMagnitude = 0.001f;
     private Vector2 inputHoriz = Vector2.Zero;
 
-    public Player(World world, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
-        super(world, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+    private float groundDistance = 0f;
+    private float groundDistanceJumpThreshold = 0.2f;
+
+    public Player(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+        super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
     }
 
     private boolean onGround() {
-        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                System.out.println(Entity.entityFromBody(fixture.getBody()).getName());
+                groundDistance = body.getPosition().y - point.y;
                 return 0;
             }
         };
-        world.rayCast(callback, bottom, bottom.add(0f, -100));
 
-        return false;
+        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
+        Vector2 endRay = new Vector2(bottom);
+        endRay.add(0,-100f);
+
+        world.rayCast(callback, bottom, endRay);
+
+        return (groundDistance < groundDistanceJumpThreshold);
     }
 
     private void control() {

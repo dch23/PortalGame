@@ -12,13 +12,18 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import java.text.Bidi;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Entity {
+    static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
+
     protected World world;
+    protected String name;
     protected Map<String,Boolean> tags;
     protected Body body;
     protected Vector2 gravity;
+    protected Vector2 size;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
@@ -27,17 +32,19 @@ public class Entity {
     TextureRegion textureRegion;
     PolygonSprite polygonSprite;
     Sprite sprite;
-    protected Vector2 size;
-
 
     private Color color;
 
 
 
-    public Entity(World world, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+    public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+
+
+        // ensure a new sprite is made rather than using the same one
         sprite = new Sprite(sprite);
         // Initialize Variables
         this.world = world;
+        this.name = name;
         this.gravity = world.getGravity();
         this.color = color;
         this.size = size;
@@ -63,6 +70,9 @@ public class Entity {
         fixtureDef.friction = friction;
         this.body.createFixture(fixtureDef);
 
+        // add entity to entity map
+        entityFromBodyMap.put(this.body, this);
+
         // Free memory
         shape.dispose();
 
@@ -70,7 +80,7 @@ public class Entity {
         if (!gravityEnabled) this.body.setGravityScale(0f);
     }
 
-    // Attempt to Gather the verticies that make up the FIRST Fixture of the Physics Body Object
+    // Attempt to Gather the vertices that make up the FIRST Fixture of the Physics Body Object
     private float[] getVertices() {
         PolygonShape shape = (PolygonShape) this.body.getFixtureList().first().getShape();
         float[] vertices = new float[shape.getVertexCount()*2];
@@ -139,11 +149,19 @@ public class Entity {
 //        return this.body.getFixtureList().first().getShape().;
 //    }
 
+    public String getName() {
+        return this.name;
+    }
+
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
     static void dispose() {
         // MUST DISPOSE ALL SHAPE RENDERERS
 //        shapeRenderer.dispose();
         // MUST DISPOSE ALL ENTITIES;
+    }
+
+    static Entity entityFromBody(Body body) {
+        return entityFromBodyMap.get(body);
     }
 
 }
