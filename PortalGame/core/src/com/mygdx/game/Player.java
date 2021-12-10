@@ -15,6 +15,7 @@ public class Player extends Entity {
     private float slowDownSpeed = 0.1f;
     private float jumpHeight = 3f;
     private float airResistanceMagnitude = 0.001f;
+    private float frictionMagnitude = 0.1f;
     private Vector2 inputHoriz = Vector2.Zero;
 
     private float groundDistance = 0f;
@@ -34,8 +35,8 @@ public class Player extends Entity {
                 return 0;
             }
         };
-
-        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
+        Vector2 bottom = body.getPosition();
+//        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
         Vector2 endRay = new Vector2(bottom);
         endRay.add(0,-100f);
 
@@ -50,55 +51,95 @@ public class Player extends Entity {
             @Override
             public boolean keyDown(int keyCode) {
                 switch (keyCode) {
-                    case Inputs.Keys.RIGHT:
+                    case Inputs.Keys.KEY_RIGHT:
+                    case Inputs.Keys.ARROW_RIGHT:
                         inputHoriz.x = 1f;
                         break;
-                    case Inputs.Keys.LEFT:
+                    case Inputs.Keys.KEY_LEFT:
+                    case Inputs.Keys.ARROW_LEFT:
                         inputHoriz.y = 1f;
                         break;
-                    case Inputs.Keys.UP:
+                    case Inputs.Keys.KEY_UP:
+                    case Inputs.Keys.ARROW_UP:
                         if (onGround()) {
                             body.setLinearVelocity(body.getLinearVelocity().x, jumpHeight);
                         }
                         break;
-                    case Inputs.Keys.DOWN:
+                    case Inputs.Keys.ARROW_DOWN:
                         break;
                 }
                 return true;
             }
             public boolean keyUp(int keyCode) {
                 switch (keyCode) {
-                    case Inputs.Keys.RIGHT:
+                    case Inputs.Keys.KEY_RIGHT:
+                    case Inputs.Keys.ARROW_RIGHT:
                         inputHoriz.x = 0f;
 //                        body.setLinearVelocity(slowDownSpeed, body.getLinearVelocity().y);
                         break;
-                    case Inputs.Keys.LEFT:
+                    case Inputs.Keys.KEY_LEFT:
+                    case Inputs.Keys.ARROW_LEFT:
                         inputHoriz.y = 0f;
 //                        body.setLinearVelocity(-slowDownSpeed, body.getLinearVelocity().y);
                         break;
-                    case Inputs.Keys.UP:
+                    case Inputs.Keys.KEY_UP:
+                    case Inputs.Keys.ARROW_UP:
                         break;
-                    case Inputs.Keys.DOWN:
+                    case Inputs.Keys.ARROW_DOWN:
                         break;
                 }
                 return true;
             }
         });
         if (inputHoriz.x - inputHoriz.y != 0) {
-            body.setLinearVelocity(speed * (inputHoriz.x - inputHoriz.y), body.getLinearVelocity().y);
+            body.setLinearVelocity(Math.max(speed, Math.abs(body.getLinearVelocity().x)) * (inputHoriz.x - inputHoriz.y), body.getLinearVelocity().y);
         }
     }
 
     private void airResistance() {  // Doesnt work
-        Vector2 direction = body.getLinearVelocity();
-        direction = direction.nor();
-        System.out.println(direction);
-        direction = Vector2.Zero.mulAdd(direction, -airResistanceMagnitude);
-        body.applyForceToCenter(direction, false);
+//        Vector2 position = new Vector2(body.getPosition());
+//        Vector2 velocity = new Vector2(body.getLinearVelocity());
+//        Vector2 direction = new Vector2(velocity.nor());
+//
+//
+//        direction = new Vector2(-direction.x, -direction.y);
+//        Vector2 airResistanceVector = new Vector2(direction.x * airResistanceMagnitude, direction.y * airResistanceMagnitude);
+//        if (PMath.magnitude(velocity) - airResistanceMagnitude > 0f) {
+//            body.setLinearVelocity(new Vector2(velocity.x - airResistanceVector.x, velocity.y - airResistanceVector.y));
+//        }
+
+//        float magnitude = PMath.magnitude(velocity);
+//
+//        if (magnitude - airResistanceMagnitude > 0f) {
+////            velocity = velocity.add(airResistanceVector);
+//        }
+//        body.setLinearVelocity(velocity);
+
+//        direction = direction.nor();
+//        direction = Vector2.Zero.mulAdd(direction, -airResistanceMagnitude);
+//
+//        Vector2 newPosition = new Vector2(body.getPosition().add(body.getLinearVelocity()).add(direction));
+//        Vector2 newDirection = new Vector2(Vector2.Zero.mulAdd(body.getPosition(), -1f));
+//        if (direction == newDirection) System.out.println("PROLLY WORK");
+    }
+
+    private void friction () {
+        float xVelocity = body.getLinearVelocity().x;
+        float direction = xVelocity / Math.abs(xVelocity);
+        float newXVelocity = (Math.abs(xVelocity) - frictionMagnitude) * direction;
+        float newDirection = newXVelocity / Math.abs(newXVelocity);
+        if (direction == newDirection) {
+            body.setLinearVelocity(newXVelocity, body.getLinearVelocity().y);
+        }
+        else {
+            body.setLinearVelocity(0, body.getLinearVelocity().y);
+        }
     }
 
     public void operate() {
 //        this.body.setLinearVelocity(new Vector2(-0.1f,this.body.getLinearVelocity().y));
         control();
+        friction();
+//        airResistance();
     }
 }

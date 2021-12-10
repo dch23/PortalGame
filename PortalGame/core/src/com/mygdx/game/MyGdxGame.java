@@ -79,7 +79,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, "Player", new Vector2(1.5f, 0.5f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.6f, 0.1f, true, squareSprite);
+		player = new Player(world, "Player", new Vector2(1.5f, 0.5f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 2f, 0.0f, true, squareSprite);
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
