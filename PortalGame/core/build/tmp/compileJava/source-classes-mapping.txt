@@ -1,17 +1,20 @@
-com/mygdx/game/Inputs.java
- com.mygdx.game.Inputs
- com.mygdx.game.Inputs$Keys
+com/mygdx/game/GameMap.java
+ com.mygdx.game.GameMap
 com/mygdx/game/PMath.java
  com.mygdx.game.PMath
 com/mygdx/game/Player.java
  com.mygdx.game.Player
  com.mygdx.game.Player$1
  com.mygdx.game.Player$2
-com/mygdx/game/Renderer.java
- com.mygdx.game.Renderer
-com/mygdx/game/Entity.java
- com.mygdx.game.Entity
-com/mygdx/game/GameMap.java
- com.mygdx.game.GameMap
 com/mygdx/game/MyGdxGame.java
  com.mygdx.game.MyGdxGame
+com/mygdx/game/Entity.java
+ com.mygdx.game.Entity
+com/mygdx/game/Renderer.java
+ com.mygdx.game.Renderer
+com/mygdx/game/Laser.java
+ com.mygdx.game.Laser
+ com.mygdx.game.Laser$1
+com/mygdx/game/Inputs.java
+ com.mygdx.game.Inputs
+ com.mygdx.game.Inputs$Keys

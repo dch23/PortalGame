@@ -12,9 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player extends Entity {
     private float speed = 1f;
-    private float slowDownSpeed = 0.1f;
     private float jumpHeight = 3f;
-    private float airResistanceMagnitude = 0.001f;
     private float frictionMagnitude = 0.1f;
     private Vector2 inputHoriz = Vector2.Zero;
 
@@ -30,7 +28,6 @@ public class Player extends Entity {
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                System.out.println(Entity.entityFromBody(fixture.getBody()).getName());
                 groundDistance = body.getPosition().y - point.y;
                 return 0;
             }

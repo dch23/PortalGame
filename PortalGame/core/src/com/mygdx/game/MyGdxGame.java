@@ -55,6 +55,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Rendering Debug Objects
 	Box2DDebugRenderer debugRenderer;
 
+	ArrayList<Laser> lasers;
+
 	@Override
 	public void create () {
 
@@ -75,7 +77,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 
 		//Maps
-		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
+//		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
@@ -95,6 +97,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
 		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
 		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+
+		lasers = new ArrayList<>();
+		lasers.add(new Laser(world, new Vector2(1.4f,3f), new Color(1,0,0,1), -90f, 1f, 10));
 
 
 
@@ -159,7 +164,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.render(entityRenderer, camera);
 		entityRenderer.getBatch().end();
 
-		// Render Debug Lines for Physics Obeject in Physics World
+		Laser.beginRender();
+		for (Laser laser : lasers) {
+			laser.render();
+		}
+		Laser.endRender();
+
+		// Render Debug Lines for Physics Object in Physics World
 		debugRenderer.render(world, camera.combined);
 
 		// Update the Camera
