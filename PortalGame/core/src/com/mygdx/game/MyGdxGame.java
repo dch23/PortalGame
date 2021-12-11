@@ -75,7 +75,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 
 		//Maps
-//		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
+		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
