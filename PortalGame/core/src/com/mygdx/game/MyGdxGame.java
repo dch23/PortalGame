@@ -1,9 +1,6 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,14 +25,17 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
-	static final float GAME_SCALE = 0.005f;
+	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
 
 	private static final float SCENE_WIDTH = 1024f;
 	private static final float SCENE_HEIGHT = 768f;
 
+	// Maps
+	GameMap map1;
+
 	// Physics World
 	private World world;
-	Vector2 gravity = new Vector2(0,-4);
+	Vector2 gravity = new Vector2(0f,-6);
 
 	// Camera
 	OrthographicCamera camera;
@@ -44,6 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Player player;
 	Entity floor;
 	ArrayList<Entity> boxes;
+	ArrayList<Entity> walls;
 
 	// Rendered variables
 	Renderer entityRenderer;
@@ -54,8 +55,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Rendering Debug Objects
 	Box2DDebugRenderer debugRenderer;
 
+	ArrayList<Laser> lasers;
+
 	@Override
 	public void create () {
+
 		// Initialize Debug Renderer
 		debugRenderer = new Box2DDebugRenderer();
 //		img = new Texture("badlogic.jpg");
@@ -72,35 +76,44 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera = new OrthographicCamera(scale(SCENE_WIDTH), scale(SCENE_HEIGHT));
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 
+		//Maps
+//		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, new Vector2(1.5f,3f), new Vector2(0.3f,0.3f), BodyDef.BodyType.DynamicBody, new Color(0,0,0,1), 0.1f, 0.1f, true, squareSprite);
-		floor = new Entity(world, new Vector2(1.5f,0.15f), new Vector2(3f,0.3f), BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
+		player = new Player(world, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
+		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.4f ,3f), new Vector2(0.4f, 0.4f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
-		addBox(new Vector2(1.5f ,1.5f), new Vector2(0.2f, 0.2f));
+		for (int i=0; i<10; i++) {
+			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
+			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
+		}
+
+		// Add walls and floor
+		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
+		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+
+		lasers = new ArrayList<>();
+		lasers.add(new Laser(world, new Vector2(1.4f,3f), new Color(1,0,0,1), -90f, 1f, 10));
+
 
 
 //		box = new Entity(world, new Vector2(1.5f ,1.5f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 1f);
 	}
 
 	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, position, size, BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 0.1f, 0.1f, true, squareSprite);
+		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 0.1f, true, squareSprite);
 		boxes.add(newBox);
+	}
+
+	private void addWall(Vector2 position, Vector2 size) {
+		Entity newWall = new Entity(world, "Wall", position, size, BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
+		walls.add(newWall);
 	}
 
 //	private void addSprites() {
@@ -145,9 +158,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (Entity box : boxes) {
 			box.render(entityRenderer, camera);
 		}
+		for (Entity wall : walls) {
+			wall.render(entityRenderer, camera);
+		}
+		player.render(entityRenderer, camera);
 		entityRenderer.getBatch().end();
 
-		// Render Debug Lines for Physics Obeject in Physics World
+		Laser.beginRender();
+		for (Laser laser : lasers) {
+			laser.render();
+		}
+		Laser.endRender();
+
+		// Render Debug Lines for Physics Object in Physics World
 		debugRenderer.render(world, camera.combined);
 
 		// Update the Camera
@@ -165,6 +188,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Entity.dispose();
 		world.dispose();
 		for (Entity box : boxes) box.dispose();
+		for (Entity wall : walls) wall.dispose();
+		player.dispose();
 	}
 
 	private void stepWorld() {
