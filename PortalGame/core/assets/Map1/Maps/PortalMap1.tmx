@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="39">
- <tileset firstgid="1" source="../../../../../../../../../terrain2.tsx"/>
- <tileset firstgid="248" source="../../../../../../../../../backgroundObjects.tsx"/>
- <tileset firstgid="416" source="../../../../../../../../../box.tsx"/>
- <tileset firstgid="417" source="../../../../../../../../../Opening (46x56).tsx"/>
+ <tileset firstgid="1" source="extra/terrain2.tsx"/>
+ <tileset firstgid="248" source="extra/backgroundObjects.tsx"/>
+ <tileset firstgid="416" source="extra/box.tsx"/>
+<!--  <tileset firstgid="417" source="../../../../../../../../../Opening (46x56).tsx"/> -->
  <layer id="3" name="Background" width="40" height="30">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
