@@ -31,7 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private static final float SCENE_HEIGHT = 768f;
 
 	// Maps
-	GameMap map1;
+	GameMap map;
 
 	// Physics World
 	private World world;
@@ -56,6 +56,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Box2DDebugRenderer debugRenderer;
 
 	ArrayList<Laser> lasers;
+	float angle = 0f;
 
 	@Override
 	public void create () {
@@ -75,9 +76,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Initialize Camera
 		camera = new OrthographicCamera(scale(SCENE_WIDTH), scale(SCENE_HEIGHT));
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
+		camera.update();
 
 		//Maps
-//		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
+		map = new GameMap(this.camera, "DarkMap1/DarkMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
@@ -98,8 +100,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
 		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
 
+		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
-		lasers.add(new Laser(world, new Vector2(1.4f,3f), new Color(1,0,0,1), -90f, 1f, 10));
+		lasers.add(new Laser(world, new Vector2(1,1), new Color(1,0,0,1), 0f, 0.01f, 10));
 
 
 
@@ -107,7 +110,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 0.1f, true, squareSprite);
+		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
 		boxes.add(newBox);
 	}
 
@@ -165,7 +168,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.getBatch().end();
 
 		Laser.beginRender();
+		angle+=0.01f;
 		for (Laser laser : lasers) {
+			laser.setAngle(angle);
 			laser.render();
 		}
 		Laser.endRender();
