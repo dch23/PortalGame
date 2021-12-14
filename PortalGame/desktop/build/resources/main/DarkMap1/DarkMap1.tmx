@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="5">
- <tileset firstgid="1" source="main_lev_build.tsx"/>
+ <tileset firstgid="1" source="tiledAssets/main_lev_build.tsx"/>
  <tileset firstgid="10241" source="tiledAssets/01 background.tsx"/>
  <layer id="6" name="Backgorund" width="40" height="30">
   <data encoding="csv">

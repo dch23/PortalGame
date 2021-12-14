@@ -31,7 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private static final float SCENE_HEIGHT = 768f;
 
 	// Maps
-	GameMap map1;
+	GameMap map;
 
 	// Physics World
 	private World world;
@@ -56,6 +56,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Box2DDebugRenderer debugRenderer;
 
 	ArrayList<Laser> lasers;
+	float angle = 0f;
 
 	@Override
 	public void create () {
@@ -78,7 +79,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.update();
 
 		//Maps
-//		map1 = new GameMap(this.camera, "Map1/Maps/PortalMap1.tmx");
+		map = new GameMap(this.camera, "DarkMap1/DarkMap1.tmx");
 
 		// Initialize Physics World
 		world = new World(gravity, false);
@@ -167,7 +168,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.getBatch().end();
 
 		Laser.beginRender();
+		angle+=0.01f;
 		for (Laser laser : lasers) {
+			laser.setAngle(angle);
 			laser.render();
 		}
 		Laser.endRender();

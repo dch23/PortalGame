@@ -26,11 +26,12 @@ public class Laser {
     public Laser(World world, Vector2 position, Color color, float angle, float thickness, float maxLength) {
         this.world = world;
         this.position = position;
-        this.maxPosition = position.cpy().add(new Vector2((float) Math.cos(angle), (float) Math.sin(angle)).scl(maxLength));
-        this.endPosition = this.maxPosition;
+
         this.color = color;
         this.thickness = thickness;
         this.maxLength = maxLength;
+        setAngle(angle);
+        this.endPosition = this.maxPosition;
     }
 
     static public void beginRender() {
@@ -56,6 +57,10 @@ public class Laser {
         };
         world.rayCast(callback, this.position, maxPosition);
         return endPosition;
+    }
+
+    public void setAngle(float angle) {
+        this.maxPosition = this.position.cpy().add(new Vector2((float) Math.cos(angle), (float) Math.sin(angle)).scl(this.maxLength));
     }
 
     static public void dispose() {

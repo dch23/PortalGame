@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 public class GameMap {
-    static protected TiledMapRenderer renderer;
+    static protected TiledMapRenderer tiledMapRenderer;
     static protected TmxMapLoader tmxMapLoader = new TmxMapLoader();
 
     protected TiledMap tiledMap;
@@ -21,11 +21,11 @@ public class GameMap {
         this.camera = camera;
         this.tiledMap = tmxMapLoader.load(tiledMapDirectory);
 
-//        renderer = new OrthogonalTiledMapRenderer(tiledMap);
-//        renderer.setView(this.camera);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledMapRenderer.setView(this.camera);
     }
 
     public void render () {
-        renderer.render();
+        tiledMapRenderer.render();
     }
 }
