@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
@@ -18,6 +19,10 @@ public class Laser {
     private float thickness;
     private float maxLength;
 
+    static public void setProjectionMatrix(Matrix4 matrix4) {
+        shapeRenderer.setProjectionMatrix(matrix4);
+    }
+
     public Laser(World world, Vector2 position, Color color, float angle, float thickness, float maxLength) {
         this.world = world;
         this.position = position;
@@ -29,7 +34,7 @@ public class Laser {
     }
 
     static public void beginRender() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
     }
     static public void endRender() {
         shapeRenderer.end();
@@ -51,5 +56,9 @@ public class Laser {
         };
         world.rayCast(callback, this.position, maxPosition);
         return endPosition;
+    }
+
+    static public void dispose() {
+        shapeRenderer.dispose();
     }
 }
