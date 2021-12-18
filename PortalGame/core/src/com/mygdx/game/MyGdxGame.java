@@ -96,13 +96,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 		// Add walls and floor
-		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
-		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
-		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+//		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
+//		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+//		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
 
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
-		lasers.add(new Laser(world, new Vector2(1,1), new Color(1,0,0,1), 0f, 0.01f, 10));
+//		lasers.add(new Laser(world, new Vector2(1,1), new Color(1,0,0,1), 0f, 0.01f, 10));
 
 
 
@@ -142,7 +142,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
-
+		map.render();
 		// Sprite Batch Draws Sprite/Texture
 //		batch.begin();
 //		batch.draw(img, 0, 0);
