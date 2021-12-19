@@ -10,8 +10,9 @@ public class DesktopLauncher {
 
 		// changing config information
 		config.title = "Portal Game";
-		config.width = 1024;
-		config.height = 768;
+		config.width = 1920;
+		config.height = 1080;
+		config.fullscreen = true;
 
 		new LwjglApplication(new MyGdxGame(), config);
 	}

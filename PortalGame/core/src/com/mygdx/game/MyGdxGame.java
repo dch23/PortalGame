@@ -27,8 +27,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final int POSITION_ITERATIONS = 2;
 	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
 
-	private static final float SCENE_WIDTH = 1024f;
-	private static final float SCENE_HEIGHT = 768f;
+	protected static final float SCENE_WIDTH = 1920f;
+	protected static final float SCENE_HEIGHT = 1080f;
 
 	// Maps
 	GameMap map;
@@ -79,7 +79,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.update();
 
 		//Maps
-		map = new GameMap(this.camera, "DarkMap1/DarkMap1.tmx");
+		map = new GameMap(world,"DarkMap1/DarkMap1.tmx", this.camera);
 
 		// Initialize Physics World
 		world = new World(gravity, false);
@@ -195,6 +195,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (Entity box : boxes) box.dispose();
 		for (Entity wall : walls) wall.dispose();
 		player.dispose();
+		map.dispose();
 	}
 
 	private void stepWorld() {
