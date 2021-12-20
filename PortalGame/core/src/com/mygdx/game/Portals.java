@@ -14,12 +14,12 @@ public class Portals {
         portals[1] = new Portal();
     }
 
-    public void setPortal(int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixture) {
+    public void setPortal(int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
 //        System.out.println(Entity.entityFromBody(fixture.getBody()));
 
         if (portals[portalNumber].getFixture() != null) {
-            portals[portalNumber].reset();
-            return;
+            portals[portalNumber].reset(fixtureHit);
+//            return;
         }
 //        if (fixture==null) return;
         // set for certain portal number
@@ -27,12 +27,11 @@ public class Portals {
         portals[portalNumber].setNormal(normal);
         portals[portalNumber].setEnabled(enabled);
 
-
-        portals[portalNumber].setFixture(fixture);
+        portals[portalNumber].setFixture(fixtureHit);
         portals[portalNumber].getFixture().setSensor(true);
 
         if (normal.y == 0) {
-            Entity entity = Entity.entityFromBody(fixture.getBody());
+            Entity entity = Entity.entityFromBody(portals[portalNumber].getFixture().getBody());
             Vector2 bodyPosition = new Vector2(entity.getPosition());
             Vector2 bodySize = new Vector2(entity.size);
 
@@ -49,15 +48,15 @@ public class Portals {
 
             FixtureDef botFixtureDef = new FixtureDef();
             botFixtureDef.shape = botShape;
-            botFixtureDef.density = fixture.getDensity();
-            botFixtureDef.friction = fixture.getFriction();
-            botFixtureDef.restitution = fixture.getRestitution();
+            botFixtureDef.density = portals[portalNumber].getFixture().getDensity();
+            botFixtureDef.friction = portals[portalNumber].getFixture().getFriction();
+            botFixtureDef.restitution = portals[portalNumber].getFixture().getRestitution();
 
             FixtureDef topFixtureDef = new FixtureDef();
             topFixtureDef.shape = topShape;
-            topFixtureDef.density = fixture.getDensity();
-            topFixtureDef.friction = fixture.getFriction();
-            topFixtureDef.restitution = fixture.getRestitution();
+            topFixtureDef.density = portals[portalNumber].getFixture().getDensity();
+            topFixtureDef.friction = portals[portalNumber].getFixture().getFriction();
+            topFixtureDef.restitution = portals[portalNumber].getFixture().getRestitution();
 
             entity.body.createFixture(topFixtureDef);
             entity.body.createFixture(botFixtureDef);
@@ -90,8 +89,8 @@ class Portal {
         this.fixture = fixture;
     }
 
-    public void reset() {
-        Body body = this.fixture.getBody();
+    public void reset(Fixture fixtureHit) {
+        Body body = getFixture().getBody();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = body.getType();
         bodyDef.position.set(body.getPosition());
@@ -100,9 +99,22 @@ class Portal {
         bodyDef.active = body.isActive();
         bodyDef.gravityScale = body.getGravityScale();
 
+
         World world = body.getWorld();
-        world.destroyBody(body);
         Body newBody = world.createBody(bodyDef);
+        FixtureDef firstFixtureDef = new FixtureDef();
+        firstFixtureDef.friction = getFixture().getBody().getFixtureList().first().getFriction();
+        firstFixtureDef.density = getFixture().getBody().getFixtureList().first().getDensity();
+        firstFixtureDef.shape = getFixture().getBody().getFixtureList().first().getShape();
+        firstFixtureDef.restitution = getFixture().getBody().getFixtureList().first().getRestitution();
+
+        newBody.createFixture(firstFixtureDef);
+        if (fixtureHit == getFixture()) {
+            
+        }
+
+        world.destroyBody(body);
+
 //        newBody.createFixture(this.fixture);
 
 
@@ -120,7 +132,7 @@ class Portal {
 //        System.out.println(body.getFixtureList().size);
 //        body.createFixture(originalFixtureDef);
 
-        setFixture(null);
+//        setFixture(newBody.getFixtureList().first());
     }
 
     public Vector2 getPosition() {
