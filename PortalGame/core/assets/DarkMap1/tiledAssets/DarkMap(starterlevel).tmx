@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="1">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="14">
  <tileset firstgid="1" source="01 background.tsx"/>
  <tileset firstgid="625" source="main_lev_build.tsx"/>
  <tileset firstgid="10865" source="05 background.tsx"/>
@@ -158,6 +158,21 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="8" name="Collisions">
+  <object id="1" x="161.251" y="127.821" width="125.199" height="30.8081"/>
+  <object id="2" x="19.6647" y="78.6589" width="11.7988" height="325.779"/>
+  <object id="3" x="23.5977" y="400.505" width="142.242" height="10.4879"/>
+  <object id="4" x="160.595" y="240.565" width="11.7988" height="167.15"/>
+  <object id="5" x="161.251" y="240.565" width="125.199" height="13.1098"/>
+  <object id="6" x="273.995" y="240.565" width="12.4543" height="122.577"/>
+  <object id="7" x="384.118" y="320.535" width="30.8081" height="98.9791"/>
+  <object id="8" x="277.928" y="352.654" width="108.156" height="11.1433"/>
+  <object id="9" x="411.648" y="399.85" width="216.312" height="10.4879"/>
+  <object id="10" x="624.683" y="256.952" width="12.4543" height="150.763"/>
+  <object id="11" x="625.338" y="256.952" width="112.089" height="15.7318"/>
+  <object id="12" x="736.772" y="68.1711" width="13.7653" height="204.513"/>
+  <object id="13" x="127.165" y="16.3873" width="518.493" height="15.0763"/>
+ </objectgroup>
  <layer id="7" name="Doors" width="48" height="27">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
