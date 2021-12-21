@@ -144,6 +144,13 @@ public class Entity {
     public Body getBody() {
         return this.body;
     }
+
+    public void setBody(Body body) {
+        entityFromBodyMap.remove(this.body);
+        this.body = body;
+        entityFromBodyMap.put(this.body, this);
+    }
+
     public Vector2 getPosition() {
         return this.body.getPosition();
     }
@@ -156,10 +163,14 @@ public class Entity {
     }
 
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
-    static void dispose() {
+    static void disposeAll() {
         // MUST DISPOSE ALL SHAPE RENDERERS
 //        shapeRenderer.dispose();
         // MUST DISPOSE ALL ENTITIES;
+    }
+
+    public void dispose() {
+        this.world.destroyBody(this.body);
     }
 
     static Entity entityFromBody(Body body) {

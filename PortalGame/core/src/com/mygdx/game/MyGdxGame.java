@@ -195,7 +195,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
 //		batch.dispose();
 //		img.dispose();
-		Entity.dispose();
+		Entity.disposeAll();
 		world.dispose();
 		for (Entity box : boxes) box.dispose();
 		for (Entity wall : walls) wall.dispose();

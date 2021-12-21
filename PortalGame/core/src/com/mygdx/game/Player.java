@@ -19,9 +19,9 @@ import java.util.ArrayList;
 public class Player extends Entity {
     Renderer debugRenderer;
 
-    private float speed = 1f;
+    private float speed = 3f;
     private float jumpHeight = 3f;
-    private float frictionMagnitude = 0.3f;
+    private float frictionMagnitude = 0.6f;
     private Vector2 inputHoriz = Vector2.Zero;
 
     private float groundDistance = 0f;
@@ -173,7 +173,8 @@ public class Player extends Entity {
         if (closestRayHitInfo != null) {
             if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
                 if (properPortalNormal(closestRayHitInfo.normal)) {
-                    portals.setPortal(portalNumber, closestRayHitInfo.point, closestRayHitInfo.normal, true, closestRayHitInfo.fixture);
+//                    System.out.println(closestRayHitInfo.fixture.getBody());
+                    portals.setPortal(world, portalNumber, closestRayHitInfo.point, closestRayHitInfo.normal, true, closestRayHitInfo.fixture);
                 }
             }
         }
