@@ -20,12 +20,12 @@ public class Player extends Entity {
     Renderer debugRenderer;
 
     private float speed = 3f;
-    private float jumpHeight = 3f;
+    private float jumpHeight = 4f;
     private float frictionMagnitude = 0.6f;
     private Vector2 inputHoriz = Vector2.Zero;
 
     private float groundDistance = 0f;
-    private float groundDistanceJumpThreshold = 0.2f;
+    private float groundDistanceJumpThreshold = 0.4f;
 
     private Portals portals;
     private float maxShootPortalDistance = 100f;
