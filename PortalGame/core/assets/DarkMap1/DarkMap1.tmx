@@ -139,17 +139,17 @@
 </data>
  </layer>
  <objectgroup id="14" name="Collision">
-  <object id="18" x="16" y="448" width="608" height="16">
+  <object id="18" x="32.6667" y="448" width="575" height="16">
    <properties>
     <property name="PortalWall" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="19" x="608" y="79.3333" width="16" height="384.667">
+  <object id="19" x="608" y="79.3333" width="16" height="368.667">
    <properties>
     <property name="PortalWall" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="20" x="16" y="80" width="16" height="384">
+  <object id="20" x="16" y="80" width="16" height="367">
    <properties>
     <property name="PortalWall" type="bool" value="true"/>
    </properties>
