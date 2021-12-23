@@ -87,7 +87,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(gravity, false);
 
 		//Maps
-		map = new GameMap(world,"DarkMap1/DarkMap1.tmx", this.camera);
+		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera);
 
 		// Initialize Objects in Physics World
 		player = new Player(world, camera, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
