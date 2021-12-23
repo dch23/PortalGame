@@ -15,4 +15,13 @@ public class RayHitInfo {
         this.normal = normal;
         this.fraction = fraction;
     }
+
+    public void print() {
+        System.out.println("Info of " + this);
+        System.out.println("\tFixture: " + fixture);
+        System.out.println("\tPoint: " + point);
+        System.out.println("\tNormal: " + normal);
+        System.out.println("\tFraction: " + fraction);
+        System.out.println();
+    }
 }

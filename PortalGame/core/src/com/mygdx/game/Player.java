@@ -54,8 +54,8 @@ public class Player extends Entity {
         endRay.add(0,-100f);
 
         world.rayCast(callback, bottom, endRay);
-
-        return (groundDistance < groundDistanceJumpThreshold);
+        return true;
+//        return (groundDistance < groundDistanceJumpThreshold);
     }
 
     private void control() {
@@ -118,7 +118,7 @@ public class Player extends Entity {
                 return true;
             }
             public boolean mouseMoved(int x, int y) {
-//                mousePos = new Vector2(x*MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT-y) * MyGdxGame.GAME_SCALE);
+                mousePos = new Vector2(x*MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT-y) * MyGdxGame.GAME_SCALE);
                 return true;
             }
         });
@@ -168,12 +168,16 @@ public class Player extends Entity {
                 }
             }
         }
-
+        for (RayHitInfo r : raysHitInfo) {
+            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
+            r.print();
+        }
+        System.out.println();
+        closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
         // portal to the closest
         if (closestRayHitInfo != null) {
             if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
                 if (properPortalNormal(closestRayHitInfo.normal)) {
-//                    System.out.println(closestRayHitInfo.fixture.getBody());
                     portals.setPortal(world, portalNumber, closestRayHitInfo.point, closestRayHitInfo.normal, true, closestRayHitInfo.fixture);
                 }
             }
@@ -183,6 +187,13 @@ public class Player extends Entity {
     private boolean properPortalNormal(Vector2 normal) {
 //        System.out.println(normal);
         return normal.equals(new Vector2(1,0)) || normal.equals(new Vector2(-1,0)) || normal.equals(new Vector2(0,1)) || normal.equals(new Vector2(0,-1));
+    }
+    private RayHitInfo getOriginalFixtureHitInfo(ArrayList<RayHitInfo> hitInfos, RayHitInfo closestRayHitInfo) {
+        Fixture originalFixture = closestRayHitInfo.fixture.getBody().getFixtureList().first();
+        for (int i=0; i<hitInfos.size(); i++) {
+            if (hitInfos.get(i).fixture == originalFixture) return hitInfos.get(i);
+        }
+        return null;
     }
 
     private void airResistance() {  // Doesnt work
@@ -232,10 +243,10 @@ public class Player extends Entity {
 
 
 //        mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
-//        if (mousePos != null) {
-//            System.out.p
-//            this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
-//        }
+        if (mousePos != null) {
+
+            this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
+        }
 //        airResistance();
     }
 }

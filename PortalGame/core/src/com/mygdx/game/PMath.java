@@ -28,6 +28,11 @@ public class PMath {
         return divideVector2(v, magnitude(v));
     }
 
+    static public Vector2 absoluteVector2(Vector2 v) {
+        return new Vector2(Math.abs(v.x), Math.abs(v.y));
+    }
+
+
 }
 
 
