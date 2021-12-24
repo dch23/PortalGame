@@ -39,17 +39,18 @@ public class Entity {
 
     public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
-
-        // ensure a new sprite is made rather than using the same one
-        sprite = new Sprite(sprite);
         // Initialize Variables
         this.world = world;
         this.name = name;
         this.gravity = world.getGravity();
         this.color = color;
         this.size = size;
-        this.sprite = sprite;
-        this.sprite.setColor(this.color);
+
+        if (sprite != null) {
+            sprite = new Sprite(sprite);    //copy
+            this.sprite = sprite;
+            this.sprite.setColor(this.color);
+        }
 
         // Create a BodyDef and apply to Body Object
         BodyDef bodyDef = new BodyDef();
@@ -101,6 +102,7 @@ public class Entity {
     // Render: NEEDS WORK
     public void render(Renderer renderer, Camera camera) {
         renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
+
 //        System.out.println(this.body.getPosition());
 //        PolygonShape polygonShape = (PolygonShape) this.body.getFixtureList().first().getShape();
 
@@ -142,6 +144,13 @@ public class Entity {
     public Body getBody() {
         return this.body;
     }
+
+    public void setBody(Body body) {
+        entityFromBodyMap.remove(this.body);
+        this.body = body;
+        entityFromBodyMap.put(this.body, this);
+    }
+
     public Vector2 getPosition() {
         return this.body.getPosition();
     }
@@ -154,10 +163,14 @@ public class Entity {
     }
 
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
-    static void dispose() {
+    static void disposeAll() {
         // MUST DISPOSE ALL SHAPE RENDERERS
 //        shapeRenderer.dispose();
         // MUST DISPOSE ALL ENTITIES;
+    }
+
+    public void dispose() {
+        this.world.destroyBody(this.body);
     }
 
     static Entity entityFromBody(Body body) {

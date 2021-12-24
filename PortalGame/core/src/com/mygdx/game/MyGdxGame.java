@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
+	//
+
 	// Window size is initialized at DesktopLauncher Class
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
@@ -53,7 +55,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Sprite squareSprite;
 
 	// Rendering Debug Objects
-	Box2DDebugRenderer debugRenderer;
+	Box2DDebugRenderer b2dr;
 
 	ArrayList<Laser> lasers;
 	float angle = 0f;
@@ -62,7 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 
 		// Initialize Debug Renderer
-		debugRenderer = new Box2DDebugRenderer();
+		b2dr = new Box2DDebugRenderer();
 //		img = new Texture("badlogic.jpg");
 //		textureAtlas = new TextureAtlas();
 
@@ -78,19 +80,22 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
-		//Maps
-		map = new GameMap(world,"DarkMap1/DarkMap1.tmx", this.camera);
+
+
 
 		// Initialize Physics World
 		world = new World(gravity, false);
 
+		//Maps
+		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera);
+
 		// Initialize Objects in Physics World
-		player = new Player(world, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
+		player = new Player(world, camera, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<0; i++) {
 			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
 			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
 		}
@@ -176,7 +181,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Laser.endRender();
 
 		// Render Debug Lines for Physics Object in Physics World
-		debugRenderer.render(world, camera.combined);
+		b2dr.render(world, camera.combined);
 
 		// Update the Camera
 		camera.update();
@@ -190,7 +195,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
 //		batch.dispose();
 //		img.dispose();
-		Entity.dispose();
+		Entity.disposeAll();
 		world.dispose();
 		for (Entity box : boxes) box.dispose();
 		for (Entity wall : walls) wall.dispose();
@@ -204,10 +209,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	// This Scale Methods ARE NECESSARY because of libGDXs poor physics scale. Makes everything small with a small camera to enable uses of small force magnitudes
-	float scale(float x) {
+	static public float scale(float x) {
 		return x*GAME_SCALE;
 	}
-	Vector2 scale(Vector2 v) {
+	static public Vector2 scale(Vector2 v) {
 		return Vector2.Zero.mulAdd(v,GAME_SCALE);
 	}
 
