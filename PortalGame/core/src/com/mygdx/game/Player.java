@@ -144,7 +144,7 @@ public class Player extends Entity {
 //                mousePos = point;
 //                System.out.println("HIT");
                 // Multiple hits
-                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), normal, fraction));
+                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
                 return 1;
             }
         };
@@ -168,10 +168,10 @@ public class Player extends Entity {
                 }
             }
         }
-        for (RayHitInfo r : raysHitInfo) {
-            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
-            r.print();
-        }
+//        for (RayHitInfo r : raysHitInfo) {
+//            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
+//            r.print();
+//        }
         System.out.println();
         closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
         // portal to the closest
