@@ -6,13 +6,14 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
 import javax.sound.sampled.Port;
+import java.util.ArrayList;
 
 public class Portals {
     Portal[] portals;
-    public Portals() {
+    public Portals(World world) {
         portals = new Portal[2];
-        portals[0] = new Portal();
-        portals[1] = new Portal();
+        portals[0] = new Portal(world);
+        portals[1] = new Portal(world);
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
@@ -258,7 +259,56 @@ class Portal {
     private Fixture surface;
     private boolean enabled = false;
 
-    public Portal() {};
+    protected World world;
+    protected ContactListener contactListener;
+
+
+
+    public Portal(final World world) {
+        this.world = world;
+
+        contactListener = new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture fixture1 = contact.getFixtureB();
+                Fixture fixture2 = contact.getFixtureB();
+
+
+                if (fixture1 == null || fixture2 == null) return;
+//                System.out.println(fixture1.isSensor() + " vs " + fixture2.isSensor());
+
+                if (fixture1.getBody() != fixture2.getBody()) {
+                    Entity entity1 = Entity.entityFromBody(fixture1.getBody());
+                    Entity entity2 = Entity.entityFromBody(fixture2.getBody());
+//                    System.out.println(entity1.getName() + " vs " + entity2.getName());
+
+                }
+                Entity entity1 = Entity.entityFromBody(fixture1.getBody());
+                Entity entity2 = Entity.entityFromBody(fixture2.getBody());
+//                System.out.println(entity1.getName() + " vs " + entity2.getName());
+                if (fixture1!=fixture2) {
+                    System.out.println(fixture1 + " vs " + fixture2);
+                }
+            }
+
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        };
+        world.setContactListener(contactListener);
+    };
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {
         this.position = position;

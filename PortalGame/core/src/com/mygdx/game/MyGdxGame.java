@@ -142,6 +142,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		System.out.println(this.world.getContactCount());
 		// Set Screen Background Colour to White with an Alpha of 100%
 		ScreenUtils.clear(1, 1, 1, 1);
 

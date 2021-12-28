@@ -36,7 +36,7 @@ public class Player extends Entity {
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
-        this.portals = new Portals();
+        this.portals = new Portals(world);
         this.debugRenderer = new Renderer(camera);
     }
 
