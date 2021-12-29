@@ -19,15 +19,15 @@ import java.util.ArrayList;
 public class Player extends Entity {
     Renderer debugRenderer;
 
-    private float speed = 3f;
-    private float jumpHeight = 4f;
+    private float speed = 1f;
+    private float jumpHeight = 1f;
     private float frictionMagnitude = 0.6f;
     private Vector2 inputHoriz = Vector2.Zero;
 
     private float groundDistance = 0f;
     private float groundDistanceJumpThreshold = 0.4f;
 
-    private Portals portals;
+    public Portals portals;
     private float maxShootPortalDistance = 100f;
     private ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();
     private RayHitInfo closestRayHitInfo;
@@ -36,7 +36,7 @@ public class Player extends Entity {
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
-        this.portals = new Portals(world);
+        this.portals = new Portals(this.world);
         this.debugRenderer = new Renderer(camera);
     }
 
@@ -172,7 +172,7 @@ public class Player extends Entity {
 //            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
 //            r.print();
 //        }
-        System.out.println();
+//        System.out.println();
         closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
         // portal to the closest
         if (closestRayHitInfo != null) {

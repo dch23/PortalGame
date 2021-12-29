@@ -35,7 +35,10 @@ public class Entity {
 
     private Color color;
 
-
+    public Portal portalEntering;
+    public Portal portalExiting;
+//
+    public Entity reflectEntity;
 
     public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
@@ -98,10 +101,46 @@ public class Entity {
         return polygon.getTransformedVertices();
     }
 
+    public void updateReflection(Portals portals) {
+        if (portalEntering == null || portalExiting == null) {
+            if (reflectEntity != null) {
+                setPosition(reflectEntity.getPosition());
+                reflectEntity.dispose();
+            }
+            reflectEntity = null;
+
+        }
+        else {
+            if (reflectEntity == null) {
+                reflectEntity = new ReflectEntity(this.world, getName(), new Vector2(0, 0), this.size,
+                        BodyDef.BodyType.StaticBody, getSprite().getColor(), getBody().getFixtureList().first().getDensity(),
+                        getBody().getFixtureList().first().getFriction(), false, getSprite());
+            }
+
+            Vector2 reflectPosition = new Vector2();
+            float portalEnteringSurfaceWidth = Entity.entityFromBody(portalEntering.getSurface().getBody()).size.x;
+            float entityWidth = size.x;
+            Vector2 enteringPortalSurfacePosition = portalEntering.getSurface().getBody().getPosition();
+
+            //        float enteringSurfaceX = enteringPortalPosition.x * portalEntering.getNormal().x;
+            float distanceFromSurfaceX = enteringPortalSurfacePosition.x - getPosition().x;
+            float intrudingWidth = entityWidth / 2f + portalEnteringSurfaceWidth / 2f - distanceFromSurfaceX;
+
+            Vector2 portalExitingSurfacePosition = portalExiting.getSurface().getBody().getPosition();
+            float portalExitingWidth = Entity.entityFromBody(portalExiting.getSurface().getBody()).size.x;
+            float reflectEntityX = portalExitingSurfacePosition.x + portalExitingWidth / 2f - entityWidth / 2f + intrudingWidth;
+            reflectEntity.setPosition(new Vector2(reflectEntityX, portalExiting.getPosition().y));
+
+            if (intrudingWidth >= size.x+0.03) portals.unlinkPortal(getBody().getFixtureList().first());
+        }
+    }
+
 
     // Render: NEEDS WORK
     public void render(Renderer renderer, Camera camera) {
-        renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
+        renderer.renderSprite(this.sprite, this.body.getPosition(), this.size,
+                new Vector2(this.size.x/2f, this.size.y/2f),
+                (float) Math.toDegrees(this.body.getAngle()));
 
 //        System.out.println(this.body.getPosition());
 //        PolygonShape polygonShape = (PolygonShape) this.body.getFixtureList().first().getShape();
@@ -145,6 +184,7 @@ public class Entity {
         return this.body;
     }
 
+
     public void setBody(Body body) {
         entityFromBodyMap.remove(this.body);
         this.body = body;
@@ -158,10 +198,21 @@ public class Entity {
 //        return this.body.getFixtureList().first().getShape().;
 //    }
 
+    public void setPosition(Vector2 pos) {
+        getBody().setTransform(pos, getBody().getAngle());
+    }
+
     public String getName() {
         return this.name;
     }
 
+    public Sprite getSprite() {
+        return this.sprite;
+    }
+
+    public Vector2 reflectedPosition() {
+        return null;
+    }
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
     static void disposeAll() {
         // MUST DISPOSE ALL SHAPE RENDERERS
