@@ -6,22 +6,25 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
 import javax.sound.sampled.Port;
+import java.util.ArrayList;
 
 public class Portals {
     Portal[] portals;
-    public Portals() {
+    public Portals(World world) {
         portals = new Portal[2];
-        portals[0] = new Portal();
-        portals[1] = new Portal();
+        portals[0] = new Portal(world);
+        portals[1] = new Portal(world);
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
-//        System.out.println(Entity.entityFromBody(fixture.getBody()));
+        System.out.println(portalNumber);
 
-        System.out.println(normal);
+        //        System.out.println(Entity.entityFromBody(fixture.getBody()));
+
+//        System.out.println(normal);
 //        if (fixture==null) return;
         // set for certain portal number
 
@@ -35,7 +38,7 @@ public class Portals {
             // set the new surface
             portals[portalNumber].setSurface(fixtureHit.getBody().getFixtureList().first());
             portals[portalNumber].getSurface().setSensor(true);
-            
+
             // if the portal is being shot on a surface that has the other portal then reset the surface
             if (portals[portalNumber].getOtherPortal().getSurface() == fixtureHit.getBody().getFixtureList().first()) {
                 portals[portalNumber].reset(world, fixtureHit);
@@ -94,7 +97,7 @@ public class Portals {
         }
 
         positionOffset = axisSurfacePosition - axisSurfaceLength/2f;
-        System.out.println(positionOffset);
+//        System.out.println(positionOffset);
 
         // if shooting both portals on same surface
         if (portals[portalNumber].getSurface() == portals[portalNumber].getOtherPortal().getSurface()) {
@@ -256,7 +259,56 @@ class Portal {
     private Fixture surface;
     private boolean enabled = false;
 
-    public Portal() {};
+    protected World world;
+    protected ContactListener contactListener;
+
+
+
+    public Portal(final World world) {
+        this.world = world;
+
+        contactListener = new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture fixture1 = contact.getFixtureB();
+                Fixture fixture2 = contact.getFixtureB();
+
+
+                if (fixture1 == null || fixture2 == null) return;
+//                System.out.println(fixture1.isSensor() + " vs " + fixture2.isSensor());
+
+                if (fixture1.getBody() != fixture2.getBody()) {
+                    Entity entity1 = Entity.entityFromBody(fixture1.getBody());
+                    Entity entity2 = Entity.entityFromBody(fixture2.getBody());
+//                    System.out.println(entity1.getName() + " vs " + entity2.getName());
+
+                }
+                Entity entity1 = Entity.entityFromBody(fixture1.getBody());
+                Entity entity2 = Entity.entityFromBody(fixture2.getBody());
+//                System.out.println(entity1.getName() + " vs " + entity2.getName());
+                if (fixture1!=fixture2) {
+                    System.out.println(fixture1 + " vs " + fixture2);
+                }
+            }
+
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        };
+        world.setContactListener(contactListener);
+    };
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {
         this.position = position;
@@ -265,61 +317,36 @@ class Portal {
     }
 
     public void reset(World world, Fixture fixtureHit) {
-        System.out.println("RESET");
-        if (getSurface() != getOtherPortal().getSurface()) {
-            if (fixtureHit.getBody() == getSurface().getBody()) {
-                for (int i = fixtureHit.getBody().getFixtureList().size-1; i > 0; i--) {
-                    fixtureHit.getBody().destroyFixture(fixtureHit.getBody().getFixtureList().get(i));
-                }
-            } else {
-                for (int i = getSurface().getBody().getFixtureList().size-1; i > 0; i--) {
-                    getSurface().getBody().destroyFixture(getSurface().getBody().getFixtureList().get(i));
-                }
-                if (getOtherPortal().getSurface() != null) {
-                    for (int i = getOtherPortal().getSurface().getBody().getFixtureList().size - 1; i > 0; i--) {
-                        getOtherPortal().getSurface().getBody().destroyFixture(getOtherPortal().getSurface().getBody().getFixtureList().get(i));
-                    }
-                }
+        fixtureHit = fixtureHit.getBody().getFixtureList().first();
+        if (fixtureHit == getOtherPortal().getSurface()) {
+            // reset old surface
+            if (getSurface() != null && getSurface() != otherPortal.getSurface()) {
+                while (getSurface().getBody().getFixtureList().size > 1) getSurface().getBody().destroyFixture(
+                        getSurface().getBody().getFixtureList().get(getSurface().getBody().getFixtureList().size - 1));
                 getSurface().setSensor(false);
-                setSurface(fixtureHit.getBody().getFixtureList().first());
-                getSurface().setSensor(true);
             }
+
+            // joining the new surface
+            while (fixtureHit.getBody().getFixtureList().size > 1) fixtureHit.getBody().destroyFixture(
+                    fixtureHit.getBody().getFixtureList().get(fixtureHit.getBody().getFixtureList().size - 1));
+            setSurface(fixtureHit);
         }
         else {
-            // if what I am hitting has the other portal on it then ->
-            if (fixtureHit.getBody() == getOtherPortal().getSurface().getBody()) {
-//                System.out.print("Removing: ");
-                for (int i = fixtureHit.getBody().getFixtureList().size - 1; i>=1; i--) {
-//                    System.out.print(fixtureHit.getBody().getFixtureList().get(i));
-                    fixtureHit.getBody().destroyFixture(fixtureHit.getBody().getFixtureList().get(i));
-                    setSurface(fixtureHit.getBody().getFixtureList().first());
-                }
-//                System.out.println();
-            }
-            else {
-                setSurface(fixtureHit.getBody().getFixtureList().first());
-                getSurface().setSensor(true);
+            // reset old surface
+            while (getSurface().getBody().getFixtureList().size > 1) getSurface().getBody().destroyFixture(
+                    getSurface().getBody().getFixtureList().get(getSurface().getBody().getFixtureList().size - 1));
+            if (getSurface() == otherPortal.getSurface()) {
+                Fixture otherPortalSurface = getOtherPortal().getSurface();
 
-                // reset other portal fixture
-                // remove fixtures
-                Fixture otherPortalFixture = getOtherPortal().getSurface();
-                for (int i = otherPortalFixture.getBody().getFixtureList().size-1; i > 0; i--) {
-                    otherPortalFixture.getBody().destroyFixture(otherPortalFixture.getBody().getFixtureList().get(i));
-                }
-
-                //add new fixtures to other portal surface
-                Entity portalSurfaceEntity = Entity.entityFromBody(otherPortalFixture.getBody());
+                // add new fixtures to old surface
+                Entity portalSurfaceEntity = Entity.entityFromBody(otherPortalSurface.getBody());
                 Vector2 portalPosition = getOtherPortal().getPosition();
                 Vector2 surfacePosition = new Vector2(portalSurfaceEntity.getPosition());
                 Vector2 surfaceSize = new Vector2(portalSurfaceEntity.size);
 
-                float axisSurfaceThickness;
-                float axisSurfaceLength;
-                float axisSurfacePosition;
-                float axisPortalPosition;
+                float axisSurfaceThickness, axisSurfaceLength, axisSurfacePosition, axisPortalPosition;
 
-
-                if (getNormal().y == 0f) {
+                if (getOtherPortal().getNormal().y == 0f) {
                     axisSurfaceThickness = surfaceSize.x;
                     axisSurfaceLength = surfaceSize.y;
                     axisSurfacePosition = surfacePosition.y;
@@ -338,29 +365,169 @@ class Portal {
 
                 PolygonShape firstShape = new PolygonShape();
                 PolygonShape lastShape = new PolygonShape();
-                firstShape.setAsBox(axisSurfaceThickness / 2f, firstLength / 2f, new Vector2(0, -(axisSurfacePosition -
-                        axisPortalPosition) - Portal.portalLength / 2f - firstLength / 2f), 0f);
-                lastShape.setAsBox(axisSurfaceThickness / 2f, lastLength / 2f, new Vector2(0, axisPortalPosition -
-                        axisSurfacePosition+ Portal.portalLength / 2f + lastLength / 2f), 0f);
+
+                float firstWidth, midWidth, lastWidth, firstHeight, midHeight, lastHeight;
+                float firstOriginOffset = -(axisSurfacePosition - axisPortalPosition) - Portal.portalLength / 2f - firstLength / 2f;
+                float lastOriginOffset = axisPortalPosition - axisSurfacePosition+ Portal.portalLength / 2f + lastLength / 2f;
+                Vector2 firstOriginOffsetVector, midOriginOffsetVector, lastOriginOffsetVector;
+                if (getOtherPortal().getNormal().y == 0f) {
+                    firstWidth = axisSurfaceThickness/2f;
+                    lastWidth = axisSurfaceThickness/2f;
+
+                    firstHeight = firstLength/2f;
+                    lastHeight = lastLength/2f;
+
+                    firstOriginOffsetVector = new Vector2(0, firstOriginOffset);
+                    lastOriginOffsetVector = new Vector2(0, lastOriginOffset);
+                }
+                else {
+                    firstHeight = axisSurfaceThickness/2f;
+                    midHeight = axisSurfaceThickness/2f;
+                    lastHeight = axisSurfaceThickness/2f;
+
+                    firstWidth = firstLength/2f;
+                    lastWidth = lastLength/2f;
+
+                    firstOriginOffsetVector = new Vector2(firstOriginOffset, 0);
+                    lastOriginOffsetVector = new Vector2(lastOriginOffset, 0);
+                }
+
+                firstShape.setAsBox(firstWidth, firstHeight, firstOriginOffsetVector, 0f);
+                lastShape.setAsBox(lastWidth, lastHeight, lastOriginOffsetVector, 0f);
 
 
                 FixtureDef botFixtureDef = new FixtureDef();
                 botFixtureDef.shape = firstShape;
-                botFixtureDef.density = otherPortalFixture.getDensity();
-                botFixtureDef.friction = otherPortalFixture.getFriction();
-                botFixtureDef.restitution = otherPortalFixture.getRestitution();
+                botFixtureDef.density = otherPortalSurface.getDensity();
+                botFixtureDef.friction = otherPortalSurface.getFriction();
+                botFixtureDef.restitution = otherPortalSurface.getRestitution();
 
                 FixtureDef topFixtureDef = new FixtureDef();
                 topFixtureDef.shape = lastShape;
-                topFixtureDef.density = otherPortalFixture.getDensity();
-                topFixtureDef.friction = otherPortalFixture.getFriction();
-                topFixtureDef.restitution = otherPortalFixture.getRestitution();
+                topFixtureDef.density = otherPortalSurface.getDensity();
+                topFixtureDef.friction = otherPortalSurface.getFriction();
+                topFixtureDef.restitution = otherPortalSurface.getRestitution();
 
                 portalSurfaceEntity.getBody().createFixture(botFixtureDef);
                 portalSurfaceEntity.getBody().createFixture(topFixtureDef);
-
             }
+            else {
+                getSurface().setSensor(false);
+            }
+            setSurface(fixtureHit);
+            getSurface().setSensor(true);
         }
+
+//        System.out.println("RESET");
+//        // if the portal's surface is different from the other portal's surface
+//        if (getSurface() != getOtherPortal().getSurface()) {
+//            // if the hit surface is the same as the portal's previous surface
+//            if (fixtureHit.getBody() == getSurface().getBody()) {
+//                // delete all the extra fixtures
+//                for (int i = fixtureHit.getBody().getFixtureList().size-1; i > 0; i--) {
+//                    fixtureHit.getBody().destroyFixture(fixtureHit.getBody().getFixtureList().get(i));
+//                }
+//            } else {
+//                // if the hit surface is different from the surface the portal was previously on
+//                for (int i = getSurface().getBody().getFixtureList().size-1; i > 0; i--) {
+//                    getSurface().getBody().destroyFixture(getSurface().getBody().getFixtureList().get(i));
+//                }
+//                //something weird here
+//                if (getOtherPortal().getSurface() != null) {
+//                    for (int i = getOtherPortal().getSurface().getBody().getFixtureList().size - 1; i > 0; i--) {
+//                        getOtherPortal().getSurface().getBody().destroyFixture(getOtherPortal().getSurface().getBody().getFixtureList().get(i));
+//                    }
+//                }
+//
+//                getSurface().setSensor(false);
+//                setSurface(fixtureHit.getBody().getFixtureList().first());
+//                getSurface().setSensor(true);
+//            }
+//        }
+//        else {
+//            System.out.println("Leaving");
+//            // if the portal's surface is the same as the other portal's surface
+//            // if the hit surface is the same as the other portal's surface
+//            if (fixtureHit.getBody() == getOtherPortal().getSurface().getBody()) {
+////                System.out.print("Removing: ");
+//                // remove the extra fixtures of the hit surface
+//                for (int i = fixtureHit.getBody().getFixtureList().size - 1; i>=1; i--) {
+////                    System.out.print(fixtureHit.getBody().getFixtureList().get(i));
+//                    fixtureHit.getBody().destroyFixture(fixtureHit.getBody().getFixtureList().get(i));
+//
+//                }
+//                // set the surface of the portal to the hit surface
+//                setSurface(fixtureHit.getBody().getFixtureList().first());
+////                System.out.println();
+//            }
+//            else {
+//                // if the hit surface is different from the other portal's surface then:
+//                getSurface().setSensor(false);
+//                setSurface(fixtureHit.getBody().getFixtureList().first());
+//                getSurface().setSensor(true);
+//
+//                // reset other portal fixture
+//                // remove fixtures
+//                Fixture otherPortalFixture = getOtherPortal().getSurface();
+//                for (int i = otherPortalFixture.getBody().getFixtureList().size-1; i > 0; i--) {
+//                    otherPortalFixture.getBody().destroyFixture(otherPortalFixture.getBody().getFixtureList().get(i));
+//                }
+//                otherPortalFixture.getBody().getFixtureList().first().setSensor(false);
+//
+//                //add new fixtures to other portal surface
+//                Entity portalSurfaceEntity = Entity.entityFromBody(otherPortalFixture.getBody());
+//                Vector2 portalPosition = getOtherPortal().getPosition();
+//                Vector2 surfacePosition = new Vector2(portalSurfaceEntity.getPosition());
+//                Vector2 surfaceSize = new Vector2(portalSurfaceEntity.size);
+//
+//                float axisSurfaceThickness;
+//                float axisSurfaceLength;
+//                float axisSurfacePosition;
+//                float axisPortalPosition;
+//
+//
+//                if (getOtherPortal().getNormal().y == 0f) {
+//                    axisSurfaceThickness = surfaceSize.x;
+//                    axisSurfaceLength = surfaceSize.y;
+//                    axisSurfacePosition = surfacePosition.y;
+//                    axisPortalPosition = portalPosition.y;
+//                }
+//                else {
+//                    axisSurfaceThickness = surfaceSize.y;
+//                    axisSurfaceLength = surfaceSize.x;
+//                    axisSurfacePosition = surfacePosition.x;
+//                    axisPortalPosition = portalPosition.x;
+//                }
+//
+//                float positionOffset = axisSurfacePosition - axisSurfaceLength/2f;
+//                float firstLength = axisPortalPosition - Portal.portalLength / 2f - positionOffset;
+//                float lastLength = axisSurfacePosition + axisSurfaceLength / 2f - positionOffset - firstLength - Portal.portalLength;
+//
+//                PolygonShape firstShape = new PolygonShape();
+//                PolygonShape lastShape = new PolygonShape();
+//                firstShape.setAsBox(axisSurfaceThickness / 2f, firstLength / 2f, new Vector2(0, -(axisSurfacePosition -
+//                        axisPortalPosition) - Portal.portalLength / 2f - firstLength / 2f), 0f);
+//                lastShape.setAsBox(axisSurfaceThickness / 2f, lastLength / 2f, new Vector2(0, axisPortalPosition -
+//                        axisSurfacePosition+ Portal.portalLength / 2f + lastLength / 2f), 0f);
+//
+//
+//                FixtureDef botFixtureDef = new FixtureDef();
+//                botFixtureDef.shape = firstShape;
+//                botFixtureDef.density = otherPortalFixture.getDensity();
+//                botFixtureDef.friction = otherPortalFixture.getFriction();
+//                botFixtureDef.restitution = otherPortalFixture.getRestitution();
+//
+//                FixtureDef topFixtureDef = new FixtureDef();
+//                topFixtureDef.shape = lastShape;
+//                topFixtureDef.density = otherPortalFixture.getDensity();
+//                topFixtureDef.friction = otherPortalFixture.getFriction();
+//                topFixtureDef.restitution = otherPortalFixture.getRestitution();
+//
+//                portalSurfaceEntity.getBody().createFixture(botFixtureDef);
+//                portalSurfaceEntity.getBody().createFixture(topFixtureDef);
+//
+//            }
+//        }
     }
 
     public void setOtherPortal(Portal otherPortal) {

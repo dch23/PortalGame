@@ -11,6 +11,7 @@ com/mygdx/game/MyGdxGame.java
  com.mygdx.game.MyGdxGame
 com/mygdx/game/Portals.java
  com.mygdx.game.Portal
+ com.mygdx.game.Portal$1
  com.mygdx.game.Portals
 com/mygdx/game/RayHitInfo.java
  com.mygdx.game.RayHitInfo

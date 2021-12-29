@@ -36,7 +36,7 @@ public class Player extends Entity {
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
-        this.portals = new Portals();
+        this.portals = new Portals(world);
         this.debugRenderer = new Renderer(camera);
     }
 
@@ -144,7 +144,7 @@ public class Player extends Entity {
 //                mousePos = point;
 //                System.out.println("HIT");
                 // Multiple hits
-                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), normal, fraction));
+                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
                 return 1;
             }
         };
@@ -168,10 +168,10 @@ public class Player extends Entity {
                 }
             }
         }
-        for (RayHitInfo r : raysHitInfo) {
-            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
-            r.print();
-        }
+//        for (RayHitInfo r : raysHitInfo) {
+//            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
+//            r.print();
+//        }
         System.out.println();
         closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
         // portal to the closest

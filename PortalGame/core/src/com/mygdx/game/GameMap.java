@@ -10,8 +10,7 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.Iterator;
 
@@ -21,11 +20,13 @@ public class GameMap {
 
     protected TiledMap tiledMap;
     protected OrthographicCamera camera;
+    protected MapLayer wallLayer;
 
     protected float renderScale;
 
 
     public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera) {
+
         this.camera = camera;
 
         // Load map
@@ -71,6 +72,7 @@ public class GameMap {
 
             Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody, null, density, friction, false, null);
         }
+        wallLayer = layers.get("Border");
     }
 
     public void render () {
