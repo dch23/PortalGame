@@ -49,7 +49,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Entity> walls;
 
 	// Rendered variables
-	Renderer entityRenderer;
+	static Renderer entityRenderer;
 	Texture img;
 	Texture squareTexture;
 	Sprite squareSprite;
@@ -85,12 +85,15 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Initialize Physics World
 		world = new World(gravity, false);
+//		System.out.println(world);
 
 		//Maps
-		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera);
+		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera, entityRenderer);
 
 		// Initialize Objects in Physics World
 		player = new Player(world, camera, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
+		entityRenderer.addToRenderLayer(1, player);
+
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
@@ -139,16 +142,20 @@ public class MyGdxGame extends ApplicationAdapter {
 //			sprites.put(region.name, sprite);
 //		}
 //	}
-
+	boolean m=true;
 	@Override
 	public void render () {
-		System.out.println(this.world.getContactCount());
+		if (m) {
+			new Entity(this.world, "Test", new Vector2(1,1), new Vector2(0.1f,0.1f), BodyDef.BodyType.DynamicBody, Color.WHITE, 1, 1, false, null);
+			m=false;
+		}
+//		System.out.println(this.world.getContactCount());
 		// Set Screen Background Colour to White with an Alpha of 100%
 		ScreenUtils.clear(1, 1, 1, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
-		map.render();
+//		map.renderBackground();
 		// Sprite Batch Draws Sprite/Texture
 //		batch.begin();
 //		batch.draw(img, 0, 0);
@@ -160,26 +167,45 @@ public class MyGdxGame extends ApplicationAdapter {
 //		box.render(camera);
 
 		// Operate Player Entity
-		player.operate();
+//		player.operate();
 
 		// Render Boxes
-		entityRenderer.getBatch().begin();
-		for (Entity box : boxes) {
-			box.render(entityRenderer, camera);
-		}
-		for (Entity wall : walls) {
-			wall.render(entityRenderer, camera);
-		}
-		player.render(entityRenderer, camera);
-		entityRenderer.getBatch().end();
+//		entityRenderer.getBatch().begin();
+//		for (Entity box : boxes) {
+//			box.render(entityRenderer, camera);
+//		}
+//		for (Entity wall : walls) {
+//			wall.render(entityRenderer, camera);
+//		}
+//		player.render(entityRenderer, camera);
+//		entityRenderer.getBatch().end();
 
-		Laser.beginRender();
-		angle+=0.01f;
-		for (Laser laser : lasers) {
-			laser.setAngle(angle);
-			laser.render();
-		}
-		Laser.endRender();
+//		entityRenderer.beginRender();
+//
+//		entityRenderer.render();
+//
+//		entityRenderer.endRender();
+
+
+//		Laser.beginRender();
+//		angle+=0.01f;
+//		for (Laser laser : lasers) {
+//			laser.setAngle(angle);
+//			laser.render();
+//		}
+//		Laser.endRender();
+
+		player.operate();
+
+		player.updateReflection(player.portals);
+
+		map.renderBackground();
+
+		entityRenderer.beginRender();
+		entityRenderer.render();
+		entityRenderer.endRender();
+
+		map.renderForeground();
 
 		// Render Debug Lines for Physics Object in Physics World
 		b2dr.render(world, camera.combined);

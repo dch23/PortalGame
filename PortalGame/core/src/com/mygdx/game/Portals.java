@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -9,8 +10,17 @@ import javax.sound.sampled.Port;
 import java.util.ArrayList;
 
 public class Portals {
+    private Renderer entityRenderer = MyGdxGame.entityRenderer;;
+    private World world;
+    private float pullMagnitude = 2f;
+
     Portal[] portals;
+
     public Portals(World world) {
+        this.world = world;
+        // sensor collisions with walls
+        world.setContactListener(new CollisionListener(this));
+
         portals = new Portal[2];
         portals[0] = new Portal(world);
         portals[1] = new Portal(world);
@@ -20,7 +30,7 @@ public class Portals {
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
-        System.out.println(portalNumber);
+//        System.out.println(portalNumber);
 
         //        System.out.println(Entity.entityFromBody(fixture.getBody()));
 
@@ -247,6 +257,69 @@ public class Portals {
 //        }
 //        System.out.println();
     }
+
+    public void linkPortal(Fixture solid, Fixture wall) {
+        Entity entity = Entity.entityFromBody(solid.getBody());
+        Portal portalEntering = wall == portals[0].getSurface() ? portals[0] : portals[1];
+        Portal portalExiting = portalEntering.getOtherPortal();
+
+        entity.portalEntering = portalEntering;
+        entity.portalExiting = portalExiting;
+
+        Vector2 directionFromSolidToPortal = PMath.normalizeVector2(PMath.subVector2(portalEntering.getPosition(), entity.getPosition()));
+
+
+//        FixtureDef reflectFixture = new FixtureDef();
+//
+//        PolygonShape entityShape = (PolygonShape) entity.getBody().getFixtureList().first().getShape();
+//        float width = entity.size.x, height = entity.size.y, angle = 0;
+//        Vector2 offset = new Vector2(-1,1);
+//
+//        PolygonShape shape = new PolygonShape();
+//        shape.setAsBox(width, height, offset, angle);
+//
+//        reflectFixture.shape = shape;
+//        solid.getBody().createFixture(reflectFixture);
+
+//        new Entity(this.world, new String(entity.getName()), position, new Vector2(entity.size),
+//                BodyDef.BodyType.StaticBody, new Color(entity.getSprite().getColor()), entity.getBody().getFixtureList().first().getDensity(),
+//                entity.getBody().getFixtureList().first().getFriction(), false, new Sprite(entity.getSprite()));
+
+//        entity.reflectPosition
+
+
+//        Vector2 position = entity.reflectedPosition();
+//        Vector2 position = new Vector2(1,1);
+//        System.out.println(this.world);
+//        System.out.println(entity.getName());
+//        System.out.println(entity.size);
+//        System.out.println(entity.getSprite().getColor());
+//        System.out.println(entity.getBody().getFixtureList().first().getDensity());
+//        System.out.println(entity.getBody().getFixtureList().first().getFriction());
+//        System.out.println(entity.getSprite());
+//        System.out.println(new ReflectEntity(this.world, entity.getName(), position, entity.size,
+//                BodyDef.BodyType.StaticBody, entity.getSprite().getColor(), entity.getBody().getFixtureList().first().getDensity(),
+//                entity.getBody().getFixtureList().first().getFriction(), false, entity.getSprite()));
+
+
+
+
+//        entity.reflectEntity.exitPortal = portalEntering.getOtherPortal();
+//        entity.reflectEntity.updatePosition();
+
+//        Sprite sprite = entity.getSprite();
+//        this.reflectEntity.sprite = sprite;
+    }
+
+    public void unlinkPortal(Fixture solid) {
+        Entity entity = Entity.entityFromBody(solid.getBody());
+
+        entity.portalEntering = null;
+        entity.portalExiting = null;
+
+    }
+
+    // renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
 }
 
 class Portal {
@@ -266,48 +339,6 @@ class Portal {
 
     public Portal(final World world) {
         this.world = world;
-
-        contactListener = new ContactListener() {
-            @Override
-            public void beginContact(Contact contact) {
-                Fixture fixture1 = contact.getFixtureB();
-                Fixture fixture2 = contact.getFixtureB();
-
-
-                if (fixture1 == null || fixture2 == null) return;
-//                System.out.println(fixture1.isSensor() + " vs " + fixture2.isSensor());
-
-                if (fixture1.getBody() != fixture2.getBody()) {
-                    Entity entity1 = Entity.entityFromBody(fixture1.getBody());
-                    Entity entity2 = Entity.entityFromBody(fixture2.getBody());
-//                    System.out.println(entity1.getName() + " vs " + entity2.getName());
-
-                }
-                Entity entity1 = Entity.entityFromBody(fixture1.getBody());
-                Entity entity2 = Entity.entityFromBody(fixture2.getBody());
-//                System.out.println(entity1.getName() + " vs " + entity2.getName());
-                if (fixture1!=fixture2) {
-                    System.out.println(fixture1 + " vs " + fixture2);
-                }
-            }
-
-
-            @Override
-            public void endContact(Contact contact) {
-
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {
-
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-
-            }
-        };
-        world.setContactListener(contactListener);
     };
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {

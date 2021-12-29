@@ -11,7 +11,9 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import org.graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class GameMap {
@@ -24,8 +26,11 @@ public class GameMap {
 
     protected float renderScale;
 
+    protected int[] backgroundIndexes;
+    protected int[] foregroundIndexes;
 
-    public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera) {
+
+    public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera, Renderer entityRenderer) {
 
         this.camera = camera;
 
@@ -50,6 +55,8 @@ public class GameMap {
 //                Iterator<> tile.getProperties().getKeys();
 //            }
 //        }
+
+        // collision entities
         MapLayers layers = this.tiledMap.getLayers();
         MapLayer collisionLayer = layers.get("Collision");
         MapObjects objects = collisionLayer.getObjects();
@@ -73,12 +80,32 @@ public class GameMap {
             Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody, null, density, friction, false, null);
         }
         wallLayer = layers.get("Border");
+
+
+        // foreground and background indexes for rendering order
+        ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
+        ArrayList<Integer> foregroundIndexesList = new ArrayList<>();
+        for (int i = 0; i < layers.size(); ++i) {
+            MapLayer mapLayer = layers.get(i);
+            if (mapLayer.getName().equals("Border") || mapLayer.getName().equals("Windows")) foregroundIndexesList.add(i);
+            else backgroundIndexesList.add(i);
+        }
+
+        backgroundIndexes = new int[backgroundIndexesList.size()];
+        foregroundIndexes = new int[foregroundIndexesList.size()];
+
+        for (int i = 0; i < backgroundIndexes.length; ++i) backgroundIndexes[i] = backgroundIndexesList.get(i);
+        for (int i = 0; i < foregroundIndexes.length; ++i) foregroundIndexes[i] = foregroundIndexesList.get(i);
     }
 
-    public void render () {
+    public void renderBackground () {
 //        tiledMapRenderer.setView(this.camera);
+        if (backgroundIndexes == null) return;
+        tiledMapRenderer.render(backgroundIndexes);
+    }
 
-        tiledMapRenderer.render();
+    public void renderForeground () {
+        tiledMapRenderer.render(this.foregroundIndexes);
     }
 
     public void dispose() {
