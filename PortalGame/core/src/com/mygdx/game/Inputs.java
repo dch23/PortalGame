@@ -16,5 +16,9 @@ public class Inputs {
         static public final int KEY_LEFT = 29;
         static public final int KEY_UP = 51;
         static public final int KEY_DOWN = 47;
+        public static final int ATTACK = 45;
+        public static final int NEXT = 62;
+        public static final int PORTAL_1 = 33;
+        public static final int PORTAL_2 = 46;
     }
 }

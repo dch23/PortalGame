@@ -19,8 +19,8 @@ import java.util.ArrayList;
 public class Player extends Entity {
     Renderer debugRenderer;
 
-    private float speed = 1f;
-    private float jumpHeight = 1f;
+    private float speed = 1.4f;
+    private float jumpHeight = 2.3f;
     private float frictionMagnitude = 0.6f;
     private Vector2 inputHoriz = Vector2.Zero;
 
