@@ -1,12 +1,12 @@
 #
 # A fatal error has been detected by the Java Runtime Environment:
 #
-#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x0000000066b0cfa7, pid=28836, tid=2332
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x0000000066b1f8ac, pid=15664, tid=32564
 #
 # JRE version: OpenJDK Runtime Environment Zulu15.36+13-CA (15.0.5+3) (build 15.0.5+3-MTS)
 # Java VM: OpenJDK 64-Bit Server VM Zulu15.36+13-CA (15.0.5+3-MTS, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
 # Problematic frame:
-# C  [gdx-box2d64.dll+0xcfa7]
+# C  [gdx-box2d64.dll+0x1f8ac]
 #
 # No core dump will be written. Minidumps are not enabled by default on client versions of Windows
 #
@@ -21,15 +21,15 @@
 Command Line: -Dfile.encoding=windows-1252 -Duser.country=CA -Duser.language=en -Duser.variant com.mygdx.game.desktop.DesktopLauncher
 
 Host: Intel(R) Core(TM) i7-8665U CPU @ 1.90GHz, 8 cores, 15G,  Windows 10 , 64 bit Build 18362 (10.0.18362.1110)
-Time: Sat Jan  1 18:17:16 2022 Eastern Standard Time elapsed time: 46.811863 seconds (0d 0h 0m 46s)
+Time: Wed Dec 29 18:09:49 2021 Eastern Standard Time elapsed time: 97.613737 seconds (0d 0h 1m 37s)
 
 ---------------  T H R E A D  ---------------
 
-Current thread (0x0000011a7cafb2d0):  JavaThread "LWJGL Application" [_thread_in_native, id=2332, stack(0x0000001406800000,0x0000001406900000)]
+Current thread (0x0000020d3d6a4f10):  JavaThread "LWJGL Application" [_thread_in_native, id=32564, stack(0x000000b09c900000,0x000000b09ca00000)]
 
-Stack: [0x0000001406800000,0x0000001406900000],  sp=0x00000014068fee60,  free space=1019k
+Stack: [0x000000b09c900000,0x000000b09ca00000],  sp=0x000000b09c9fef00,  free space=1019k
 Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
-C  [gdx-box2d64.dll+0xcfa7]
+C  [gdx-box2d64.dll+0x1f8ac]
 
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
 j  com.badlogic.gdx.physics.box2d.World.jniDestroyBody(JJ)V+0
@@ -40,134 +40,135 @@ j  com.badlogic.gdx.backends.lwjgl.LwjglApplication.mainLoop()V+924
 j  com.badlogic.gdx.backends.lwjgl.LwjglApplication$1.run()V+27
 v  ~StubRoutines::call_stub
 
-siginfo: EXCEPTION_ACCESS_VIOLATION (0xc0000005), reading address 0x0000000000000008
+siginfo: EXCEPTION_ACCESS_VIOLATION (0xc0000005), reading address 0x0000000000000000
 
 
 Register to memory mapping:
 
-RIP=0x0000000066b0cfa7 gdx-box2d64.dll
+RIP=0x0000000066b1f8ac gdx-box2d64.dll
 RAX=0x0 is NULL
-RBX=0x0000011a7fee71b0 points into unknown readable memory: 0x0000000066b48700 | 00 87 b4 66 00 00 00 00
-RCX=0x0000000000000036 is an unknown value
-RDX=0x0000011a7d7b6350 points into unknown readable memory: 0x0000011a41200000 | 00 00 20 41 1a 01 00 00
-RSP=0x00000014068fee60 is pointing into the stack for thread: 0x0000011a7cafb2d0
-RBP=0x0000011a7d75e600 points into unknown readable memory: 0x0000011a56140150 | 50 01 14 56 1a 01 00 00
-RSI=0x0000011a7d7778a0 points into unknown readable memory: 0x0000000000000010 | 10 00 00 00 00 00 00 00
-RDI=0x0000011a7fee71b0 points into unknown readable memory: 0x0000000066b48700 | 00 87 b4 66 00 00 00 00
-R8 =0x0000011a7d7b2820 points into unknown readable memory: 0x0000003600000002 | 02 00 00 00 36 00 00 00
-R9 =0x0000000000000004 is an unknown value
-R10=0x0000011a7cd27f60 points into unknown readable memory: 0x0000001e00000003 | 03 00 00 00 1e 00 00 00
-R11=0x00000014068fee50 is pointing into the stack for thread: 0x0000011a7cafb2d0
-R12=0x0 is NULL
-R13={method} {0x0000011a7c2162d0} 'jniDestroyBody' '(JJ)V' in 'com/badlogic/gdx/physics/box2d/World'
-R14=0x00000014068ff0a8 is pointing into the stack for thread: 0x0000011a7cafb2d0
-R15=0x0000011a7cafb2d0 is a thread
+RBX=0x0000020d3e9c6350 points into unknown readable memory: 0x0000020d41200000 | 00 00 20 41 0d 02 00 00
+RCX=0x0 is NULL
+RDX=0x0000020d3e96e600 points into unknown readable memory: 0x0000020d173f0150 | 50 01 3f 17 0d 02 00 00
+RSP=0x000000b09c9fef00 is pointing into the stack for thread: 0x0000020d3d6a4f10
+RBP=0x0 is NULL
+RSI=0x0000020d3e96e600 points into unknown readable memory: 0x0000020d173f0150 | 50 01 3f 17 0d 02 00 00
+RDI=0x0000020d3e96e600 points into unknown readable memory: 0x0000020d173f0150 | 50 01 3f 17 0d 02 00 00
+R8 =0x0000020d3e96e600 points into unknown readable memory: 0x0000020d173f0150 | 50 01 3f 17 0d 02 00 00
+R9 =0x0000020d3e9c2820 points into unknown readable memory: 0x0000003600000002 | 02 00 00 00 36 00 00 00
+R10=0x0000020d218ef148 is at code_begin+1000 in an Interpreter codelet
+method entry point (kind = native)  [0x0000020d218eed60, 0x0000020d218ef7e0]  2688 bytes
+R11=0x0000000000000102 is an unknown value
+R12=0x0000020d3e9878a0 points into unknown readable memory: 0x000000000000001c | 1c 00 00 00 00 00 00 00
+R13={method} {0x0000020d3d3768b8} 'jniDestroyBody' '(JJ)V' in 'com/badlogic/gdx/physics/box2d/World'
+R14=0x000000b09c9ff0e8 is pointing into the stack for thread: 0x0000020d3d6a4f10
+R15=0x0000020d3d6a4f10 is a thread
 
 
 Registers:
-RAX=0x0000000000000000, RBX=0x0000011a7fee71b0, RCX=0x0000000000000036, RDX=0x0000011a7d7b6350
-RSP=0x00000014068fee60, RBP=0x0000011a7d75e600, RSI=0x0000011a7d7778a0, RDI=0x0000011a7fee71b0
-R8 =0x0000011a7d7b2820, R9 =0x0000000000000004, R10=0x0000011a7cd27f60, R11=0x00000014068fee50
-R12=0x0000000000000000, R13=0x0000011a7c2162c8, R14=0x00000014068ff0a8, R15=0x0000011a7cafb2d0
-RIP=0x0000000066b0cfa7, EFLAGS=0x0000000000010202
+RAX=0x0000000000000000, RBX=0x0000020d3e9c6350, RCX=0x0000000000000000, RDX=0x0000020d3e96e600
+RSP=0x000000b09c9fef00, RBP=0x0000000000000000, RSI=0x0000020d3e96e600, RDI=0x0000020d3e96e600
+R8 =0x0000020d3e96e600, R9 =0x0000020d3e9c2820, R10=0x0000020d218ef148, R11=0x0000000000000102
+R12=0x0000020d3e9878a0, R13=0x0000020d3d3768b0, R14=0x000000b09c9ff0e8, R15=0x0000020d3d6a4f10
+RIP=0x0000000066b1f8ac, EFLAGS=0x0000000000010246
 
-Top of Stack: (sp=0x00000014068fee60)
-0x00000014068fee60:   0000000000000000 0000000066b3d36c
-0x00000014068fee70:   0000011a7fee71b0 0000011a7d7b2160
-0x00000014068fee80:   0000011a7d7778a0 0000011a7fee71b0
-0x00000014068fee90:   0000011a7d7778a0 0000011a7d7b2820
-0x00000014068feea0:   0000011a7d7b2160 0000000066b1f39f
-0x00000014068feeb0:   0000011a7cafb200 0000000000000000
-0x00000014068feec0:   00007ffaa813b548 0000011a7fee71b0
-0x00000014068feed0:   000000000000000e 0000000000000000
-0x00000014068feee0:   0000011a7d75e600 0000011a7d7b2820
-0x00000014068feef0:   0000011a7d7778a0 0000000066b215d3
-0x00000014068fef00:   0000011a7bbaa420 0000002800000003
-0x00000014068fef10:   00000014068ff068 0000011a7cafb2d0
-0x00000014068fef20:   0000011a7d75e600 0000011a7d7b2820
-0x00000014068fef30:   0000000000002a76 00000014068ff068
-0x00000014068fef40:   0000000000000000 0000000066b26a9d
-0x00000014068fef50:   00000014068ff068 00007ffaa7bbe3d7 
+Top of Stack: (sp=0x000000b09c9fef00)
+0x000000b09c9fef00:   0000000000000000 0000000000000000
+0x000000b09c9fef10:   0000020d3e9c6350 0000020d3e96e600
+0x000000b09c9fef20:   0000020d3e9c6350 0000020d3e96e600
+0x000000b09c9fef30:   0000020d3e9c2820 0000000066b2162f
+0x000000b09c9fef40:   0000020d3d6a4f10 000000b09c9ff1c8
+0x000000b09c9fef50:   0000020d3d1451b8 0000000000000000
+0x000000b09c9fef60:   0000020d3e96e600 0000020d3e9c2820
+0x000000b09c9fef70:   000000000002926a 000000b09c9ff0a8
+0x000000b09c9fef80:   0000000000000000 0000000066b26a9d
+0x000000b09c9fef90:   0000020d3ccff5f0 00000000000003d8
+0x000000b09c9fefa0:   000000b09c9ff218 000000b09c9ff1c8
+0x000000b09c9fefb0:   0000000066b487e0 0000020d3d6a5238
+0x000000b09c9fefc0:   000000b09c9ff0e8 0000000000000000
+0x000000b09c9fefd0:   0000000066b48840 0000020d3d6a5238
+0x000000b09c9fefe0:   000000b09c9ff0e8 00007ffac0c1eca4
+0x000000b09c9feff0:   0000020d3d1451d0 0000020d3d3768b0 
 
-Instructions: (pc=0x0000000066b0cfa7)
-0x0000000066b0cea7:   e0 05 48 8d 04 d0 48 8d 15 8c 34 04 00 48 01 d0
-0x0000000066b0ceb7:   4c 8b 10 4d 85 d2 0f 84 8e 00 00 00 80 78 10 00
-0x0000000066b0cec7:   4c 89 b4 24 80 00 00 00 75 1f 41 89 e9 4d 89 e8
-0x0000000066b0ced7:   89 fa 4c 89 e1 48 83 c4 20 5b 5e 5f 5d 41 5c 41
-0x0000000066b0cee7:   5d 41 5e 49 ff e2 0f 1f 00 41 89 f9 4d 89 e0 89
-0x0000000066b0cef7:   ea 4c 89 e9 eb df 0f 1f 00 48 8d 15 79 50 03 00
-0x0000000066b0cf07:   48 8d 0d 12 51 03 00 41 b8 51 00 00 00 e8 b7 96
-0x0000000066b0cf17:   02 00 e9 7f ff ff ff 66 90 48 8d 15 59 50 03 00
-0x0000000066b0cf27:   48 8d 0d c2 50 03 00 41 b8 50 00 00 00 e8 97 96
-0x0000000066b0cf37:   02 00 e9 5a ff ff ff 66 90 e8 fb fc ff ff c6 05
-0x0000000066b0cf47:   d4 33 04 00 01 e9 2d ff ff ff 31 c0 48 83 c4 20
-0x0000000066b0cf57:   5b 5e 5f 5d 41 5c 41 5d 41 5e c3 0f 1f 40 00 66
-0x0000000066b0cf67:   2e 0f 1f 84 00 00 00 00 00 55 57 56 53 48 83 ec
-0x0000000066b0cf77:   28 80 3d a1 33 04 00 00 48 89 cf 48 89 d5 0f 84
-0x0000000066b0cf87:   f5 00 00 00 8b 8f b4 00 00 00 48 8b 47 60 48 8b
-0x0000000066b0cf97:   57 68 85 c9 7e 06 80 78 3a 00 74 50 48 8b 40 18
-0x0000000066b0cfa7:   48 63 58 08 48 8b 42 18 8b 70 08 85 db 0f 88 8a
-0x0000000066b0cfb7:   00 00 00 83 fe 03 0f 8f 81 00 00 00 48 63 c6 48
-0x0000000066b0cfc7:   89 f9 48 8d 14 40 48 8d 04 5b 48 c1 e0 05 48 8d
-0x0000000066b0cfd7:   04 d0 48 8d 15 60 33 04 00 48 8b 44 02 08 48 89
-0x0000000066b0cfe7:   ea 48 83 c4 28 5b 5e 5f 5d 48 ff e0 80 7a 3a 00
-0x0000000066b0cff7:   75 aa 4c 8b 40 10 41 0f b7 48 04 f6 c1 02 75 13
-0x0000000066b0d007:   83 c9 02 41 c7 80 ac 00 00 00 00 00 00 00 66 41
-0x0000000066b0d017:   89 48 04 4c 8b 42 10 41 0f b7 48 04 f6 c1 02 0f
-0x0000000066b0d027:   85 77 ff ff ff 83 c9 02 41 c7 80 ac 00 00 00 00
-0x0000000066b0d037:   00 00 00 66 41 89 48 04 e9 5f ff ff ff 48 8d 15
-0x0000000066b0d047:   35 4f 03 00 48 8d 0d 16 50 03 00 41 b8 77 00 00
-0x0000000066b0d057:   00 e8 73 95 02 00 48 8d 15 1c 4f 03 00 48 8d 0d
-0x0000000066b0d067:   fd 4f 03 00 41 b8 78 00 00 00 e8 5a 95 02 00 e9
-0x0000000066b0d077:   48 ff ff ff 0f 1f 44 00 00 48 8d 15 f9 4e 03 00
-0x0000000066b0d087:   48 8d 0d bd 4f 03 00 41 b8 67 00 00 00 e8 37 95
-0x0000000066b0d097:   02 00 e9 ed fe ff ff 66 90 48 83 ec 38 48 8d 05 
+Instructions: (pc=0x0000000066b1f8ac)
+0x0000000066b1f7ac:   41 08 00 00 00 00 48 c7 41 28 00 00 00 00 c7 41
+0x0000000066b1f7bc:   30 00 00 00 00 48 c7 41 18 00 00 00 00 c7 01 00
+0x0000000066b1f7cc:   00 00 00 c3 55 57 56 53 48 83 ec 28 49 8b 41 08
+0x0000000066b1f7dc:   f3 41 0f 10 41 10 48 89 cb 48 89 d5 f3 0f 11 41
+0x0000000066b1f7ec:   20 4c 89 ce 48 89 41 40 41 8b 41 1e f3 41 0f 10
+0x0000000066b1f7fc:   41 14 f3 0f 11 41 24 4c 89 41 10 48 c7 41 08 00
+0x0000000066b1f80c:   00 00 00 89 41 34 41 0f b7 41 22 66 89 41 38 41
+0x0000000066b1f81c:   0f b6 41 1c 88 41 3a 49 8b 09 48 8b 01 ff 50 10
+0x0000000066b1f82c:   48 8b 10 48 89 c1 48 89 43 18 ff 52 18 89 c2 89
+0x0000000066b1f83c:   c7 48 89 e9 c1 e2 05 e8 18 c3 fe ff 85 ff 48 89
+0x0000000066b1f84c:   43 28 7e 27 8d 4f ff 48 8d 50 10 48 c1 e1 05 48
+0x0000000066b1f85c:   8d 44 08 30 48 c7 02 00 00 00 00 c7 42 0c ff ff
+0x0000000066b1f86c:   ff ff 48 83 c2 20 48 39 c2 75 e9 f3 0f 10 46 18
+0x0000000066b1f87c:   c7 43 30 00 00 00 00 f3 0f 11 03 48 83 c4 28 5b
+0x0000000066b1f88c:   5e 5f 5d c3 57 56 53 48 83 ec 20 8b 41 30 48 89
+0x0000000066b1f89c:   cb 48 89 d7 85 c0 0f 85 a8 00 00 00 48 8b 4b 18
+0x0000000066b1f8ac:   48 8b 01 ff 50 18 48 8b 53 28 c1 e0 05 48 89 f9
+0x0000000066b1f8bc:   41 89 c0 e8 dc c4 fe ff 48 8b 73 18 48 c7 43 28
+0x0000000066b1f8cc:   00 00 00 00 8b 46 08 83 f8 01 0f 84 94 00 00 00
+0x0000000066b1f8dc:   0f 82 be 00 00 00 83 f8 02 74 39 83 f8 03 0f 85
+0x0000000066b1f8ec:   e0 00 00 00 48 8b 06 48 89 f1 ff 10 41 b8 30 00
+0x0000000066b1f8fc:   00 00 48 89 f2 48 89 f9 e8 97 c4 fe ff 48 c7 43
+0x0000000066b1f90c:   18 00 00 00 00 48 83 c4 20 5b 5e 5f c3 0f 1f 80
+0x0000000066b1f91c:   00 00 00 00 48 8b 06 48 89 f1 ff 10 41 b8 a0 00
+0x0000000066b1f92c:   00 00 48 89 f2 48 89 f9 e8 67 c4 fe ff 48 c7 43
+0x0000000066b1f93c:   18 00 00 00 00 48 83 c4 20 5b 5e 5f c3 0f 1f 80
+0x0000000066b1f94c:   00 00 00 00 48 8d 15 d9 49 02 00 48 8d 0d 32 4a
+0x0000000066b1f95c:   02 00 41 b8 48 00 00 00 e8 67 6c 01 00 e9 3a ff
+0x0000000066b1f96c:   ff ff 66 90 48 8b 06 48 89 f1 ff 10 41 b8 38 00
+0x0000000066b1f97c:   00 00 48 89 f2 48 89 f9 e8 17 c4 fe ff 48 c7 43
+0x0000000066b1f98c:   18 00 00 00 00 48 83 c4 20 5b 5e 5f c3 0f 1f 80
+0x0000000066b1f99c:   00 00 00 00 48 8b 06 48 89 f1 ff 10 41 b8 18 00 
 
 
 Stack slot to memory mapping:
 stack at sp + 0 slots: 0x0 is NULL
-stack at sp + 1 slots: 0x0000000066b3d36c gdx-box2d64.dll
-stack at sp + 2 slots: 0x0000011a7fee71b0 points into unknown readable memory: 0x0000000066b48700 | 00 87 b4 66 00 00 00 00
-stack at sp + 3 slots: 0x0000011a7d7b2160 points into unknown readable memory: 0x0000002600000000 | 00 00 00 00 26 00 00 00
-stack at sp + 4 slots: 0x0000011a7d7778a0 points into unknown readable memory: 0x0000000000000010 | 10 00 00 00 00 00 00 00
-stack at sp + 5 slots: 0x0000011a7fee71b0 points into unknown readable memory: 0x0000000066b48700 | 00 87 b4 66 00 00 00 00
-stack at sp + 6 slots: 0x0000011a7d7778a0 points into unknown readable memory: 0x0000000000000010 | 10 00 00 00 00 00 00 00
-stack at sp + 7 slots: 0x0000011a7d7b2820 points into unknown readable memory: 0x0000003600000002 | 02 00 00 00 36 00 00 00
+stack at sp + 1 slots: 0x0 is NULL
+stack at sp + 2 slots: 0x0000020d3e9c6350 points into unknown readable memory: 0x0000020d41200000 | 00 00 20 41 0d 02 00 00
+stack at sp + 3 slots: 0x0000020d3e96e600 points into unknown readable memory: 0x0000020d173f0150 | 50 01 3f 17 0d 02 00 00
+stack at sp + 4 slots: 0x0000020d3e9c6350 points into unknown readable memory: 0x0000020d41200000 | 00 00 20 41 0d 02 00 00
+stack at sp + 5 slots: 0x0000020d3e96e600 points into unknown readable memory: 0x0000020d173f0150 | 50 01 3f 17 0d 02 00 00
+stack at sp + 6 slots: 0x0000020d3e9c2820 points into unknown readable memory: 0x0000003600000002 | 02 00 00 00 36 00 00 00
+stack at sp + 7 slots: 0x0000000066b2162f gdx-box2d64.dll
 
 
 ---------------  P R O C E S S  ---------------
 
 Threads class SMR info:
-_java_thread_list=0x0000011a0a174080, length=13, elements={
-0x0000011a7bb56f90, 0x0000011a7bb57a70, 0x0000011a7bb71470, 0x0000011a7bb73d40,
-0x0000011a7bb74700, 0x0000011a7bb76400, 0x0000011a7bb76eb0, 0x0000011a7bb7b7d0,
-0x0000011a7c529ae0, 0x0000011a7c5306f0, 0x0000011a7cafb2d0, 0x0000011a58273400,
-0x0000011a0a245c00
+_java_thread_list=0x0000020d4bbb4b80, length=13, elements={
+0x0000020d3ccc7820, 0x0000020d3ccc8a00, 0x0000020d3cce37a0, 0x0000020d3cce6170,
+0x0000020d3cce7030, 0x0000020d3cce8ed0, 0x0000020d3ccfc6e0, 0x0000020d3ccfd0d0,
+0x0000020d3d6a4a40, 0x0000020d3d6a7f30, 0x0000020d3d6a4f10, 0x0000020d3d6a7a60,
+0x0000020d3d6a7590
 }
 
 Java Threads: ( => current thread )
-  0x0000011a7bb56f90 JavaThread "Reference Handler" daemon [_thread_blocked, id=26108, stack(0x0000001405900000,0x0000001405a00000)]
-  0x0000011a7bb57a70 JavaThread "Finalizer" daemon [_thread_blocked, id=24184, stack(0x0000001405a00000,0x0000001405b00000)]
-  0x0000011a7bb71470 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=24336, stack(0x0000001405b00000,0x0000001405c00000)]
-  0x0000011a7bb73d40 JavaThread "Attach Listener" daemon [_thread_blocked, id=19304, stack(0x0000001405c00000,0x0000001405d00000)]
-  0x0000011a7bb74700 JavaThread "Service Thread" daemon [_thread_blocked, id=29204, stack(0x0000001405d00000,0x0000001405e00000)]
-  0x0000011a7bb76400 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=16204, stack(0x0000001405e00000,0x0000001405f00000)]
-  0x0000011a7bb76eb0 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=3236, stack(0x0000001405f00000,0x0000001406000000)]
-  0x0000011a7bb7b7d0 JavaThread "Sweeper thread" daemon [_thread_blocked, id=37704, stack(0x0000001406000000,0x0000001406100000)]
-  0x0000011a7c529ae0 JavaThread "Notification Thread" daemon [_thread_blocked, id=20136, stack(0x0000001406100000,0x0000001406200000)]
-  0x0000011a7c5306f0 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=10156, stack(0x0000001406300000,0x0000001406400000)]
-=>0x0000011a7cafb2d0 JavaThread "LWJGL Application" [_thread_in_native, id=2332, stack(0x0000001406800000,0x0000001406900000)]
-  0x0000011a58273400 JavaThread "DestroyJavaVM" [_thread_blocked, id=5404, stack(0x0000001405200000,0x0000001405300000)]
-  0x0000011a0a245c00 JavaThread "LWJGL Timer" daemon [_thread_blocked, id=2240, stack(0x0000001406e00000,0x0000001406f00000)]
+  0x0000020d3ccc7820 JavaThread "Reference Handler" daemon [_thread_blocked, id=8100, stack(0x000000b09bc00000,0x000000b09bd00000)]
+  0x0000020d3ccc8a00 JavaThread "Finalizer" daemon [_thread_blocked, id=10640, stack(0x000000b09bd00000,0x000000b09be00000)]
+  0x0000020d3cce37a0 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=26000, stack(0x000000b09be00000,0x000000b09bf00000)]
+  0x0000020d3cce6170 JavaThread "Attach Listener" daemon [_thread_blocked, id=36704, stack(0x000000b09bf00000,0x000000b09c000000)]
+  0x0000020d3cce7030 JavaThread "Service Thread" daemon [_thread_blocked, id=33060, stack(0x000000b09c000000,0x000000b09c100000)]
+  0x0000020d3cce8ed0 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=16376, stack(0x000000b09c100000,0x000000b09c200000)]
+  0x0000020d3ccfc6e0 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=16352, stack(0x000000b09c200000,0x000000b09c300000)]
+  0x0000020d3ccfd0d0 JavaThread "Sweeper thread" daemon [_thread_blocked, id=34900, stack(0x000000b09c300000,0x000000b09c400000)]
+  0x0000020d3d6a4a40 JavaThread "Notification Thread" daemon [_thread_blocked, id=34312, stack(0x000000b09c400000,0x000000b09c500000)]
+  0x0000020d3d6a7f30 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=8140, stack(0x000000b09c600000,0x000000b09c700000)]
+=>0x0000020d3d6a4f10 JavaThread "LWJGL Application" [_thread_in_native, id=32564, stack(0x000000b09c900000,0x000000b09ca00000)]
+  0x0000020d3d6a7a60 JavaThread "DestroyJavaVM" [_thread_blocked, id=16356, stack(0x000000b09b500000,0x000000b09b600000)]
+  0x0000020d3d6a7590 JavaThread "LWJGL Timer" daemon [_thread_blocked, id=37804, stack(0x000000b09d000000,0x000000b09d100000)]
 
 Other Threads:
-  0x0000011a7bb55ff0 VMThread "VM Thread" [stack: 0x0000001405800000,0x0000001405900000] [id=34372]
-  0x0000011a7c52bfd0 WatcherThread [stack: 0x0000001406200000,0x0000001406300000] [id=33120]
-  0x0000011a582c2460 GCTaskThread "GC Thread#0" [stack: 0x0000001405300000,0x0000001405400000] [id=25556]
-  0x0000011a582d5370 ConcurrentGCThread "G1 Main Marker" [stack: 0x0000001405400000,0x0000001405500000] [id=15084]
-  0x0000011a582d5ef0 ConcurrentGCThread "G1 Conc#0" [stack: 0x0000001405500000,0x0000001405600000] [id=34728]
-  0x0000011a7ba4a520 ConcurrentGCThread "G1 Refine#0" [stack: 0x0000001405600000,0x0000001405700000] [id=32628]
-  0x0000011a7ba4af30 ConcurrentGCThread "G1 Young RemSet Sampling" [stack: 0x0000001405700000,0x0000001405800000] [id=32712]
+  0x0000020d3ccc6180 VMThread "VM Thread" [stack: 0x000000b09bb00000,0x000000b09bc00000] [id=28080]
+  0x0000020d3d6a9a10 WatcherThread [stack: 0x000000b09c500000,0x000000b09c600000] [id=9092]
+  0x0000020d19422a40 GCTaskThread "GC Thread#0" [stack: 0x000000b09b600000,0x000000b09b700000] [id=10600]
+  0x0000020d19434a30 ConcurrentGCThread "G1 Main Marker" [stack: 0x000000b09b700000,0x000000b09b800000] [id=1664]
+  0x0000020d194356a0 ConcurrentGCThread "G1 Conc#0" [stack: 0x000000b09b800000,0x000000b09b900000] [id=33188]
+  0x0000020d1949e450 ConcurrentGCThread "G1 Refine#0" [stack: 0x000000b09b900000,0x000000b09ba00000] [id=11780]
+  0x0000020d3cbc0390 ConcurrentGCThread "G1 Young RemSet Sampling" [stack: 0x000000b09ba00000,0x000000b09bb00000] [id=26196]
 
 Threads with active compile tasks:
 
@@ -199,8 +200,8 @@ GC Precious Log:
 Heap:
  garbage-first heap   total 260096K, used 16384K [0x0000000702e00000, 0x0000000800000000)
   region size 2048K, 10 young (20480K), 0 survivors (0K)
- Metaspace       used 4937K, capacity 7966K, committed 8320K, reserved 1056768K
-  class space    used 323K, capacity 617K, committed 640K, reserved 1048576K
+ Metaspace       used 4963K, capacity 7966K, committed 8320K, reserved 1056768K
+  class space    used 325K, capacity 617K, committed 640K, reserved 1048576K
 
 Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=humongous(continues), CS=collection set, F=free, OA=open archive, CA=closed archive, TAMS=top-at-mark-start (previous, next)
 |   0|0x0000000702e00000, 0x0000000702e00000, 0x0000000703000000|  0%| F|  |TAMS 0x0000000702e00000, 0x0000000702e00000| Untracked 
@@ -320,7 +321,7 @@ Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=
 | 114|0x0000000711200000, 0x0000000711200000, 0x0000000711400000|  0%| F|  |TAMS 0x0000000711200000, 0x0000000711200000| Untracked 
 | 115|0x0000000711400000, 0x0000000711400000, 0x0000000711600000|  0%| F|  |TAMS 0x0000000711400000, 0x0000000711400000| Untracked 
 | 116|0x0000000711600000, 0x0000000711600000, 0x0000000711800000|  0%| F|  |TAMS 0x0000000711600000, 0x0000000711600000| Untracked 
-| 117|0x0000000711800000, 0x0000000711871248, 0x0000000711a00000| 22%| E|  |TAMS 0x0000000711800000, 0x0000000711800000| Complete 
+| 117|0x0000000711800000, 0x000000071197f640, 0x0000000711a00000| 74%| E|  |TAMS 0x0000000711800000, 0x0000000711800000| Complete 
 | 118|0x0000000711a00000, 0x0000000711c00000, 0x0000000711c00000|100%| E|CS|TAMS 0x0000000711a00000, 0x0000000711a00000| Complete 
 | 119|0x0000000711c00000, 0x0000000711e00000, 0x0000000711e00000|100%| E|  |TAMS 0x0000000711c00000, 0x0000000711c00000| Complete 
 | 120|0x0000000711e00000, 0x0000000712000000, 0x0000000712000000|100%| E|CS|TAMS 0x0000000711e00000, 0x0000000711e00000| Complete 
@@ -331,20 +332,20 @@ Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=
 | 125|0x0000000712800000, 0x0000000712a00000, 0x0000000712a00000|100%| E|CS|TAMS 0x0000000712800000, 0x0000000712800000| Complete 
 | 126|0x0000000712a00000, 0x0000000712c00000, 0x0000000712c00000|100%| E|CS|TAMS 0x0000000712a00000, 0x0000000712a00000| Complete 
 
-Card table byte_map: [0x0000011a702a0000,0x0000011a70a90000] _byte_map_base: 0x0000011a6ca89000
+Card table byte_map: [0x0000020d31400000,0x0000020d31bf0000] _byte_map_base: 0x0000020d2dbe9000
 
-Marking Bits (Prev, Next): (CMBitMap*) 0x0000011a582c4c00, (CMBitMap*) 0x0000011a582c4c40
- Prev Bits: [0x0000011a71280000, 0x0000011a751c8000)
- Next Bits: [0x0000011a751d0000, 0x0000011a79118000)
+Marking Bits (Prev, Next): (CMBitMap*) 0x0000020d194242c0, (CMBitMap*) 0x0000020d19424300
+ Prev Bits: [0x0000020d323e0000, 0x0000020d36328000)
+ Next Bits: [0x0000020d36330000, 0x0000020d3a278000)
 
-Polling page: 0x0000011a56160000
+Polling page: 0x0000020d171c0000
 
 Metaspace:
 
 Usage:
-  Non-class:      7.18 MB capacity,     4.51 MB ( 63%) used,     2.67 MB ( 37%) free+waste,     3.56 KB ( <1%) overhead. 
-      Class:    617.00 KB capacity,   323.87 KB ( 52%) used,   292.32 KB ( 47%) free+waste,   832 bytes ( <1%) overhead. 
-       Both:      7.78 MB capacity,     4.82 MB ( 62%) used,     2.95 MB ( 38%) free+waste,     4.38 KB ( <1%) overhead. 
+  Non-class:      7.18 MB capacity,     4.53 MB ( 63%) used,     2.64 MB ( 37%) free+waste,     3.56 KB ( <1%) overhead. 
+      Class:    617.00 KB capacity,   325.41 KB ( 53%) used,   290.77 KB ( 47%) free+waste,   832 bytes ( <1%) overhead. 
+       Both:      7.78 MB capacity,     4.85 MB ( 62%) used,     2.93 MB ( 38%) free+waste,     4.38 KB ( <1%) overhead. 
 
 Virtual space:
   Non-class space:        8.00 MB reserved,       7.50 MB ( 94%) committed 
@@ -359,63 +360,63 @@ Chunk freelists:
 MaxMetaspaceSize: 17179869184.00 GB
 CompressedClassSpaceSize: 1.00 GB
 
-CodeHeap 'non-profiled nmethods': size=120000Kb used=617Kb max_used=617Kb free=119382Kb
- bounds [0x0000011a68250000, 0x0000011a684c0000, 0x0000011a6f780000]
-CodeHeap 'profiled nmethods': size=120000Kb used=2067Kb max_used=2067Kb free=117932Kb
- bounds [0x0000011a60d20000, 0x0000011a60f90000, 0x0000011a68250000]
-CodeHeap 'non-nmethods': size=5760Kb used=1284Kb max_used=1335Kb free=4476Kb
- bounds [0x0000011a60780000, 0x0000011a609f0000, 0x0000011a60d20000]
- total_blobs=1838 nmethods=1260 adapters=491
+CodeHeap 'non-profiled nmethods': size=120000Kb used=749Kb max_used=749Kb free=119250Kb
+ bounds [0x0000020d293b0000, 0x0000020d29620000, 0x0000020d308e0000]
+CodeHeap 'profiled nmethods': size=120000Kb used=2128Kb max_used=2128Kb free=117871Kb
+ bounds [0x0000020d21e80000, 0x0000020d220f0000, 0x0000020d293b0000]
+CodeHeap 'non-nmethods': size=5760Kb used=1285Kb max_used=1337Kb free=4474Kb
+ bounds [0x0000020d218e0000, 0x0000020d21b50000, 0x0000020d21e80000]
+ total_blobs=1928 nmethods=1350 adapters=491
  compilation: enabled
               stopped_count=0, restarted_count=0
  full_count=0
 
 Compilation events (20 events):
-Event: 42.346 Thread 0x0000011a7bb76400 1251   !   4       java.nio.ByteBuffer::put (248 bytes)
-Event: 42.357 Thread 0x0000011a7bb76400 nmethod 1251 0x0000011a682e6510 code [0x0000011a682e66c0, 0x0000011a682e6ab8]
-Event: 42.363 Thread 0x0000011a7bb76400 1252       4       java.nio.HeapByteBuffer::put (12 bytes)
-Event: 42.375 Thread 0x0000011a7bb76400 nmethod 1252 0x0000011a682e7090 code [0x0000011a682e7220, 0x0000011a682e76d8]
-Event: 44.014 Thread 0x0000011a7bb76400 1253       4       com.mygdx.game.CollisionListener::preSolve (1 bytes)
-Event: 44.015 Thread 0x0000011a7bb76400 nmethod 1253 0x0000011a682e7d10 code [0x0000011a682e7e80, 0x0000011a682e7ed8]
-Event: 44.196 Thread 0x0000011a7bb76eb0 1254       3       com.badlogic.gdx.backends.lwjgl.DefaultLwjglInput::updateKeyboard (293 bytes)
-Event: 44.200 Thread 0x0000011a7bb76eb0 nmethod 1254 0x0000011a60f22090 code [0x0000011a60f224a0, 0x0000011a60f23f78]
-Event: 44.731 Thread 0x0000011a7bb76400 1255       4       com.mygdx.game.CollisionListener::postSolve (1 bytes)
-Event: 44.731 Thread 0x0000011a7bb76400 nmethod 1255 0x0000011a682e8010 code [0x0000011a682e8180, 0x0000011a682e81d8]
-Event: 45.095 Thread 0x0000011a7bb76400 1256       4       org.lwjgl.opengl.Display::getPixelScaleFactor (9 bytes)
-Event: 45.096 Thread 0x0000011a7bb76400 nmethod 1256 0x0000011a682e8310 code [0x0000011a682e84a0, 0x0000011a682e84f8]
-Event: 45.579 Thread 0x0000011a7bb76400 1257       4       java.nio.ByteBuffer::limit (6 bytes)
-Event: 45.582 Thread 0x0000011a7bb76400 nmethod 1257 0x0000011a682e8610 code [0x0000011a682e87a0, 0x0000011a682e8898]
-Event: 45.731 Thread 0x0000011a7bb76400 1258       4       com.badlogic.gdx.math.Vector3::crs (62 bytes)
-Event: 45.733 Thread 0x0000011a7bb76400 nmethod 1258 0x0000011a682e8a10 code [0x0000011a682e8b80, 0x0000011a682e8c38]
-Event: 45.745 Thread 0x0000011a7bb76400 1259  s    4       org.lwjgl.opengl.EventQueue::copyEvents (77 bytes)
-Event: 45.767 Thread 0x0000011a7bb76400 nmethod 1259 0x0000011a682e8d10 code [0x0000011a682e8ee0, 0x0000011a682e9798]
-Event: 45.780 Thread 0x0000011a7bb76400 1260       4       com.badlogic.gdx.backends.lwjgl.LwjglGL20::glBufferData (113 bytes)
-Event: 45.784 Thread 0x0000011a7bb76400 nmethod 1260 0x0000011a682ea090 code [0x0000011a682ea220, 0x0000011a682ea408]
+Event: 90.720 Thread 0x0000020d3cce8ed0 1341       4       com.badlogic.gdx.math.Vector3::add (23 bytes)
+Event: 90.721 Thread 0x0000020d3cce8ed0 nmethod 1341 0x0000020d29460a90 code [0x0000020d29460c00, 0x0000020d29460c78]
+Event: 90.729 Thread 0x0000020d3cce8ed0 1342   !   4       org.lwjgl.input.Mouse::poll (215 bytes)
+Event: 90.744 Thread 0x0000020d3cce8ed0 nmethod 1342 0x0000020d29460d90 code [0x0000020d29460f80, 0x0000020d29461758]
+Event: 90.744 Thread 0x0000020d3cce8ed0 1343   !   4       org.lwjgl.opengl.Display::processMessages (44 bytes)
+Event: 90.790 Thread 0x0000020d3cce8ed0 nmethod 1343 0x0000020d29461d90 code [0x0000020d29462060, 0x0000020d29463520]
+Event: 90.790 Thread 0x0000020d3cce8ed0 1344   !   4       org.lwjgl.input.Mouse::updateCursor (71 bytes)
+Event: 90.791 Thread 0x0000020d3cce8ed0 nmethod 1344 0x0000020d29464590 code [0x0000020d29464720, 0x0000020d294648b8]
+Event: 92.864 Thread 0x0000020d3cce8ed0 1345       4       com.badlogic.gdx.graphics.OrthographicCamera::update (164 bytes)
+Event: 92.907 Thread 0x0000020d3cce8ed0 nmethod 1345 0x0000020d29464990 code [0x0000020d29464c80, 0x0000020d294657b0]
+Event: 92.907 Thread 0x0000020d3cce8ed0 1346       4       org.lwjgl.opengl.GL11::glClearColor (27 bytes)
+Event: 92.910 Thread 0x0000020d3cce8ed0 nmethod 1346 0x0000020d29465f90 code [0x0000020d29466120, 0x0000020d29466268]
+Event: 95.012 Thread 0x0000020d3cce8ed0 1347       4       org.lwjgl.opengl.GL11::glClear (19 bytes)
+Event: 95.017 Thread 0x0000020d3cce8ed0 nmethod 1347 0x0000020d29466410 code [0x0000020d294665a0, 0x0000020d294666a8]
+Event: 95.018 Thread 0x0000020d3cce8ed0 1348       4       org.lwjgl.opengl.DrawableGL::swapBuffers (4 bytes)
+Event: 95.032 Thread 0x0000020d3cce8ed0 nmethod 1348 0x0000020d29466810 code [0x0000020d29466a00, 0x0000020d29467400]
+Event: 95.033 Thread 0x0000020d3cce8ed0 1349       4       com.badlogic.gdx.backends.lwjgl.DefaultLwjglInput::update (13 bytes)
+Event: 95.096 Thread 0x0000020d3ccfc6e0 1350       1       com.mygdx.game.Player::access$300 (5 bytes)
+Event: 95.097 Thread 0x0000020d3ccfc6e0 nmethod 1350 0x0000020d29467990 code [0x0000020d29467b20, 0x0000020d29467bb8]
+Event: 95.125 Thread 0x0000020d3cce8ed0 nmethod 1349 0x0000020d29467c90 code [0x0000020d29468020, 0x0000020d2946a578]
 
 GC Heap History (0 events):
 No events
 
 Deoptimization events (20 events):
-Event: 1.213 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e6b387 sp=0x00000014068fef50
-Event: 1.213 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe378 mode 0
-Event: 1.662 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e94ee2 sp=0x00000014068ff060
-Event: 1.662 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 1.711 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e94ee2 sp=0x00000014068ff060
-Event: 1.711 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 1.727 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e94ee2 sp=0x00000014068ff060
-Event: 1.727 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 1.745 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e94ee2 sp=0x00000014068ff060
-Event: 1.745 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 1.777 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e94ee2 sp=0x00000014068ff060
-Event: 1.777 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 1.779 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e917c0 sp=0x00000014068ff050
-Event: 1.779 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 1.812 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a60e94ee2 sp=0x00000014068ff060
-Event: 1.812 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce23f sp=0x00000014068fe5e8 mode 0
-Event: 42.129 Thread 0x0000011a7cafb2d0 Uncommon trap: trap_request=0xffffff45 fr.pc=0x0000011a682e2cc4 relative=0x0000000000001544
-Event: 42.129 Thread 0x0000011a7cafb2d0 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000011a682e2cc4 method=com.badlogic.gdx.backends.lwjgl.DefaultLwjglInput.updateKeyboard()V @ 40 c2
-Event: 42.129 Thread 0x0000011a7cafb2d0 DEOPT PACKING pc=0x0000011a682e2cc4 sp=0x00000014068ff150
-Event: 42.129 Thread 0x0000011a7cafb2d0 DEOPT UNPACKING pc=0x0000011a607ce42f sp=0x00000014068ff108 mode 2
+Event: 1.984 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d21ff2662 sp=0x000000b09c9ff0a0
+Event: 1.984 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e23f sp=0x000000b09c9fe628 mode 0
+Event: 2.050 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d21ff2662 sp=0x000000b09c9ff0a0
+Event: 2.050 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e23f sp=0x000000b09c9fe628 mode 0
+Event: 2.101 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d21ff2662 sp=0x000000b09c9ff0a0
+Event: 2.101 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e23f sp=0x000000b09c9fe628 mode 0
+Event: 2.151 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d21ff2662 sp=0x000000b09c9ff0a0
+Event: 2.151 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e23f sp=0x000000b09c9fe628 mode 0
+Event: 32.436 Thread 0x0000020d3d6a4f10 Uncommon trap: trap_request=0xffffff45 fr.pc=0x0000020d29400e00 relative=0x00000000000000e0
+Event: 32.436 Thread 0x0000020d3d6a4f10 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000020d29400e00 method=com.badlogic.gdx.graphics.glutils.ShapeRenderer.check(Lcom/badlogic/gdx/graphics/glutils/ShapeRenderer$ShapeType;Lcom/badlogic/gdx/graphics/glutils/ShapeRenderer$ShapeType;I
+Event: 32.436 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d29400e00 sp=0x000000b09c9feed0
+Event: 32.436 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e42f sp=0x000000b09c9fee70 mode 2
+Event: 34.005 Thread 0x0000020d3d6a4f10 Uncommon trap: trap_request=0xffffff45 fr.pc=0x0000020d2940ebe8 relative=0x0000000000000f28
+Event: 34.005 Thread 0x0000020d3d6a4f10 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000020d2940ebe8 method=com.badlogic.gdx.physics.box2d.Fixture.getShape()Lcom/badlogic/gdx/physics/box2d/Shape; @ 4 c2
+Event: 34.005 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d2940ebe8 sp=0x000000b09c9ff010
+Event: 34.005 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e42f sp=0x000000b09c9fef30 mode 2
+Event: 55.132 Thread 0x0000020d3d6a4f10 Uncommon trap: trap_request=0xffffff45 fr.pc=0x0000020d2942c6ec relative=0x0000000000005fec
+Event: 55.132 Thread 0x0000020d3d6a4f10 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000020d2942c6ec method=com.badlogic.gdx.utils.Array.iterator()Lcom/badlogic/gdx/utils/Array$ArrayIterator; @ 20 c2
+Event: 55.132 Thread 0x0000020d3d6a4f10 DEOPT PACKING pc=0x0000020d2942c6ec sp=0x000000b09c9ff070
+Event: 55.132 Thread 0x0000020d3d6a4f10 DEOPT UNPACKING pc=0x0000020d2192e42f sp=0x000000b09c9fef98 mode 2
 
 Classes unloaded (0 events):
 No events
@@ -423,40 +424,41 @@ No events
 Classes redefined (0 events):
 No events
 
-Internal exceptions (0 events):
-No events
+Internal exceptions (2 events):
+Event: 34.005 Thread 0x0000020d3d6a4f10 Implicit null exception at 0x0000020d2940dd60 to 0x0000020d2940ebdc
+Event: 55.132 Thread 0x0000020d3d6a4f10 Implicit null exception at 0x0000020d294275e6 to 0x0000020d2942c6bc
 
 Events (20 events):
-Event: 1.315 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 1.331 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 1.332 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 1.585 Loaded shared library C:\Program Files\Zulu\zulu-15\bin\java.dll
-Event: 1.682 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 2.032 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 2.248 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 2.564 Loaded shared library C:\Program Files\Zulu\zulu-15\bin\java.dll
-Event: 2.583 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 2.586 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 2.681 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 3.099 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 3.102 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 4.183 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 5.196 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 5.248 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 9.463 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\e1cd32f8\gdx64.dll
-Event: 9.480 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 9.481 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
-Event: 33.913 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 1.437 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 1.454 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 1.456 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 1.803 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 2.154 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 2.261 Loaded shared library C:\Program Files\Zulu\zulu-15\bin\java.dll
+Event: 2.370 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 2.685 Loaded shared library C:\Program Files\Zulu\zulu-15\bin\java.dll
+Event: 2.703 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 2.705 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 2.804 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 3.221 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 3.223 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 5.320 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 5.370 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 5.371 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 9.589 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\e1cd32f8\gdx64.dll
+Event: 9.604 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 9.606 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
+Event: 35.054 Loaded shared library C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
 
 
 Dynamic libraries:
-0x00007ff6ff330000 - 0x00007ff6ff33d000 	C:\Program Files\Zulu\zulu-15\bin\java.exe
+0x00007ff7eff90000 - 0x00007ff7eff9d000 	C:\Program Files\Zulu\zulu-15\bin\java.exe
 0x00007ffb2fe00000 - 0x00007ffb2fff0000 	C:\Windows\SYSTEM32\ntdll.dll
 0x00007ffb2e5c0000 - 0x00007ffb2e672000 	C:\Windows\System32\KERNEL32.DLL
 0x00007ffb2d090000 - 0x00007ffb2d335000 	C:\Windows\System32\KERNELBASE.dll
 0x00007ffb2ce40000 - 0x00007ffb2cf3a000 	C:\Windows\System32\ucrtbase.dll
-0x00007ffb20640000 - 0x00007ffb20658000 	C:\Program Files\Zulu\zulu-15\bin\jli.dll
-0x00007ffb204f0000 - 0x00007ffb20505000 	C:\Program Files\Zulu\zulu-15\bin\VCRUNTIME140.dll
+0x00007ffb29370000 - 0x00007ffb29388000 	C:\Program Files\Zulu\zulu-15\bin\jli.dll
+0x00007ffb26b00000 - 0x00007ffb26b15000 	C:\Program Files\Zulu\zulu-15\bin\VCRUNTIME140.dll
 0x00007ffb2e6a0000 - 0x00007ffb2e834000 	C:\Windows\System32\USER32.dll
 0x00007ffb02d20000 - 0x00007ffb02fa4000 	C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.18362.1139_none_9e7bf2d3e4605ac6\COMCTL32.dll
 0x00007ffb2d600000 - 0x00007ffb2d621000 	C:\Windows\System32\win32u.dll
@@ -468,22 +470,22 @@ Dynamic libraries:
 0x00007ffb2d3c0000 - 0x00007ffb2d45e000 	C:\Windows\System32\msvcp_win.dll
 0x00007ffb2d340000 - 0x00007ffb2d3c0000 	C:\Windows\System32\bcryptPrimitives.dll
 0x00007ffb2f490000 - 0x00007ffb2f4be000 	C:\Windows\System32\IMM32.DLL
-0x00007ffaf96b0000 - 0x00007ffaf974b000 	C:\Program Files\Zulu\zulu-15\bin\msvcp140.dll
-0x00007ffaa7890000 - 0x00007ffaa8422000 	C:\Program Files\Zulu\zulu-15\bin\server\jvm.dll
+0x00007ffb20600000 - 0x00007ffb2069b000 	C:\Program Files\Zulu\zulu-15\bin\msvcp140.dll
+0x00007ffac08f0000 - 0x00007ffac1482000 	C:\Program Files\Zulu\zulu-15\bin\server\jvm.dll
 0x00007ffb2e000000 - 0x00007ffb2e0a3000 	C:\Windows\System32\ADVAPI32.dll
 0x00007ffb2fd10000 - 0x00007ffb2fda7000 	C:\Windows\System32\sechost.dll
 0x00007ffb2e3e0000 - 0x00007ffb2e3e8000 	C:\Windows\System32\PSAPI.DLL
 0x00007ffb08570000 - 0x00007ffb08579000 	C:\Windows\SYSTEM32\WSOCK32.dll
 0x00007ffb29590000 - 0x00007ffb295b4000 	C:\Windows\SYSTEM32\WINMM.dll
-0x00007ffb207f0000 - 0x00007ffb207fa000 	C:\Windows\SYSTEM32\VERSION.dll
 0x00007ffb2f270000 - 0x00007ffb2f2df000 	C:\Windows\System32\WS2_32.dll
-0x00007ffb29560000 - 0x00007ffb2958d000 	C:\Windows\SYSTEM32\winmmbase.dll
+0x00007ffb207f0000 - 0x00007ffb207fa000 	C:\Windows\SYSTEM32\VERSION.dll
+0x00007ffb29560000 - 0x00007ffb2958d000 	C:\Windows\SYSTEM32\WINMMBASE.dll
 0x00007ffb2d6e0000 - 0x00007ffb2d72a000 	C:\Windows\System32\cfgmgr32.dll
 0x00007ffb2cd20000 - 0x00007ffb2cd31000 	C:\Windows\System32\kernel.appcore.dll
-0x00007ffb29df0000 - 0x00007ffb29dfa000 	C:\Program Files\Zulu\zulu-15\bin\jimage.dll
+0x00007ffb29e40000 - 0x00007ffb29e4a000 	C:\Program Files\Zulu\zulu-15\bin\jimage.dll
 0x00007ffb28c20000 - 0x00007ffb28e14000 	C:\Windows\SYSTEM32\DBGHELP.DLL
 0x00007ffb06180000 - 0x00007ffb061aa000 	C:\Windows\SYSTEM32\dbgcore.DLL
-0x00007ffb142b0000 - 0x00007ffb142d5000 	C:\Program Files\Zulu\zulu-15\bin\java.dll
+0x00007ffb205d0000 - 0x00007ffb205f5000 	C:\Program Files\Zulu\zulu-15\bin\java.dll
 0x00007ffb2e840000 - 0x00007ffb2ef27000 	C:\Windows\System32\SHELL32.dll
 0x00007ffb2e3f0000 - 0x00007ffb2e499000 	C:\Windows\System32\shcore.dll
 0x00007ffb2d730000 - 0x00007ffb2deb0000 	C:\Windows\System32\windows.storage.dll
@@ -492,22 +494,22 @@ Dynamic libraries:
 0x00007ffb2ccc0000 - 0x00007ffb2ccd0000 	C:\Windows\System32\UMPDC.dll
 0x00007ffb2e0b0000 - 0x00007ffb2e102000 	C:\Windows\System32\shlwapi.dll
 0x00007ffb2d690000 - 0x00007ffb2d6a7000 	C:\Windows\System32\cryptsp.dll
-0x00007ffb14760000 - 0x00007ffb14779000 	C:\Program Files\Zulu\zulu-15\bin\net.dll
+0x00007ffb20d50000 - 0x00007ffb20d69000 	C:\Program Files\Zulu\zulu-15\bin\net.dll
 0x00007ffb274d0000 - 0x00007ffb275c0000 	C:\Windows\SYSTEM32\WINHTTP.dll
 0x00007ffb2c510000 - 0x00007ffb2c577000 	C:\Windows\system32\mswsock.dll
-0x00007ffb14290000 - 0x00007ffb142a2000 	C:\Program Files\Zulu\zulu-15\bin\nio.dll
-0x00007ffb11330000 - 0x00007ffb11348000 	C:\Program Files\Zulu\zulu-15\bin\zip.dll
+0x00007ffb20700000 - 0x00007ffb20712000 	C:\Program Files\Zulu\zulu-15\bin\nio.dll
+0x00007ffb205b0000 - 0x00007ffb205c8000 	C:\Program Files\Zulu\zulu-15\bin\zip.dll
 0x000000006e700000 - 0x000000006e72a000 	C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\e1cd32f8\gdx64.dll
-0x00007ffb29300000 - 0x00007ffb29310000 	C:\Program Files\Zulu\zulu-15\bin\verify.dll
+0x00007ffb29350000 - 0x00007ffb29360000 	C:\Program Files\Zulu\zulu-15\bin\verify.dll
 0x0000000180000000 - 0x0000000180053000 	C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\lwjgl64.dll
 0x00007ffaef7f0000 - 0x00007ffaef946000 	C:\Windows\SYSTEM32\OPENGL32.dll
 0x00007ffaf94c0000 - 0x00007ffaf94ec000 	C:\Windows\SYSTEM32\GLU32.dll
 0x00007ffb2b6a0000 - 0x00007ffb2b6c0000 	C:\Windows\SYSTEM32\dxcore.dll
-0x0000011a7d120000 - 0x0000011a7d184000 	C:\Users\STEFAN~1\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\OpenAL64.dll
+0x0000020d3e210000 - 0x0000020d3e274000 	C:\Users\STEFAN~1\AppData\Local\Temp\libgdxStefanieZuccarini\1cecf4f6\OpenAL64.dll
 0x00007ffb2fbb0000 - 0x00007ffb2fd07000 	C:\Windows\System32\ole32.dll
 0x00007ffb2ac90000 - 0x00007ffb2ad29000 	C:\Windows\system32\uxtheme.dll
 0x00007ffb2e1e0000 - 0x00007ffb2e282000 	C:\Windows\System32\clbcatq.dll
-0x00007ffaeb970000 - 0x00007ffaeba09000 	C:\Windows\SYSTEM32\dsound.dll
+0x00007ffb111a0000 - 0x00007ffb11239000 	C:\Windows\SYSTEM32\dsound.dll
 0x00007ffb19040000 - 0x00007ffb190b2000 	C:\Windows\System32\MMDevApi.dll
 0x00007ffb2cab0000 - 0x00007ffb2cada000 	C:\Windows\System32\DEVOBJ.dll
 0x00007ffb12830000 - 0x00007ffb1298d000 	C:\Windows\SYSTEM32\AUDIOSES.DLL
@@ -523,12 +525,12 @@ Dynamic libraries:
 0x00007ffb2a860000 - 0x00007ffb2a934000 	C:\Windows\System32\CoreMessaging.dll
 0x00007ffb2bba0000 - 0x00007ffb2bbd1000 	C:\Windows\SYSTEM32\ntmarta.dll
 0x00007ffb1a960000 - 0x00007ffb1ac07000 	C:\Windows\System32\iertutil.dll
-0x00007ffaa6970000 - 0x00007ffaa7887000 	C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_dc945736c722f2b5\ig9icd64.dll
+0x00007ffa92e30000 - 0x00007ffa93d47000 	C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_dc945736c722f2b5\ig9icd64.dll
 0x00007ffb2b290000 - 0x00007ffb2b2bd000 	C:\Windows\system32\dwmapi.dll
 0x00007ffb2b730000 - 0x00007ffb2b81b000 	C:\Windows\system32\dxgi.dll
 0x00007ffb20f80000 - 0x00007ffb21124000 	C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_dc945736c722f2b5\igdgmm64.dll
-0x00007ffb111d0000 - 0x00007ffb11213000 	C:\Windows\SYSTEM32\icm32.dll
-0x00007ffae74f0000 - 0x00007ffae784b000 	C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_dc945736c722f2b5\igdml64.dll
+0x00007ffb140f0000 - 0x00007ffb14133000 	C:\Windows\SYSTEM32\icm32.dll
+0x00007ffae7700000 - 0x00007ffae7a5b000 	C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_dc945736c722f2b5\igdml64.dll
 0x00007ffb1c3d0000 - 0x00007ffb1e9d1000 	C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_dc945736c722f2b5\igc64.dll
 0x0000000066b00000 - 0x0000000066b5b000 	C:\Users\StefanieZuccarini\AppData\Local\Temp\libgdxStefanieZuccarini\a14961b7\gdx-box2d64.dll
 
@@ -581,14 +583,14 @@ PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 142 Stepping 12, GenuineIntel
 
 OS:
  Windows 10 , 64 bit Build 18362 (10.0.18362.1110)
-OS uptime: 8 days 4:20 hours
+OS uptime: 5 days 4:13 hours
 
 CPU: total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 142 stepping 12 microcode 0xca, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, vzeroupper, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx, fma, clflush, clflushopt
 
-Memory: 4k page, system-wide physical 16198M (5062M free)
-TotalPageFile size 20038M (AvailPageFile size 7941M)
-current process WorkingSet (physical memory assigned to process): 189M, peak: 211M
-current process commit charge ("private bytes"): 462M, peak: 485M
+Memory: 4k page, system-wide physical 16198M (5522M free)
+TotalPageFile size 20038M (AvailPageFile size 8725M)
+current process WorkingSet (physical memory assigned to process): 175M, peak: 196M
+current process commit charge ("private bytes"): 426M, peak: 450M
 
 vm_info: OpenJDK 64-Bit Server VM (15.0.5+3-MTS) for windows-amd64 JRE (15.0.5+3-MTS) (Zulu15.36+13-CA), built on Oct  8 2021 11:07:26 by "zulu_re" with MS VC++ 15.9 (VS2017)
 
