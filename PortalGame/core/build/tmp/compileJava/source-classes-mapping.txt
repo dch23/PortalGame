@@ -4,11 +4,13 @@ com/mygdx/game/ReflectEntity.java
  com.mygdx.game.ReflectEntity
 com/mygdx/game/PMath.java
  com.mygdx.game.PMath
-com/mygdx/game/Inputs.java
- com.mygdx.game.Inputs
- com.mygdx.game.Inputs$Keys
-com/mygdx/game/CollisionListener.java
- com.mygdx.game.CollisionListener
+com/mygdx/game/Player.java
+ com.mygdx.game.Player
+ com.mygdx.game.Player$1
+ com.mygdx.game.Player$2
+ com.mygdx.game.Player$3
+com/mygdx/game/MyGdxGame.java
+ com.mygdx.game.MyGdxGame
 com/mygdx/game/Portals.java
  com.mygdx.game.Portal
  com.mygdx.game.Portals
@@ -22,10 +24,8 @@ com/mygdx/game/Entity.java
 com/mygdx/game/Laser.java
  com.mygdx.game.Laser
  com.mygdx.game.Laser$1
-com/mygdx/game/Player.java
- com.mygdx.game.Player
- com.mygdx.game.Player$1
- com.mygdx.game.Player$2
- com.mygdx.game.Player$3
-com/mygdx/game/MyGdxGame.java
- com.mygdx.game.MyGdxGame
+com/mygdx/game/CollisionListener.java
+ com.mygdx.game.CollisionListener
+com/mygdx/game/Inputs.java
+ com.mygdx.game.Inputs
+ com.mygdx.game.Inputs$Keys
