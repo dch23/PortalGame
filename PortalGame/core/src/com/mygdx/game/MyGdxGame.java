@@ -49,7 +49,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Entity> boxes;
 	ArrayList<Entity> walls;
 
-	// Rendered variables
+	// Rendered variables for the entities
 	static Renderer entityRenderer;
 	Texture img;
 	Texture squareTexture;
@@ -58,13 +58,14 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Rendering Debug Objects
 	Box2DDebugRenderer b2dr;
 
+	// lasers are not used rn
 	ArrayList<Laser> lasers;
 	float angle = 0f;
 
 	@Override
 	public void create () {
 
-		// Initialize Debug Renderer
+		// Initialize Debug Renderer for making debug lines and debug shapes for the physics objects
 		b2dr = new Box2DDebugRenderer();
 //		img = new Texture("badlogic.jpg");
 //		textureAtlas = new TextureAtlas();
@@ -119,6 +120,7 @@ public class MyGdxGame extends ApplicationAdapter {
 //		box = new Entity(world, new Vector2(1.5f ,1.5f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 1f);
 	}
 
+	// a function for adding a box to the physics world by supplying the entity constructor with proper values
 	private void addBox(Vector2 position, Vector2 size) {
 		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
 		entityRenderer.addToRenderLayer(1, newBox);
@@ -197,6 +199,11 @@ public class MyGdxGame extends ApplicationAdapter {
 //			laser.render();
 //		}
 //		Laser.endRender();
+
+		for (Entity entity : boxes) {
+			entity.updateReflection(player.portals);
+		}
+
 
 		player.operate();
 

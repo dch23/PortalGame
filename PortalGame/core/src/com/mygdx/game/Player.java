@@ -17,29 +17,40 @@ import javax.sound.sampled.Port;
 import java.util.ArrayList;
 
 public class Player extends Entity {
+    // used for drawing a debug line for the mouse (line from player to mouse)
     Renderer debugRenderer;
 
+    // variables that control the player values
     private float speed = 1.4f;
     private float jumpHeight = 2.3f;
     private float frictionMagnitude = 0.6f;
+
+    // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
     private Vector2 inputHoriz = Vector2.Zero;
 
+    // not used
     private float groundDistance = 0f;
     private float groundDistanceJumpThreshold = 0.4f;
 
+    // the portal variables
     public Portals portals;
-    private float maxShootPortalDistance = 100f;
-    private ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();
-    private RayHitInfo closestRayHitInfo;
-    private Vector2 mousePos;
+    private float maxShootPortalDistance = 100f;                    // the farthest you can shoot a portal
+    private ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();  // finding a portal surface when shooting a portal is done by constantly adding ray information to this array every time a ray is created when mouse clicked
+    private RayHitInfo closestRayHitInfo;                           // used to set the closest plausible surface to put a portal on
+    private Vector2 mousePos;                                       // used to keep track of the position of the mouse
 
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+        // constructor similarity to the entity is set with super
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+
+        // lock the rotation of the player
         this.body.setFixedRotation(true);
-        this.portals = new Portals(this.world);
-        this.debugRenderer = new Renderer(camera);
+        this.portals = new Portals(this.world);     // create the portals instance
+        this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
     }
 
+
+    // right now the on ground function just returns true, havent found a good way to check if on ground
     private boolean onGround() {
         RayCastCallback callback = new RayCastCallback() {
             @Override
@@ -58,41 +69,42 @@ public class Player extends Entity {
 //        return (groundDistance < groundDistanceJumpThreshold);
     }
 
+    // the control function allows for input reactions
     private void control() {
+        // process the input
         Gdx.input.setInputProcessor(new InputAdapter() {
-
             @Override
-            public boolean keyDown(int keyCode) {
-                switch (keyCode) {
+            public boolean keyDown(int keyCode) {           // if a key is pressed down (holding the key only fires this function once still)
+                switch (keyCode) {                          // switch statement (look up if your not sure how it works)
                     case Inputs.Keys.KEY_RIGHT:
                     case Inputs.Keys.ARROW_RIGHT:
-                        inputHoriz.x = 1f;
+                        inputHoriz.x = 1f;                  // if the right arrow key or the right button key is pressed then set the inputHoriz x to 1
                         break;
                     case Inputs.Keys.KEY_LEFT:
                     case Inputs.Keys.ARROW_LEFT:
-                        inputHoriz.y = 1f;
+                        inputHoriz.y = 1f;                  // if the left arrow or left button key is pressed then set input horiz y to 1
                         break;
                     case Inputs.Keys.KEY_UP:
                     case Inputs.Keys.ARROW_UP:
                         if (onGround()) {
-                            body.setLinearVelocity(body.getLinearVelocity().x, jumpHeight);
+                            body.setLinearVelocity(body.getLinearVelocity().x, jumpHeight);     // if on the ground, then set the y speed to the jump height, this simulates a sort of impact force upwards
                         }
                         break;
                     case Inputs.Keys.ARROW_DOWN:
                         break;
                 }
-                return true;
+                return true;        // must return a value because it is a boolean function
             }
             public boolean keyUp(int keyCode) {
                 switch (keyCode) {
                     case Inputs.Keys.KEY_RIGHT:
-                    case Inputs.Keys.ARROW_RIGHT:
+                    case Inputs.Keys.ARROW_RIGHT:           // if the right arrow or right button key is released then reset the inputHoriz x to 0
                         inputHoriz.x = 0f;
 //                        body.setLinearVelocity(slowDownSpeed, body.getLinearVelocity().y);
                         break;
                     case Inputs.Keys.KEY_LEFT:
                     case Inputs.Keys.ARROW_LEFT:
-                        inputHoriz.y = 0f;
+                        inputHoriz.y = 0f;                  // if the left arrow or left button key is released the reset the inputHoriz y to 0
 //                        body.setLinearVelocity(-slowDownSpeed, body.getLinearVelocity().y);
                         break;
                     case Inputs.Keys.KEY_UP:
@@ -122,7 +134,9 @@ public class Player extends Entity {
                 return true;
             }
         });
-        if (inputHoriz.x - inputHoriz.y != 0) {
+        if (inputHoriz.x - inputHoriz.y != 0) { // if the right and left input values have a difference other than 0, then set the player velocity to a value,
+                                                // the only case that they would have a difference of 0 is when both of them are pressed,
+                                                // so you wouldn't want to change the velocity if right and left are pressed down.
             body.setLinearVelocity(Math.max(speed, Math.abs(body.getLinearVelocity().x)) * (inputHoriz.x - inputHoriz.y), body.getLinearVelocity().y);
         }
 
@@ -130,12 +144,13 @@ public class Player extends Entity {
 
 
     private void shootPortal(final int portalNumber) {
-        raysHitInfo = new ArrayList<>();
-        closestRayHitInfo = null;
+        raysHitInfo = new ArrayList<>();            // refresh the rays information list
+        closestRayHitInfo = null;                   // reset the closest ray to nothing
 
         // Set portal
-        Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE);
+        Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
 
+        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
@@ -153,10 +168,11 @@ public class Player extends Entity {
 //                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance));
 
         // call raycast in world from player position to the max distance away from it based off the maxShootPortalDistance
+        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
         world.rayCast(callback, this.body.getPosition(), PMath.addVector2(this.body.getPosition(),
                 PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance)));
 
-        // Finding closest ray hit
+        // Finding the closest ray hit through a searching algorithm
         if (raysHitInfo!=null) {
             if (raysHitInfo.size() == 0) return;
             closestRayHitInfo = raysHitInfo.get(0);
@@ -173,8 +189,10 @@ public class Player extends Entity {
 //            r.print();
 //        }
 //        System.out.println();
+        // ngl, i have no idea why i added the next line
         closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
-        // portal to the closest
+
+        // set a portal to the closest plausible surface in the direction you click the mouse
         if (closestRayHitInfo != null) {
             if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
                 if (properPortalNormal(closestRayHitInfo.normal)) {
@@ -225,14 +243,16 @@ public class Player extends Entity {
 
     private void friction () {
         float xVelocity = body.getLinearVelocity().x;
-        float direction = xVelocity / Math.abs(xVelocity);
+        float direction = xVelocity / Math.abs(xVelocity);                          // getting the direction the player is traveling in the x axis
+
+        // creating a variable that is the same as the x velocity except it is reduced by the friction magnitude and still pointed towards the direction it needs to go
         float newXVelocity = (Math.abs(xVelocity) - frictionMagnitude) * direction;
-        float newDirection = newXVelocity / Math.abs(newXVelocity);
-        if (direction == newDirection) {
-            body.setLinearVelocity(newXVelocity, body.getLinearVelocity().y);
+        float newDirection = newXVelocity / Math.abs(newXVelocity);                 // getting the new direction that the nex x velocity is pointing to
+        if (direction == newDirection) {                                            // if the old direction is the same as the new direction then
+            body.setLinearVelocity(newXVelocity, body.getLinearVelocity().y);       // set the velocity accordingly
         }
         else {
-            body.setLinearVelocity(0, body.getLinearVelocity().y);
+            body.setLinearVelocity(0, body.getLinearVelocity().y);              // if the direction changes to the other direction (as in the friction makes it not only reach 0, but goes past 0 is some cases) then automatically set it to 0
         }
     }
 
