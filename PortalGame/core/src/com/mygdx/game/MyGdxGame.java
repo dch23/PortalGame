@@ -98,7 +98,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		for (int i=0; i<0; i++) {
+		for (int i=0; i<1; i++) {
 			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
 			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
 		}
@@ -119,6 +119,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private void addBox(Vector2 position, Vector2 size) {
 		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
+		entityRenderer.addToRenderLayer(1, newBox);
 		boxes.add(newBox);
 	}
 
