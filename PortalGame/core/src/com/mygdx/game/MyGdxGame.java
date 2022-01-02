@@ -44,6 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// Objects in the physics world
 	Player player;
+	WeakEnemyEntity enemy;
 	Entity floor;
 	ArrayList<Entity> boxes;
 	ArrayList<Entity> walls;
@@ -82,7 +83,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 
 
-
 		// Initialize Physics World
 		world = new World(gravity, false);
 //		System.out.println(world);
@@ -93,12 +93,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Initialize Objects in Physics World
 		player = new Player(world, camera, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
 		entityRenderer.addToRenderLayer(1, player);
+		//Create Enemy
+		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(2f,3f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
 
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		for (int i=0; i<1; i++) {
+		for (int i=0; i<0; i++) {
 			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
 			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
 		}

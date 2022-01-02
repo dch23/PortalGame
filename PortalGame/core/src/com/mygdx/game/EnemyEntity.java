@@ -18,7 +18,7 @@ public class EnemyEntity extends Entity {
 
     public EnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
-        this.body.setFixedRotation(true);
+        // this.body.setFixedRotation(true);
     }
 
     private boolean onGround() {
@@ -38,3 +38,4 @@ public class EnemyEntity extends Entity {
         return true;
     }
 }
+
