@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -28,6 +29,8 @@ public class Portals {
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
+
+        portals[0].setSprite(new Sprite(new Texture("")));
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
@@ -413,6 +416,11 @@ class Portal {
     public Portal(final World world) {
         this.world = world;
     };
+
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+    }
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {
         this.position = position;
