@@ -60,8 +60,8 @@ public class Portals {
         // set for certain portal number
 
         // set constant portal data
-        portals[portalNumber].setPosition(position);
         portals[portalNumber].setNormal(normal);
+        portals[portalNumber].setPosition(position);
         portals[portalNumber].setEnabled(enabled);
 
         // if the portal doesn't have a surface then:
@@ -445,6 +445,7 @@ class Portal {
         scaledSize = PMath.multVector2(scaledSize, portalLengthScale);
 
         this.sprite.setSize(scaledSize.x, scaledSize.y);
+        this.sprite.setOriginCenter();
     }
 
     public Sprite getSprite() {
@@ -693,6 +694,37 @@ class Portal {
 
     public void setPosition(Vector2 position) {
         this.position = position;
+
+        // set sprite position and rotation
+        resetSprite();
+
+    }
+
+    private void resetSprite() {
+        float positionAxis;
+        float offsetAxis;
+        float normalAxis;
+        if (getNormal().y == 0) {
+            offsetAxis = getPosition().y;
+            normalAxis = getNormal().x;
+            positionAxis = getPosition().x;
+            if (normalAxis == 1) positionAxis -= getSprite().getWidth();
+
+            float degrees = normalAxis == 1 ? 0 : 180;
+            getSprite().setRotation(degrees);
+            getSprite().setPosition(positionAxis, offsetAxis - getSprite().getHeight()/2f);
+        }
+        else {
+            offsetAxis = getPosition().x;
+            normalAxis = getNormal().y;
+            positionAxis = getPosition().y;
+            positionAxis -= getSprite().getHeight()/2f + getSprite().getWidth()/2f * normalAxis;
+
+            float degrees = normalAxis == 1 ? 90 : -90;
+            getSprite().setRotation(degrees);
+            getSprite().setPosition(offsetAxis - getSprite().getWidth()/2f, positionAxis);
+        }
+
     }
 
     public Vector2 getNormal() {
