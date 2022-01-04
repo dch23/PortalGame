@@ -13,6 +13,7 @@ public class Portals {
     private Renderer entityRenderer = MyGdxGame.entityRenderer;;
     private World world;
     private float pullMagnitude = 2f;
+    private float suckStrength = 50f;
 
     Portal[] portals;
 
@@ -258,13 +259,15 @@ public class Portals {
 //        System.out.println();
     }
 
-    public void linkPortal(Fixture solid, Fixture wall) {
+    public void linkPortal(Fixture solid, int portalNumber) {
         Entity entity = Entity.entityFromBody(solid.getBody());
-        Portal portalEntering = wall == portals[0].getSurface() ? portals[0] : portals[1];
+        Portal portalEntering = portals[portalNumber];
         Portal portalExiting = portalEntering.getOtherPortal();
 
         entity.portalEntering = portalEntering;
         entity.portalExiting = portalExiting;
+
+        entity.inPortal = true;
 
         Vector2 directionFromSolidToPortal = PMath.normalizeVector2(PMath.subVector2(portalEntering.getPosition(), entity.getPosition()));
 
@@ -312,14 +315,82 @@ public class Portals {
     }
 
     public void unlinkPortal(Fixture solid) {
+//        System.out.println("out portal");
+
         Entity entity = Entity.entityFromBody(solid.getBody());
+
+        entity.inPortal = false;
+
+        entity.setPosition(entity.reflectEntity.getPosition());
+        if (entity.portalExiting.getNormal().y == 0) {
+//            System.out.println(entity.getBody().getLinearVelocity());
+            entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) * entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
+        }
+//        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);
 
         entity.portalEntering = null;
         entity.portalExiting = null;
 
+        portals[0].suckDirection = null;
+        portals[1].suckDirection = null;
+
+
+
     }
 
     // renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
+
+    public boolean isGoingIntoPortal(Entity e, Portal p) {
+        Float eVelocity = null;
+        Integer normal = null;
+        if (p.getNormal().y == 0) {
+            eVelocity = e.getBody().getLinearVelocity().x;
+            normal = (int) p.getNormal().x;
+        }
+        else if (p.getNormal().x == 0) {
+            eVelocity = e.getBody().getLinearVelocity().y;
+            normal = (int) p.getNormal().y;
+        }
+
+        if (eVelocity != null && normal != null && eVelocity != 0) {
+            int eDirection = (int) (eVelocity / Math.abs(eVelocity));
+            return eDirection == -normal;
+        }
+        return false;
+    }
+
+    public boolean isLeavingPortal(Entity e, Portal p) {
+        Float eVelocity = null;
+        Integer normal = null;
+        if (p.getNormal().y == 0) {
+            eVelocity = e.getBody().getLinearVelocity().x;
+            normal = (int) p.getNormal().x;
+        }
+        else if (p.getNormal().x == 0) {
+            eVelocity = e.getBody().getLinearVelocity().y;
+            normal = (int) p.getNormal().y;
+        }
+
+        if (eVelocity != null && normal != null && eVelocity != 0) {
+            int eDirection = (int) (eVelocity / Math.abs(eVelocity));
+            return eDirection == normal;
+        }
+        return false;
+    }
+
+    public void suckEntity(Portal p, Entity e) {
+        if (p.suckDirection == null) {
+            p.suckDirection = PMath.normalizeVector2(PMath.subVector2(p.getPosition(), e.getPosition()));
+        }
+        if (p.getNormal().y == 0) {
+            p.suckDirection.y = 0;
+        }
+        if (p.getNormal().x == 0) {
+            p.suckDirection.x = 0;
+        }
+        e.applyForce(p.suckDirection, this.suckStrength);
+    }
+
 }
 
 class Portal {
@@ -333,6 +404,7 @@ class Portal {
     private boolean enabled = false;
 
     protected World world;
+    protected Vector2 suckDirection = null;
     protected ContactListener contactListener;
 
 
@@ -564,6 +636,7 @@ class Portal {
     public void setOtherPortal(Portal otherPortal) {
         this.otherPortal = otherPortal;
     }
+
     public Portal getOtherPortal() {
         return this.otherPortal;
     }

@@ -32,6 +32,9 @@ public class PMath {
         return new Vector2(Math.abs(v.x), Math.abs(v.y));
     }
 
+    static public float clamp(float val, float min, float max) {
+        return Math.max(min, Math.min(max, val));
+    }
 
 }
 

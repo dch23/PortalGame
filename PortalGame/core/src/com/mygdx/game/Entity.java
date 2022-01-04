@@ -35,8 +35,10 @@ public class Entity {
 
     private Color color;
 
+    public boolean inPortal = false;
     public Portal portalEntering;
     public Portal portalExiting;
+    private float reflectionExtrudeOffset = 0.02f;
 //
     public Entity reflectEntity;
 
@@ -102,36 +104,85 @@ public class Entity {
     }
 
     public void updateReflection(Portals portals) {
+        if (portals.portals[0].getSurface() == null || portals.portals[1].getSurface() == null) return;
         if (portalEntering == null || portalExiting == null) {
             if (reflectEntity != null) {
-                setPosition(reflectEntity.getPosition());
+//                setPosition(reflectEntity.getPosition());
                 reflectEntity.dispose();
             }
             reflectEntity = null;
 
         }
         else {
+
+            //suck entity in portal
+            portals.suckEntity(portalEntering, this);
+
             if (reflectEntity == null) {
                 reflectEntity = new ReflectEntity(this.world, getName(), new Vector2(0, 0), this.size,
                         BodyDef.BodyType.StaticBody, getSprite().getColor(), getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
 
-            Vector2 reflectPosition = new Vector2();
-            float portalEnteringSurfaceWidth = Entity.entityFromBody(portalEntering.getSurface().getBody()).size.x;
-            float entityWidth = size.x;
-            Vector2 enteringPortalSurfacePosition = portalEntering.getSurface().getBody().getPosition();
-
-            //        float enteringSurfaceX = enteringPortalPosition.x * portalEntering.getNormal().x;
-            float distanceFromSurfaceX = enteringPortalSurfacePosition.x - getPosition().x;
-            float intrudingWidth = entityWidth / 2f + portalEnteringSurfaceWidth / 2f - distanceFromSurfaceX;
-
+            Vector2 portalEnteringSurfacePosition = portalEntering.getSurface().getBody().getPosition();
             Vector2 portalExitingSurfacePosition = portalExiting.getSurface().getBody().getPosition();
-            float portalExitingWidth = Entity.entityFromBody(portalExiting.getSurface().getBody()).size.x;
-            float reflectEntityX = portalExitingSurfacePosition.x + portalExitingWidth / 2f - entityWidth / 2f + intrudingWidth;
-            reflectEntity.setPosition(new Vector2(reflectEntityX, portalExiting.getPosition().y));
 
-            if (intrudingWidth >= size.x+0.03) portals.unlinkPortal(getBody().getFixtureList().first());
+            Float portalEnteringSurfaceThickness = null;
+            Float entityThickness = null;
+            Float distanceFromPortalEnteringSurface = null;
+
+
+
+            if (portalEntering.getNormal().y == 0) {
+                portalEnteringSurfaceThickness = Entity.entityFromBody(portalEntering.getSurface().getBody()).size.x;
+                entityThickness = size.x;
+                distanceFromPortalEnteringSurface = (portalEnteringSurfacePosition.x - getPosition().x) * -portalEntering.getNormal().x;
+            }
+            else {
+                portalEnteringSurfaceThickness = Entity.entityFromBody(portalEntering.getSurface().getBody()).size.y;
+                entityThickness = size.y;
+                distanceFromPortalEnteringSurface = (portalEnteringSurfacePosition.y - getPosition().y) * -portalEntering.getNormal().y;
+            }
+            float halfEntityAndHalfWall = entityThickness / 2f + portalEnteringSurfaceThickness / 2f;
+            float intrudingWidth = Math.abs(halfEntityAndHalfWall - distanceFromPortalEnteringSurface);
+
+
+            Float portalExitingSurfaceThickness = null;
+            Float reflectEntityAxis = null;
+
+            Float sizeAxis = null;
+
+            if (portalExiting.getNormal().y == 0) {
+                portalExitingSurfaceThickness = Entity.entityFromBody(portalExiting.getSurface().getBody()).size.x;
+                reflectEntityAxis = portalExitingSurfacePosition.x + portalExitingSurfaceThickness / 2f * portalExiting.getNormal().x
+                        - entityThickness / 2f * portalExiting.getNormal().x + intrudingWidth * portalExiting.getNormal().x;
+
+                reflectEntity.setPosition(new Vector2(reflectEntityAxis, portalExiting.getPosition().y));
+
+                sizeAxis = size.x;
+            }
+            else {
+                portalExitingSurfaceThickness = Entity.entityFromBody(portalExiting.getSurface().getBody()).size.y;
+                reflectEntityAxis = portalExitingSurfacePosition.y + portalExitingSurfaceThickness / 2f * portalExiting.getNormal().y
+                        - entityThickness / 2f * portalExiting.getNormal().y + intrudingWidth * portalExiting.getNormal().y;
+                reflectEntity.setPosition(new Vector2(portalExiting.getPosition().x, reflectEntityAxis));
+
+                sizeAxis = size.y;
+            }
+
+            //            System.out.println("entering with an x vel of: " + getBody().getLinearVelocity().x);
+
+
+            if (intrudingWidth >= sizeAxis + reflectionExtrudeOffset) {
+                if (portals.isGoingIntoPortal(this, portalEntering)) {
+                    portals.unlinkPortal(getBody().getFixtureList().first());
+                }
+            }
+//            if (intrudingWidth <= 0.03) {
+//                if (portals.isLeavingPortal(this, portalEntering)) {
+//                    portals.unlinkPortal(getBody().getFixtureList().first());
+//                }
+//            }
         }
     }
 
