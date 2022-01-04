@@ -95,7 +95,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		player = new Player(world, camera, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
 		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
-		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(2f,3f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
+		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
 
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
@@ -150,10 +150,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	boolean m=true;
 	@Override
 	public void render () {
-		if (m) {
-			new Entity(this.world, "Test", new Vector2(1,1), new Vector2(0.1f,0.1f), BodyDef.BodyType.DynamicBody, Color.WHITE, 1, 1, false, null);
-			m=false;
-		}
 //		System.out.println(this.world.getContactCount());
 		// Set Screen Background Colour to White with an Alpha of 100%
 		ScreenUtils.clear(1, 1, 1, 1);
@@ -208,6 +204,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.operate();
 
 		player.updateReflection(player.portals);
+
+		enemy.operate();
 
 		map.renderBackground();
 
