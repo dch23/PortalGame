@@ -30,7 +30,8 @@ public class Portals {
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
 
-        portals[0].setSprite(new Sprite(new Texture("")));
+        portals[0].setSprite(new Sprite(new Texture("sprites/portal1.gif")));
+        portals[1].setSprite(new Sprite(new Texture("sprites/portal2.gif")));
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
@@ -401,6 +402,8 @@ class Portal {
     static final float portalLength = 0.4f;
 
     private Portal otherPortal;
+
+    protected Sprite sprite;
 
     private Vector2 position;
     private Vector2 normal;
