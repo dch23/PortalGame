@@ -260,6 +260,7 @@ public class Portals {
     }
 
     public void linkPortal(Fixture solid, int portalNumber) {
+        System.out.println("link portal");
         Entity entity = Entity.entityFromBody(solid.getBody());
         Portal portalEntering = portals[portalNumber];
         Portal portalExiting = portalEntering.getOtherPortal();
@@ -315,7 +316,7 @@ public class Portals {
     }
 
     public void unlinkPortal(Fixture solid) {
-//        System.out.println("out portal");
+        System.out.println("unlink portal");
 
         Entity entity = Entity.entityFromBody(solid.getBody());
 
