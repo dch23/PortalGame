@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -30,8 +31,23 @@ public class Portals {
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
 
-        portals[0].setSprite(new Sprite(new Texture("sprites/portal1.gif")));
-        portals[1].setSprite(new Sprite(new Texture("sprites/portal2.gif")));
+        portals[0].setSprite(new Sprite(new Texture("sprites/portal1.png")));
+        portals[1].setSprite(new Sprite(new Texture("sprites/portal2.png")));
+    }
+
+    public void renderPortals(SpriteBatch spriteBatch) {
+        spriteBatch.begin();
+        for (Portal p : portals) {
+            if (p.getSprite() == null) continue;
+            p.getSprite().draw(spriteBatch);
+//            Vector2 offset = PMath.divideVector2(this.entity.size, 2f);
+//            this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
+//            this.entity.sprite.setPosition(this.entity.getPosition().x - offset.x, this.entity.getPosition().y - offset.y);
+//            this.entity.sprite.setOriginCenter();
+//            this.entity.sprite.setRotation(this.entity.getBody().getAngle());
+//            this.entity.sprite.draw(this.spriteBatch);
+        }
+        spriteBatch.end();
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
@@ -423,6 +439,16 @@ class Portal {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
+        Vector2 scaledSize = PMath.multVector2(new Vector2(this.sprite.getWidth(), this.sprite.getHeight()), MyGdxGame.GAME_SCALE);
+
+        float portalLengthScale = Portal.portalLength / scaledSize.y;
+        scaledSize = PMath.multVector2(scaledSize, portalLengthScale);
+
+        this.sprite.setSize(scaledSize.x, scaledSize.y);
+    }
+
+    public Sprite getSprite() {
+        return this.sprite;
     }
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {
