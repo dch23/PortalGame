@@ -105,6 +105,8 @@ public class Entity {
 
     public void updateReflection(Portals portals) {
         if (portals.portals[0].getSurface() == null || portals.portals[1].getSurface() == null) return;
+
+
         if (portalEntering == null || portalExiting == null) {
             if (reflectEntity != null) {
 //                setPosition(reflectEntity.getPosition());
@@ -114,6 +116,8 @@ public class Entity {
 
         }
         else {
+
+            if (!properPositionToReflect()) return;
 
             //suck entity in portal
             portals.suckEntity(portalEntering, this);
@@ -184,6 +188,23 @@ public class Entity {
 //                }
 //            }
         }
+    }
+
+    private boolean properPositionToReflect() {
+        Float ePositionAxis;
+        Float topBoundPortal;
+        Float botBoundPortal;
+        if (portalEntering.getNormal().y == 0) {
+            topBoundPortal = portalEntering.getPosition().y + Portal.portalLength / 2f - size.y / 2f;
+            botBoundPortal = portalEntering.getPosition().y - Portal.portalLength / 2f + size.y / 2f;
+            ePositionAxis = getPosition().y;
+        }
+        else {
+            topBoundPortal = portalEntering.getPosition().x + Portal.portalLength / 2f - size.x / 2f;
+            botBoundPortal = portalEntering.getPosition().x - Portal.portalLength / 2f + size.x / 2f;
+            ePositionAxis = getPosition().x;
+        }
+        return ePositionAxis >= botBoundPortal && ePositionAxis <= topBoundPortal;
     }
 
 
