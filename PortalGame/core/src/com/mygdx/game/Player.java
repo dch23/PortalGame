@@ -37,7 +37,10 @@ public class Player extends Entity {
     private float maxShootPortalDistance = 100f;                    // the farthest you can shoot a portal
     private ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();  // finding a portal surface when shooting a portal is done by constantly adding ray information to this array every time a ray is created when mouse clicked
     private RayHitInfo closestRayHitInfo;                           // used to set the closest plausible surface to put a portal on
-    private Vector2 mousePos;                                       // used to keep track of the position of the mouse
+    private Vector2 mousePos; // used to keep track of the position of the mouse
+
+    // Player Properties
+    public boolean alive = true;
 
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // constructor similarity to the entity is set with super
@@ -277,5 +280,9 @@ public class Player extends Entity {
             this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
         }
 //        airResistance();
+
+//        if(alive == false){
+//            dispose();
+//       }
     }
 }

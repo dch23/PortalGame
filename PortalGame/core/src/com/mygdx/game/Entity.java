@@ -301,7 +301,9 @@ public class Entity {
     }
 
     public void dispose() {
+        if(this.body == null) return;
         this.world.destroyBody(this.body);
+        this.body = null;
     }
 
     static Entity entityFromBody(Body body) {

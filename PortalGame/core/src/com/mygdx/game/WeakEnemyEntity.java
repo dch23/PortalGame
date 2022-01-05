@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class WeakEnemyEntity extends EnemyEntity {
     float closeEnoughCollisionRange = 0.02f;
-    boolean isPlayerDead = false;
-    String enemyName = "Enemy1";
     int wanderDirection = 1;
     ArrayList<RayHitInfo> raysHitInfo;
     RayHitInfo closestRayHitInfo;
@@ -20,9 +18,10 @@ public class WeakEnemyEntity extends EnemyEntity {
 
     public WeakEnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
-
     }
-
+    static public void initialize(World world){
+        world.setContactListener(new WeakEnemyCollisionListener());
+    }
     private boolean hitWall() {
         raysHitInfo = new ArrayList<>();            // refresh the rays information list
         closestRayHitInfo = null;   // reset the closest ray to nothing
@@ -66,23 +65,6 @@ public class WeakEnemyEntity extends EnemyEntity {
             return true;
         } else {return false;}
     }
-    public void checkCollision(Contact contact) {
-        Body bodyA = contact.getFixtureA().getBody();
-        Body bodyB = contact.getFixtureB().getBody();
-
-        Entity entityA = Entity.entityFromBody(bodyA);
-        Entity entityB = Entity.entityFromBody(bodyB);
-        if (entityA.getName() == enemyName || entityB.getName() == enemyName) {
-            if (entityA.getName() != entityB.getName()) {
-                Entity enemyEntity = entityA.getName() == enemyName ? entityA : entityB; // ternary operator, google if your not sure
-                Entity otherEntity = entityA.getName() != enemyName ? entityA : entityB;
-
-                isPlayerDead = true;
-            }
-        }
-
-    }
-
 
 
     public void operate() {
@@ -90,8 +72,5 @@ public class WeakEnemyEntity extends EnemyEntity {
             wanderDirection *= -1;
         }
         this.body.setLinearVelocity(this.speed * wanderDirection, this.body.getLinearVelocity().y);
-        if(isPlayerDead){
-            player.dispose();
-        }
     }
 }
