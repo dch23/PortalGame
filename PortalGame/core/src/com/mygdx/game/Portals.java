@@ -15,7 +15,7 @@ public class Portals {
     private Renderer entityRenderer = MyGdxGame.entityRenderer;;
     private World world;
     private float pullMagnitude = 2f;
-    private float suckStrength = 50f;
+    private float suckStrength = 30f;
 
     Portal[] portals;
 
@@ -38,7 +38,7 @@ public class Portals {
     public void renderPortals(SpriteBatch spriteBatch) {
         spriteBatch.begin();
         for (Portal p : portals) {
-            if (p.getSprite() == null) continue;
+            if (p.getSurface() == null) continue;
             p.getSprite().draw(spriteBatch);
 //            Vector2 offset = PMath.divideVector2(this.entity.size, 2f);
 //            this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
@@ -345,7 +345,12 @@ public class Portals {
         entity.setPosition(entity.reflectEntity.getPosition());
         if (entity.portalExiting.getNormal().y == 0) {
 //            System.out.println(entity.getBody().getLinearVelocity());
-            entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) * entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
+            entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
+                    entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
+        }
+        else {
+            entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
+                    Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
         }
 //        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);
 
@@ -415,7 +420,7 @@ public class Portals {
 }
 
 class Portal {
-    static final float portalLength = 0.4f;
+    static final float portalLength = 0.3f;
 
     private Portal otherPortal;
 
