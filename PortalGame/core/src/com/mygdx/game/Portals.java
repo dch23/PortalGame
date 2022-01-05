@@ -1,7 +1,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -13,6 +15,7 @@ public class Portals {
     private Renderer entityRenderer = MyGdxGame.entityRenderer;;
     private World world;
     private float pullMagnitude = 2f;
+    private float suckStrength = 30f;
 
     Portal[] portals;
 
@@ -27,6 +30,24 @@ public class Portals {
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
+
+        portals[0].setSprite(new Sprite(new Texture("sprites/portal1.png")));
+        portals[1].setSprite(new Sprite(new Texture("sprites/portal2.png")));
+    }
+
+    public void renderPortals(SpriteBatch spriteBatch) {
+        spriteBatch.begin();
+        for (Portal p : portals) {
+            if (p.getSurface() == null) continue;
+            p.getSprite().draw(spriteBatch);
+//            Vector2 offset = PMath.divideVector2(this.entity.size, 2f);
+//            this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
+//            this.entity.sprite.setPosition(this.entity.getPosition().x - offset.x, this.entity.getPosition().y - offset.y);
+//            this.entity.sprite.setOriginCenter();
+//            this.entity.sprite.setRotation(this.entity.getBody().getAngle());
+//            this.entity.sprite.draw(this.spriteBatch);
+        }
+        spriteBatch.end();
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
@@ -39,8 +60,8 @@ public class Portals {
         // set for certain portal number
 
         // set constant portal data
-        portals[portalNumber].setPosition(position);
         portals[portalNumber].setNormal(normal);
+        portals[portalNumber].setPosition(position);
         portals[portalNumber].setEnabled(enabled);
 
         // if the portal doesn't have a surface then:
@@ -258,13 +279,16 @@ public class Portals {
 //        System.out.println();
     }
 
-    public void linkPortal(Fixture solid, Fixture wall) {
+    public void linkPortal(Fixture solid, int portalNumber) {
+        System.out.println("link portal");
         Entity entity = Entity.entityFromBody(solid.getBody());
-        Portal portalEntering = wall == portals[0].getSurface() ? portals[0] : portals[1];
+        Portal portalEntering = portals[portalNumber];
         Portal portalExiting = portalEntering.getOtherPortal();
 
         entity.portalEntering = portalEntering;
         entity.portalExiting = portalExiting;
+
+        entity.inPortal = true;
 
         Vector2 directionFromSolidToPortal = PMath.normalizeVector2(PMath.subVector2(portalEntering.getPosition(), entity.getPosition()));
 
@@ -312,20 +336,95 @@ public class Portals {
     }
 
     public void unlinkPortal(Fixture solid) {
+        System.out.println("unlink portal");
+
         Entity entity = Entity.entityFromBody(solid.getBody());
+
+        entity.inPortal = false;
+
+        entity.setPosition(entity.reflectEntity.getPosition());
+        if (entity.portalExiting.getNormal().y == 0) {
+//            System.out.println(entity.getBody().getLinearVelocity());
+            entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
+                    entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
+        }
+        else {
+            entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
+                    Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
+        }
+//        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);
 
         entity.portalEntering = null;
         entity.portalExiting = null;
 
+        portals[0].suckDirection = null;
+        portals[1].suckDirection = null;
+
+
+
     }
 
     // renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
+
+    public boolean isGoingIntoPortal(Entity e, Portal p) {
+        Float eVelocity = null;
+        Integer normal = null;
+        if (p.getNormal().y == 0) {
+            eVelocity = e.getBody().getLinearVelocity().x;
+            normal = (int) p.getNormal().x;
+        }
+        else if (p.getNormal().x == 0) {
+            eVelocity = e.getBody().getLinearVelocity().y;
+            normal = (int) p.getNormal().y;
+        }
+
+        if (eVelocity != null && normal != null && eVelocity != 0) {
+            int eDirection = (int) (eVelocity / Math.abs(eVelocity));
+            return eDirection == -normal;
+        }
+        return false;
+    }
+
+    public boolean isLeavingPortal(Entity e, Portal p) {
+        Float eVelocity = null;
+        Integer normal = null;
+        if (p.getNormal().y == 0) {
+            eVelocity = e.getBody().getLinearVelocity().x;
+            normal = (int) p.getNormal().x;
+        }
+        else if (p.getNormal().x == 0) {
+            eVelocity = e.getBody().getLinearVelocity().y;
+            normal = (int) p.getNormal().y;
+        }
+
+        if (eVelocity != null && normal != null && eVelocity != 0) {
+            int eDirection = (int) (eVelocity / Math.abs(eVelocity));
+            return eDirection == normal;
+        }
+        return false;
+    }
+
+    public void suckEntity(Portal p, Entity e) {
+        if (p.suckDirection == null) {
+            p.suckDirection = PMath.normalizeVector2(PMath.subVector2(p.getPosition(), e.getPosition()));
+        }
+        if (p.getNormal().y == 0) {
+            p.suckDirection.y = 0;
+        }
+        if (p.getNormal().x == 0) {
+            p.suckDirection.x = 0;
+        }
+        e.applyForce(p.suckDirection, this.suckStrength);
+    }
+
 }
 
 class Portal {
-    static final float portalLength = 0.4f;
+    static final float portalLength = 0.3f;
 
     private Portal otherPortal;
+
+    protected Sprite sprite;
 
     private Vector2 position;
     private Vector2 normal;
@@ -333,6 +432,7 @@ class Portal {
     private boolean enabled = false;
 
     protected World world;
+    protected Vector2 suckDirection = null;
     protected ContactListener contactListener;
 
 
@@ -340,6 +440,22 @@ class Portal {
     public Portal(final World world) {
         this.world = world;
     };
+
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+        Vector2 scaledSize = PMath.multVector2(new Vector2(this.sprite.getWidth(), this.sprite.getHeight()), MyGdxGame.GAME_SCALE);
+
+        float portalLengthScale = Portal.portalLength / scaledSize.y;
+        scaledSize = PMath.multVector2(scaledSize, portalLengthScale);
+
+        this.sprite.setSize(scaledSize.x, scaledSize.y);
+        this.sprite.setOriginCenter();
+    }
+
+    public Sprite getSprite() {
+        return this.sprite;
+    }
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {
         this.position = position;
@@ -564,6 +680,7 @@ class Portal {
     public void setOtherPortal(Portal otherPortal) {
         this.otherPortal = otherPortal;
     }
+
     public Portal getOtherPortal() {
         return this.otherPortal;
     }
@@ -582,6 +699,37 @@ class Portal {
 
     public void setPosition(Vector2 position) {
         this.position = position;
+
+        // set sprite position and rotation
+        resetSprite();
+
+    }
+
+    private void resetSprite() {
+        float positionAxis;
+        float offsetAxis;
+        float normalAxis;
+        if (getNormal().y == 0) {
+            offsetAxis = getPosition().y;
+            normalAxis = getNormal().x;
+            positionAxis = getPosition().x;
+            if (normalAxis == 1) positionAxis -= getSprite().getWidth();
+
+            float degrees = normalAxis == 1 ? 0 : 180;
+            getSprite().setRotation(degrees);
+            getSprite().setPosition(positionAxis, offsetAxis - getSprite().getHeight()/2f);
+        }
+        else {
+            offsetAxis = getPosition().x;
+            normalAxis = getNormal().y;
+            positionAxis = getPosition().y;
+            positionAxis -= getSprite().getHeight()/2f + getSprite().getWidth()/2f * normalAxis;
+
+            float degrees = normalAxis == 1 ? 90 : -90;
+            getSprite().setRotation(degrees);
+            getSprite().setPosition(offsetAxis - getSprite().getWidth()/2f, positionAxis);
+        }
+
     }
 
     public Vector2 getNormal() {

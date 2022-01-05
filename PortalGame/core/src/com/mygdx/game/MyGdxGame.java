@@ -92,10 +92,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera, entityRenderer);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, camera, "Player", new Vector2(1f, 1f), new Vector2(0.25f,0.25f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 0.0f, true, squareSprite);
+		player = new Player(world, camera, "Player", new Vector2(4f, 3f), new Vector2(0.25f,0.25f),
+				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
+				10f, 0.0f, true, squareSprite);
 		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
+
 		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
+
 
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
@@ -215,8 +219,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		map.renderForeground();
 
+		player.portals.renderPortals(entityRenderer.getBatch());
+
 		// Render Debug Lines for Physics Object in Physics World
-		b2dr.render(world, camera.combined);
+//		b2dr.render(world, camera.combined);
+
 
 		// Update the Camera
 		camera.update();

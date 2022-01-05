@@ -137,7 +137,14 @@ public class Player extends Entity {
         if (inputHoriz.x - inputHoriz.y != 0) { // if the right and left input values have a difference other than 0, then set the player velocity to a value,
                                                 // the only case that they would have a difference of 0 is when both of them are pressed,
                                                 // so you wouldn't want to change the velocity if right and left are pressed down.
-            body.setLinearVelocity(Math.max(speed, Math.abs(body.getLinearVelocity().x)) * (inputHoriz.x - inputHoriz.y), body.getLinearVelocity().y);
+//            System.out.println(body.getTransform().getClass());
+            float direction = (inputHoriz.x - inputHoriz.y);
+
+            body.setLinearVelocity(Math.max(speed, Math.abs(body.getLinearVelocity().x)) * direction, body.getLinearVelocity().y);
+//
+//            if (Math.abs(getBody().getLinearVelocity().x) <= speed) {
+//                applyForce(new Vector2(1,0), 30 * direction);
+//            }
         }
 
     }
@@ -257,10 +264,12 @@ public class Player extends Entity {
     }
 
     public void operate() {
+
+
+
 //        this.body.setLinearVelocity(new Vector2(-0.1f,this.body.getLinearVelocity().y));
         control();
         friction();
-
 
 //        mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
         if (mousePos != null) {
