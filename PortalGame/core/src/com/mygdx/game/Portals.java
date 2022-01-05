@@ -420,7 +420,7 @@ public class Portals {
 }
 
 class Portal {
-    static final float portalLength = 0.3f;
+    static final float portalLength = 0.4f;
 
     private Portal otherPortal;
 
