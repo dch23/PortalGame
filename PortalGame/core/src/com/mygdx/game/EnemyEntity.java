@@ -10,15 +10,14 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class EnemyEntity extends Entity {
 
-    private float speed = 1.4f;
-    private float jumpHeight = 2.3f;
-    private float frictionMagnitude = 0.6f;
+    protected float speed = 1.0f;
+    protected float frictionMagnitude = 0.6f;
 
     private float groundDistance = 0f;
 
     public EnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
-        // this.body.setFixedRotation(true);
+        this.body.setFixedRotation(true);
     }
 
     private boolean onGround() {
