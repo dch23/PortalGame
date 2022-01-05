@@ -98,7 +98,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
 
-		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
+		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, squareSprite);
 
 
 		walls = new ArrayList<>();

@@ -4,15 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.ArrayList;
 
 public class WeakEnemyEntity extends EnemyEntity {
     float closeEnoughCollisionRange = 0.02f;
+    boolean isPlayerDead = false;
+    String enemyName = "Enemy1";
     int wanderDirection = 1;
     ArrayList<RayHitInfo> raysHitInfo;
     RayHitInfo closestRayHitInfo;
@@ -67,6 +66,22 @@ public class WeakEnemyEntity extends EnemyEntity {
             return true;
         } else {return false;}
     }
+    public void checkCollision(Contact contact) {
+        Body bodyA = contact.getFixtureA().getBody();
+        Body bodyB = contact.getFixtureB().getBody();
+
+        Entity entityA = Entity.entityFromBody(bodyA);
+        Entity entityB = Entity.entityFromBody(bodyB);
+        if (entityA.getName() == enemyName || entityB.getName() == enemyName) {
+            if (entityA.getName() != entityB.getName()) {
+                Entity enemyEntity = entityA.getName() == enemyName ? entityA : entityB; // ternary operator, google if your not sure
+                Entity otherEntity = entityA.getName() != enemyName ? entityA : entityB;
+
+                isPlayerDead = true;
+            }
+        }
+
+    }
 
 
 
@@ -75,5 +90,8 @@ public class WeakEnemyEntity extends EnemyEntity {
             wanderDirection *= -1;
         }
         this.body.setLinearVelocity(this.speed * wanderDirection, this.body.getLinearVelocity().y);
+        if(isPlayerDead){
+            player.dispose();
+        }
     }
 }
