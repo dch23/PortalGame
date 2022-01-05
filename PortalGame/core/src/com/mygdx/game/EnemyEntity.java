@@ -20,14 +20,6 @@ public class EnemyEntity extends Entity {
         this.body.setFixedRotation(true);
     }
 
-    protected void searchForPlayer() {
-        for(){
-            if(----- = :"Player") {
-
-            }
-        }
-    }
-
     private boolean onGround() {
         RayCastCallback callback = new RayCastCallback() {
             @Override
