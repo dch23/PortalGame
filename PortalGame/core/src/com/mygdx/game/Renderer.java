@@ -107,18 +107,20 @@ class RenderEntity {
         this.entity.sprite.draw(this.spriteBatch);
 
 //        // reflect entity
-//        if (this.entity.reflectEntity == null) {
-////            System.out.println("Cannot render reflect item");
-//            return;
-//        }
+        if (this.entity.reflectEntity == null) return;
+        if (this.entity.reflectEntity.sprite == null) return;
+
+
 //        System.out.println("rendering reflection");
-//        // render reflect entity
-//        offset = PMath.divideVector2(this.entity.reflectEntity.size, 2f);
-//        this.entity.reflectEntity.sprite.setSize(this.entity.reflectEntity.size.x, this.entity.reflectEntity.size.y);
-//        this.entity.reflectEntity.sprite.setPosition(this.entity.reflectEntity.getPosition().x - offset.x,
-//                this.entity.reflectEntity.getPosition().y - offset.y);
-//        this.entity.reflectEntity.sprite.setOriginCenter();
-//        this.entity.reflectEntity.sprite.setRotation(this.entity.reflectEntity.getBody().getAngle());
-//        this.entity.reflectEntity.sprite.draw(this.spriteBatch);
+
+
+        // render reflect entity
+        offset = PMath.divideVector2(this.entity.reflectEntity.size, 2f);
+        this.entity.reflectEntity.sprite.setSize(this.entity.reflectEntity.size.x, this.entity.reflectEntity.size.y);
+        this.entity.reflectEntity.sprite.setPosition(this.entity.reflectEntity.getPosition().x - offset.x,
+                this.entity.reflectEntity.getPosition().y - offset.y);
+        this.entity.reflectEntity.sprite.setOriginCenter();
+        this.entity.reflectEntity.sprite.setRotation(this.entity.reflectEntity.getBody().getAngle());
+        this.entity.reflectEntity.sprite.draw(this.spriteBatch);
     }
 }

@@ -1,7 +1,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -28,6 +30,24 @@ public class Portals {
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
+
+        portals[0].setSprite(new Sprite(new Texture("sprites/portal1.png")));
+        portals[1].setSprite(new Sprite(new Texture("sprites/portal2.png")));
+    }
+
+    public void renderPortals(SpriteBatch spriteBatch) {
+        spriteBatch.begin();
+        for (Portal p : portals) {
+            if (p.getSprite() == null) continue;
+            p.getSprite().draw(spriteBatch);
+//            Vector2 offset = PMath.divideVector2(this.entity.size, 2f);
+//            this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
+//            this.entity.sprite.setPosition(this.entity.getPosition().x - offset.x, this.entity.getPosition().y - offset.y);
+//            this.entity.sprite.setOriginCenter();
+//            this.entity.sprite.setRotation(this.entity.getBody().getAngle());
+//            this.entity.sprite.draw(this.spriteBatch);
+        }
+        spriteBatch.end();
     }
 
     public void setPortal(World world, int portalNumber, Vector2 position, Vector2 normal, boolean enabled, Fixture fixtureHit) {
@@ -40,8 +60,8 @@ public class Portals {
         // set for certain portal number
 
         // set constant portal data
-        portals[portalNumber].setPosition(position);
         portals[portalNumber].setNormal(normal);
+        portals[portalNumber].setPosition(position);
         portals[portalNumber].setEnabled(enabled);
 
         // if the portal doesn't have a surface then:
@@ -399,6 +419,8 @@ class Portal {
 
     private Portal otherPortal;
 
+    protected Sprite sprite;
+
     private Vector2 position;
     private Vector2 normal;
     private Fixture surface;
@@ -413,6 +435,22 @@ class Portal {
     public Portal(final World world) {
         this.world = world;
     };
+
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+        Vector2 scaledSize = PMath.multVector2(new Vector2(this.sprite.getWidth(), this.sprite.getHeight()), MyGdxGame.GAME_SCALE);
+
+        float portalLengthScale = Portal.portalLength / scaledSize.y;
+        scaledSize = PMath.multVector2(scaledSize, portalLengthScale);
+
+        this.sprite.setSize(scaledSize.x, scaledSize.y);
+        this.sprite.setOriginCenter();
+    }
+
+    public Sprite getSprite() {
+        return this.sprite;
+    }
 
     public Portal(Vector2 position, Vector2 normal, Fixture surface) {
         this.position = position;
@@ -656,6 +694,37 @@ class Portal {
 
     public void setPosition(Vector2 position) {
         this.position = position;
+
+        // set sprite position and rotation
+        resetSprite();
+
+    }
+
+    private void resetSprite() {
+        float positionAxis;
+        float offsetAxis;
+        float normalAxis;
+        if (getNormal().y == 0) {
+            offsetAxis = getPosition().y;
+            normalAxis = getNormal().x;
+            positionAxis = getPosition().x;
+            if (normalAxis == 1) positionAxis -= getSprite().getWidth();
+
+            float degrees = normalAxis == 1 ? 0 : 180;
+            getSprite().setRotation(degrees);
+            getSprite().setPosition(positionAxis, offsetAxis - getSprite().getHeight()/2f);
+        }
+        else {
+            offsetAxis = getPosition().x;
+            normalAxis = getNormal().y;
+            positionAxis = getPosition().y;
+            positionAxis -= getSprite().getHeight()/2f + getSprite().getWidth()/2f * normalAxis;
+
+            float degrees = normalAxis == 1 ? 90 : -90;
+            getSprite().setRotation(degrees);
+            getSprite().setPosition(offsetAxis - getSprite().getWidth()/2f, positionAxis);
+        }
+
     }
 
     public Vector2 getNormal() {

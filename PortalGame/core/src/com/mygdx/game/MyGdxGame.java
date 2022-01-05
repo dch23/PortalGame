@@ -221,8 +221,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		map.renderForeground();
 
+		player.portals.renderPortals(entityRenderer.getBatch());
+
 		// Render Debug Lines for Physics Object in Physics World
-		b2dr.render(world, camera.combined);
+//		b2dr.render(world, camera.combined);
+
 
 		// Update the Camera
 		camera.update();
