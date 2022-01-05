@@ -342,15 +342,16 @@ public class Portals {
 
         entity.inPortal = false;
 
-        entity.setPosition(entity.reflectEntity.getPosition());
-        if (entity.portalExiting.getNormal().y == 0) {
-//            System.out.println(entity.getBody().getLinearVelocity());
-            entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
-                    entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
-        }
-        else {
-            entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
-                    Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
+        if (entity.reflectEntity != null) {
+            entity.setPosition(entity.reflectEntity.getPosition());
+            if (entity.portalExiting.getNormal().y == 0) {
+                //            System.out.println(entity.getBody().getLinearVelocity());
+                entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
+                        entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
+            } else {
+                entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
+                        Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
+            }
         }
 //        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);
 
@@ -420,7 +421,7 @@ public class Portals {
 }
 
 class Portal {
-    static final float portalLength = 0.3f;
+    static final float portalLength = 0.4f;
 
     private Portal otherPortal;
 

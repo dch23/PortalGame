@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class Entity {
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
+    static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
 
     protected World world;
     protected String name;
@@ -78,6 +79,7 @@ public class Entity {
 
         // add entity to entity map
         entityFromBodyMap.put(this.body, this);
+        entityFromNameMap.put(this.name, this);
 
         // Free memory
         shape.dispose();
@@ -117,7 +119,13 @@ public class Entity {
         }
         else {
 
-            if (!properPositionToReflect()) return;
+            if (!properPositionToReflect()) {
+                if (inPortal) {
+                    portals.unlinkPortal(getBody().getFixtureList().first());
+                    inPortal = false;
+                }
+                return;
+            };
 
             //suck entity in portal
             portals.suckEntity(portalEntering, this);
@@ -298,6 +306,10 @@ public class Entity {
 
     static Entity entityFromBody(Body body) {
         return entityFromBodyMap.get(body);
+    }
+
+    static Entity entityFromName(String name) {
+        return entityFromNameMap.get(name);
     }
 
 }
