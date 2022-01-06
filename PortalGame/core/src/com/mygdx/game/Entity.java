@@ -284,6 +284,17 @@ public class Entity {
         getBody().setTransform(pos, getBody().getAngle());
     }
 
+    public void setAngle(float angle, boolean centerOrigin) {
+        getBody().setTransform(getPosition(), (float) Math.toRadians(angle));
+        if (!centerOrigin) {
+            Vector2 offset = new Vector2(-this.size.x/2f,0);
+            Vector2 angleDirection = new Vector2((float) Math.cos(Math.toRadians(angle)), (float) Math.sin(Math.toRadians(angle)));
+            offset = PMath.addVector2(offset, PMath.multVector2(angleDirection, this.size.x/2f));
+
+            getBody().setTransform(PMath.addVector2(getPosition(),offset), getBody().getAngle());
+        }
+    }
+
     public String getName() {
         return this.name;
     }

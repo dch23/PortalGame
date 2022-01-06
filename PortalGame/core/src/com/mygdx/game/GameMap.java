@@ -15,6 +15,7 @@ import org.graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 
 public class GameMap {
     static protected TiledMapRenderer tiledMapRenderer;
@@ -56,15 +57,20 @@ public class GameMap {
 //            }
 //        }
 
+
+
         // collision entities
         MapLayers layers = this.tiledMap.getLayers();
         MapLayer collisionLayer = layers.get("Collision");
         MapObjects objects = collisionLayer.getObjects();
+        System.out.println(objects.getCount());
         for (int i = 0; i < objects.getCount(); i++) {
             MapObject object = objects.get(i);
 
             Vector2 position = new Vector2((float)object.getProperties().get("x"), (float)object.getProperties().get("y"));
             Vector2 size = new Vector2((float)object.getProperties().get("width"), (float)object.getProperties().get("height"));
+            Object angleObject = object.getProperties().get("rotation");
+            Float angle = angleObject == null ? null : -(float) angleObject;
 
             // scale
             position = PMath.multVector2(position, this.renderScale);
@@ -78,6 +84,9 @@ public class GameMap {
 //            System.out.println("position: " + position + ", size: " + size);
 
             Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody, null, density, friction, false, null);
+            if (angle != null) {
+                newEntity.setAngle(angle, false);
+            }
         }
         wallLayer = layers.get("Border");
 

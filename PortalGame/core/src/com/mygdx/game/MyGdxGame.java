@@ -119,7 +119,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
-		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 0f, 0.01f, 10));
+		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
+		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+
 
 
 
@@ -209,13 +213,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		map.renderBackground();
 
-//		Laser.beginRender();
-//		angle+=1f;
-//		for (Laser laser : lasers) {
-//			laser.setAngle(angle);
-//			laser.render();
-//		}
-//		Laser.endRender();
+		Laser.beginRender();
+		angle+=1f;
+		for (Laser laser : lasers) {
+			laser.setAngle(angle);
+			laser.render();
+		}
+		Laser.endRender();
 
 
 		entityRenderer.beginRender();

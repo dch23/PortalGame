@@ -17,9 +17,11 @@ public class Laser {
     private World world;
     private Vector2 position;
     private Color color;
+    private int circleSegments = 40;
     private float thickness;
     private float maxLength;
     private Vector2 direction;
+
 
     private ArrayList<RayHitInfo> raysHitInfo;
     private RayHitInfo closestRayHitInfo;
@@ -48,6 +50,8 @@ public class Laser {
     public void render() {
         shapeRenderer.setColor(this.color);
         shapeRenderer.rectLine(this.position, getLaserEnd(), this.thickness);
+        shapeRenderer.circle(getPosition().x, getPosition().y, this.thickness/2f, this.circleSegments);
+        shapeRenderer.circle(getLaserEnd().x, getLaserEnd().y, this.thickness/2f, this.circleSegments);
     }
 
     private Vector2 getLaserEnd() {
