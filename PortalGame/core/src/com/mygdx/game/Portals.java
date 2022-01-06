@@ -275,8 +275,6 @@ public class Portals {
         }
 
         surfaceEntity.getBody().createFixture(topFixtureDef);
-
-//        surfaceEntity.getBody().getFixtureList().first().;
     }
 
     public void linkPortal(Fixture solid, int portalNumber) {
@@ -416,6 +414,24 @@ public class Portals {
             p.suckDirection.x = 0;
         }
         e.applyForce(p.suckDirection, this.suckStrength);
+    }
+
+    public boolean properPositionToPortal(Portal portalEntering, Entity entity) {
+        Float ePositionAxis;
+        Float topBoundPortal;
+        Float botBoundPortal;
+        if (portalEntering.getNormal().y == 0) {
+            topBoundPortal = portalEntering.getPosition().y + Portal.portalLength / 2f - entity.size.y / 2f;
+            botBoundPortal = portalEntering.getPosition().y - Portal.portalLength / 2f + entity.size.y / 2f;
+            ePositionAxis = entity.getPosition().y;
+        }
+        else {
+            topBoundPortal = portalEntering.getPosition().x + Portal.portalLength / 2f - entity.size.x / 2f;
+            botBoundPortal = portalEntering.getPosition().x - Portal.portalLength / 2f + entity.size.x / 2f;
+            ePositionAxis = entity.getPosition().x;
+        }
+//        System.out.println(ePositionAxis + " >= " + botBoundPortal + " && " + ePositionAxis + " <= " + topBoundPortal);
+        return ePositionAxis >= botBoundPortal && ePositionAxis <= topBoundPortal;
     }
 
 }
@@ -621,6 +637,8 @@ class Portal {
         }
 
     }
+
+
 
     public Vector2 getNormal() {
         return normal;

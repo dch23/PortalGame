@@ -51,7 +51,6 @@ public class CollisionListener implements ContactListener {
                 e1.alive = false;
                 break;
             case "is sensor map object, not sensor weakEnemy":
-            case "not sensor weakEnemy, is sensor map object":
             case "not sensor Player, is sensor map object":
                 // portals
                 Fixture solidFixture = f1.isSensor() ? f2 : f1;
@@ -60,7 +59,12 @@ public class CollisionListener implements ContactListener {
                 Entity e = Entity.entityFromBody(solidFixture.getBody());
                 if (e.inPortal) return;
 
+
                 Portals portals = ((Player) Entity.entityFromName("Player")).portals;
+
+
+
+
                 Integer portalNumber = null;
                 if (portals.portals[0].getSurface() == portals.portals[1].getSurface()) {
                     float topBoundPortal1 = portals.portals[0].getPosition().y + Portal.portalLength / 2f - e.size.y / 2f;
@@ -77,6 +81,8 @@ public class CollisionListener implements ContactListener {
                 }
 
                 if (portalNumber != null) {
+                    if (!portals.properPositionToPortal(portals.portals[portalNumber], e)) return;
+
                     Portal portalEntering = portals.portals[portalNumber];
 
                     boolean goingIntoPortal = portals.isGoingIntoPortal(e, portalEntering);
