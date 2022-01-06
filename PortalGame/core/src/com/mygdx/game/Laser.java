@@ -22,6 +22,10 @@ public class Laser {
     private float maxLength;
     private Vector2 direction;
 
+    public float angle;
+    private int rotateDirection = 1;
+
+
 
     private ArrayList<RayHitInfo> raysHitInfo;
     private RayHitInfo closestRayHitInfo;
@@ -54,6 +58,13 @@ public class Laser {
         shapeRenderer.circle(getLaserEnd().x, getLaserEnd().y, this.thickness/2f, this.circleSegments);
     }
 
+    public void update(){
+//        if(angle==45) rotateDirection*=-1;
+//        setAngle(this.angle);
+    }
+
+
+
     private Vector2 getLaserEnd() {
         raysHitInfo = new ArrayList<>();            // refresh the rays information list
         closestRayHitInfo = null;                   // reset the closest ray to nothing
@@ -83,6 +94,7 @@ public class Laser {
             }
         }
         if (closestRayHitInfo != null) {
+//            Entity.entityFromBody(closestRayHitInfo.fixture.getBody()).alive=false;
             return closestRayHitInfo.point;
         }
         System.out.println(endRayPosition);
@@ -96,8 +108,10 @@ public class Laser {
 
     public void setAngle(float angle) {
         this.direction = new Vector2((float) Math.cos(Math.toRadians(angle)), (float) Math.sin(Math.toRadians(angle)));
+        this.angle=angle;
 //        this.endPosition = PMath.addVector2(this.position, PMath.multVector2(new Vector2((float) Math.cos(angle), (float) Math.sin(angle)), this.maxLength));
 //        this.endPosition = getLaserEnd();
+
     }
 
     static public void dispose() {
