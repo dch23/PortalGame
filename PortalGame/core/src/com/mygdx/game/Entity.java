@@ -43,6 +43,9 @@ public class Entity {
 //
     public Entity reflectEntity;
 
+    // properties
+    public boolean alive = true;
+
     public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
         // Initialize Variables
@@ -98,7 +101,7 @@ public class Entity {
             vertices[i * 2] = vertex.x; vertices[i * 2 + 1] = vertex.y;
         }
         for (float f : vertices) System.out.print(f+ " ");
-        System.out.println();
+//        System.out.println();
         Polygon polygon = new Polygon(vertices);
         polygon.setPosition(this.body.getPosition().x, this.body.getPosition().y);
         polygon.rotate(this.body.getAngle());
@@ -186,7 +189,7 @@ public class Entity {
 
 
             if (intrudingWidth >= sizeAxis + reflectionExtrudeOffset) {
-                System.out.println(intrudingWidth);
+//                System.out.println(intrudingWidth);
                 if (portals.isGoingIntoPortal(this, portalEntering)) {
                     portals.unlinkPortal(getBody().getFixtureList().first());
                 }
@@ -213,7 +216,7 @@ public class Entity {
             botBoundPortal = portalEntering.getPosition().x - Portal.portalLength / 2f + size.x / 2f;
             ePositionAxis = getPosition().x;
         }
-        System.out.println(ePositionAxis + " >= " + botBoundPortal + " && " + ePositionAxis + " <= " + topBoundPortal);
+//        System.out.println(ePositionAxis + " >= " + botBoundPortal + " && " + ePositionAxis + " <= " + topBoundPortal);
         return ePositionAxis >= botBoundPortal && ePositionAxis <= topBoundPortal;
     }
 
