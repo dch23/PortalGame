@@ -194,13 +194,7 @@ public class MyGdxGame extends ApplicationAdapter {
 //		entityRenderer.endRender();
 
 
-//		Laser.beginRender();
-//		angle+=0.01f;
-//		for (Laser laser : lasers) {
-//			laser.setAngle(angle);
-//			laser.render();
-//		}
-//		Laser.endRender();
+
 
 		for (Entity entity : boxes) {
 			entity.updateReflection(player.portals);
@@ -214,6 +208,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		enemy.operate();
 
 		map.renderBackground();
+
+		Laser.beginRender();
+		angle+=0.01f;
+		for (Laser laser : lasers) {
+			laser.setAngle(angle);
+			laser.render();
+		}
+		Laser.endRender();
 
 		entityRenderer.beginRender();
 		entityRenderer.render();

@@ -20,7 +20,7 @@ public class WeakEnemyEntity extends EnemyEntity {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
     }
     static public void initialize(World world){
-        world.setContactListener(new WeakEnemyCollisionListener());
+//        world.setContactListener(new WeakEnemyCollisionListener());
     }
     private boolean hitWall() {
         raysHitInfo = new ArrayList<>();            // refresh the rays information list
