@@ -37,7 +37,10 @@ public class Player extends Entity {
     private float maxShootPortalDistance = 100f;                    // the farthest you can shoot a portal
     private ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();  // finding a portal surface when shooting a portal is done by constantly adding ray information to this array every time a ray is created when mouse clicked
     private RayHitInfo closestRayHitInfo;                           // used to set the closest plausible surface to put a portal on
-    private Vector2 mousePos;                                       // used to keep track of the position of the mouse
+    private Vector2 mousePos; // used to keep track of the position of the mouse
+
+    // Player Properties
+    public boolean alive = true;
 
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // constructor similarity to the entity is set with super
@@ -221,33 +224,6 @@ public class Player extends Entity {
         return null;
     }
 
-    private void airResistance() {  // Doesnt work
-//        Vector2 position = new Vector2(body.getPosition());
-//        Vector2 velocity = new Vector2(body.getLinearVelocity());
-//        Vector2 direction = new Vector2(velocity.nor());
-//
-//
-//        direction = new Vector2(-direction.x, -direction.y);
-//        Vector2 airResistanceVector = new Vector2(direction.x * airResistanceMagnitude, direction.y * airResistanceMagnitude);
-//        if (PMath.magnitude(velocity) - airResistanceMagnitude > 0f) {
-//            body.setLinearVelocity(new Vector2(velocity.x - airResistanceVector.x, velocity.y - airResistanceVector.y));
-//        }
-
-//        float magnitude = PMath.magnitude(velocity);
-//
-//        if (magnitude - airResistanceMagnitude > 0f) {
-////            velocity = velocity.add(airResistanceVector);
-//        }
-//        body.setLinearVelocity(velocity);
-
-//        direction = direction.nor();
-//        direction = Vector2.Zero.mulAdd(direction, -airResistanceMagnitude);
-//
-//        Vector2 newPosition = new Vector2(body.getPosition().add(body.getLinearVelocity()).add(direction));
-//        Vector2 newDirection = new Vector2(Vector2.Zero.mulAdd(body.getPosition(), -1f));
-//        if (direction == newDirection) System.out.println("PROLLY WORK");
-    }
-
     private void friction () {
         float xVelocity = body.getLinearVelocity().x;
         float direction = xVelocity / Math.abs(xVelocity);                          // getting the direction the player is traveling in the x axis
@@ -264,18 +240,14 @@ public class Player extends Entity {
     }
 
     public void operate() {
+        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
 
 
-
-//        this.body.setLinearVelocity(new Vector2(-0.1f,this.body.getLinearVelocity().y));
-        control();
+        if (alive) {
+            control();
+        }
         friction();
 
-//        mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
-        if (mousePos != null) {
-
-            this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
-        }
-//        airResistance();
+        if (mousePos != null) this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
     }
 }

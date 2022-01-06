@@ -28,6 +28,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
 	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
+	static final CollisionListener COLLISION_LISTENER = new CollisionListener();
 
 	protected static final float SCENE_WIDTH = 1920f;
 	protected static final float SCENE_HEIGHT = 1080f;
@@ -86,6 +87,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Initialize Physics World
 		world = new World(gravity, false);
+		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
+
 //		System.out.println(world);
 
 		//Maps
@@ -98,7 +101,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
 
-		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
+		// Initialize Enemies
+		WeakEnemyEntity.initialize(world);
+		enemy = new WeakEnemyEntity(world, "Enemy1", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, squareSprite);
 
 
 		walls = new ArrayList<>();
@@ -117,7 +122,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
-//		lasers.add(new Laser(world, new Vector2(1,1), new Color(1,0,0,1), 0f, 0.01f, 10));
+		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
+		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+
 
 
 
@@ -192,13 +201,7 @@ public class MyGdxGame extends ApplicationAdapter {
 //		entityRenderer.endRender();
 
 
-//		Laser.beginRender();
-//		angle+=0.01f;
-//		for (Laser laser : lasers) {
-//			laser.setAngle(angle);
-//			laser.render();
-//		}
-//		Laser.endRender();
+
 
 		for (Entity entity : boxes) {
 			entity.updateReflection(player.portals);
@@ -213,6 +216,15 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		map.renderBackground();
 
+		Laser.beginRender();
+		angle+=1f;
+		for (Laser laser : lasers) {
+			laser.setAngle(angle);
+			laser.render();
+		}
+		Laser.endRender();
+
+
 		entityRenderer.beginRender();
 		entityRenderer.render();
 		entityRenderer.endRender();
@@ -222,7 +234,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.portals.renderPortals(entityRenderer.getBatch());
 
 		// Render Debug Lines for Physics Object in Physics World
-//		b2dr.render(world, camera.combined);
+		b2dr.render(world, camera.combined);
 
 
 		// Update the Camera

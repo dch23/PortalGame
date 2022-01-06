@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class Entity {
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
+    static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
 
     protected World world;
     protected String name;
@@ -78,6 +79,7 @@ public class Entity {
 
         // add entity to entity map
         entityFromBodyMap.put(this.body, this);
+        entityFromNameMap.put(this.name, this);
 
         // Free memory
         shape.dispose();
@@ -117,13 +119,19 @@ public class Entity {
         }
         else {
 
-            if (!properPositionToReflect()) return;
+            if (!properPositionToReflect()) {
+                if (inPortal) {
+//                    portals.unlinkPortal(getBody().getFixtureList().first());
+//                    inPortal = false;
+                }
+                return;
+            };
 
             //suck entity in portal
             portals.suckEntity(portalEntering, this);
 
             if (reflectEntity == null) {
-                reflectEntity = new ReflectEntity(this.world, getName(), new Vector2(0, 0), this.size,
+                reflectEntity = new ReflectEntity(this.world, "reflect " + getName(), new Vector2(0, 0), this.size,
                         BodyDef.BodyType.StaticBody, getSprite().getColor(), getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
@@ -178,6 +186,7 @@ public class Entity {
 
 
             if (intrudingWidth >= sizeAxis + reflectionExtrudeOffset) {
+                System.out.println(intrudingWidth);
                 if (portals.isGoingIntoPortal(this, portalEntering)) {
                     portals.unlinkPortal(getBody().getFixtureList().first());
                 }
@@ -204,6 +213,7 @@ public class Entity {
             botBoundPortal = portalEntering.getPosition().x - Portal.portalLength / 2f + size.x / 2f;
             ePositionAxis = getPosition().x;
         }
+        System.out.println(ePositionAxis + " >= " + botBoundPortal + " && " + ePositionAxis + " <= " + topBoundPortal);
         return ePositionAxis >= botBoundPortal && ePositionAxis <= topBoundPortal;
     }
 
@@ -274,16 +284,23 @@ public class Entity {
         getBody().setTransform(pos, getBody().getAngle());
     }
 
+    public void setAngle(float angle, boolean centerOrigin) {
+        getBody().setTransform(getPosition(), (float) Math.toRadians(angle));
+        if (!centerOrigin) {
+            Vector2 offset = new Vector2(-this.size.x/2f,0);
+            Vector2 angleDirection = new Vector2((float) Math.cos(Math.toRadians(angle)), (float) Math.sin(Math.toRadians(angle)));
+            offset = PMath.addVector2(offset, PMath.multVector2(angleDirection, this.size.x/2f));
+
+            getBody().setTransform(PMath.addVector2(getPosition(),offset), getBody().getAngle());
+        }
+    }
+
     public String getName() {
         return this.name;
     }
 
     public Sprite getSprite() {
         return this.sprite;
-    }
-
-    public Vector2 reflectedPosition() {
-        return null;
     }
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
     static void disposeAll() {
@@ -293,11 +310,17 @@ public class Entity {
     }
 
     public void dispose() {
+        if(this.body == null) return;
         this.world.destroyBody(this.body);
+        this.body = null;
     }
 
     static Entity entityFromBody(Body body) {
         return entityFromBodyMap.get(body);
+    }
+
+    static Entity entityFromName(String name) {
+        return entityFromNameMap.get(name);
     }
 
 }
