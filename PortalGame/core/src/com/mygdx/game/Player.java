@@ -40,7 +40,7 @@ public class Player extends Entity {
     private Vector2 mousePos; // used to keep track of the position of the mouse
 
     // Player Properties
-    public boolean alive = true;
+
 
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // constructor similarity to the entity is set with super
@@ -50,31 +50,7 @@ public class Player extends Entity {
         this.body.setFixedRotation(true);
         this.portals = new Portals(this.world);     // create the portals instance
         this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
-    }
 
-
-    // right now the on ground function just returns true, havent found a good way to check if on ground
-    private boolean onGround() {
-        RayCastCallback callback = new RayCastCallback() {
-            @Override
-            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                groundDistance = body.getPosition().y - point.y;
-                return 0;
-            }
-        };
-        Vector2 bottom = body.getPosition();
-//        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
-        Vector2 endRay = new Vector2(bottom);
-        endRay.add(0,-100f);
-
-        world.rayCast(callback, bottom, endRay);
-        return true;
-//        return (groundDistance < groundDistanceJumpThreshold);
-    }
-
-    // the control function allows for input reactions
-    private void control() {
-        // process the input
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {           // if a key is pressed down (holding the key only fires this function once still)
@@ -89,9 +65,7 @@ public class Player extends Entity {
                         break;
                     case Inputs.Keys.KEY_UP:
                     case Inputs.Keys.ARROW_UP:
-                        if (onGround()) {
-                            body.setLinearVelocity(body.getLinearVelocity().x, jumpHeight);     // if on the ground, then set the y speed to the jump height, this simulates a sort of impact force upwards
-                        }
+                        jump();
                         break;
                     case Inputs.Keys.ARROW_DOWN:
                         break;
@@ -137,6 +111,32 @@ public class Player extends Entity {
                 return true;
             }
         });
+    }
+
+
+    // right now the on ground function just returns true, havent found a good way to check if on ground
+    private boolean onGround() {
+        RayCastCallback callback = new RayCastCallback() {
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                groundDistance = body.getPosition().y - point.y;
+                return 0;
+            }
+        };
+        Vector2 bottom = body.getPosition();
+//        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
+        Vector2 endRay = new Vector2(bottom);
+        endRay.add(0,-100f);
+
+        world.rayCast(callback, bottom, endRay);
+        return true;
+//        return (groundDistance < groundDistanceJumpThreshold);
+    }
+
+    // the control function allows for input reactions
+    private void control() {
+        // process the input
+
         if (inputHoriz.x - inputHoriz.y != 0) { // if the right and left input values have a difference other than 0, then set the player velocity to a value,
                                                 // the only case that they would have a difference of 0 is when both of them are pressed,
                                                 // so you wouldn't want to change the velocity if right and left are pressed down.
@@ -150,6 +150,12 @@ public class Player extends Entity {
 //            }
         }
 
+    }
+
+    private void jump() {
+        if (onGround() && alive) {
+            body.setLinearVelocity(body.getLinearVelocity().x, jumpHeight);     // if on the ground, then set the y speed to the jump height, this simulates a sort of impact force upwards
+        }
     }
 
 
@@ -246,8 +252,15 @@ public class Player extends Entity {
         if (alive) {
             control();
         }
+        else {
+            die();
+        }
         friction();
 
         if (mousePos != null) this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
+    }
+
+    private void die() {
+        getBody().getFixtureList().first().setSensor(true);
     }
 }

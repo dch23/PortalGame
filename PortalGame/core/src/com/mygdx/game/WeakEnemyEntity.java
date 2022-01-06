@@ -44,16 +44,18 @@ public class WeakEnemyEntity extends EnemyEntity {
         // Finding the closest ray hit through a searching algorithm
         if (raysHitInfo != null) {
             if (raysHitInfo.size() == 0) return false;
-            closestRayHitInfo = raysHitInfo.get(0);
             for (RayHitInfo rayHitInfo : raysHitInfo) {
+                if (!rayHitInfo.fixture.isSensor()) if (closestRayHitInfo == null) closestRayHitInfo = rayHitInfo;
+                if (closestRayHitInfo == null) continue;
+
                 float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()));
                 float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
-                if (distance2 < distance1) {
+                if (distance2 < distance1 && !rayHitInfo.fixture.isSensor()) {
                     closestRayHitInfo = rayHitInfo;
                 }
             }
         }
-
+        if (closestRayHitInfo == null) return false;
         float distanceFromWall = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition())) - this.size.x/2f;
         return distanceFromWall < closeEnoughCollisionRange;
     }
