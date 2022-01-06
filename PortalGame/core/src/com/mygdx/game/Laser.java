@@ -94,7 +94,7 @@ public class Laser {
             }
         }
         if (closestRayHitInfo != null) {
-//            Entity.entityFromBody(closestRayHitInfo.fixture.getBody()).alive=false;
+            Entity.entityFromBody(closestRayHitInfo.fixture.getBody()).alive=false;
             return closestRayHitInfo.point;
         }
         System.out.println(endRayPosition);
