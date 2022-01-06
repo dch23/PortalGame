@@ -36,6 +36,7 @@ public class CollisionListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
+
         Fixture f1 = contact.getFixtureA();
         Fixture f2 = contact.getFixtureB();
 //        Entity e1 = Entity.entityFromBody(f1.getBody());

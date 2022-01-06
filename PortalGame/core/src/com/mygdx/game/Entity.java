@@ -121,8 +121,8 @@ public class Entity {
 
             if (!properPositionToReflect()) {
                 if (inPortal) {
-                    portals.unlinkPortal(getBody().getFixtureList().first());
-                    inPortal = false;
+//                    portals.unlinkPortal(getBody().getFixtureList().first());
+//                    inPortal = false;
                 }
                 return;
             };
@@ -186,6 +186,7 @@ public class Entity {
 
 
             if (intrudingWidth >= sizeAxis + reflectionExtrudeOffset) {
+                System.out.println(intrudingWidth);
                 if (portals.isGoingIntoPortal(this, portalEntering)) {
                     portals.unlinkPortal(getBody().getFixtureList().first());
                 }
@@ -212,6 +213,7 @@ public class Entity {
             botBoundPortal = portalEntering.getPosition().x - Portal.portalLength / 2f + size.x / 2f;
             ePositionAxis = getPosition().x;
         }
+        System.out.println(ePositionAxis + " >= " + botBoundPortal + " && " + ePositionAxis + " <= " + topBoundPortal);
         return ePositionAxis >= botBoundPortal && ePositionAxis <= topBoundPortal;
     }
 
@@ -288,10 +290,6 @@ public class Entity {
 
     public Sprite getSprite() {
         return this.sprite;
-    }
-
-    public Vector2 reflectedPosition() {
-        return null;
     }
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
     static void disposeAll() {
