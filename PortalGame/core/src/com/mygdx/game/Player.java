@@ -224,33 +224,6 @@ public class Player extends Entity {
         return null;
     }
 
-    private void airResistance() {  // Doesnt work
-//        Vector2 position = new Vector2(body.getPosition());
-//        Vector2 velocity = new Vector2(body.getLinearVelocity());
-//        Vector2 direction = new Vector2(velocity.nor());
-//
-//
-//        direction = new Vector2(-direction.x, -direction.y);
-//        Vector2 airResistanceVector = new Vector2(direction.x * airResistanceMagnitude, direction.y * airResistanceMagnitude);
-//        if (PMath.magnitude(velocity) - airResistanceMagnitude > 0f) {
-//            body.setLinearVelocity(new Vector2(velocity.x - airResistanceVector.x, velocity.y - airResistanceVector.y));
-//        }
-
-//        float magnitude = PMath.magnitude(velocity);
-//
-//        if (magnitude - airResistanceMagnitude > 0f) {
-////            velocity = velocity.add(airResistanceVector);
-//        }
-//        body.setLinearVelocity(velocity);
-
-//        direction = direction.nor();
-//        direction = Vector2.Zero.mulAdd(direction, -airResistanceMagnitude);
-//
-//        Vector2 newPosition = new Vector2(body.getPosition().add(body.getLinearVelocity()).add(direction));
-//        Vector2 newDirection = new Vector2(Vector2.Zero.mulAdd(body.getPosition(), -1f));
-//        if (direction == newDirection) System.out.println("PROLLY WORK");
-    }
-
     private void friction () {
         float xVelocity = body.getLinearVelocity().x;
         float direction = xVelocity / Math.abs(xVelocity);                          // getting the direction the player is traveling in the x axis
@@ -267,22 +240,14 @@ public class Player extends Entity {
     }
 
     public void operate() {
+        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
 
 
-
-//        this.body.setLinearVelocity(new Vector2(-0.1f,this.body.getLinearVelocity().y));
-        control();
+        if (alive) {
+            control();
+        }
         friction();
 
-//        mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
-        if (mousePos != null) {
-
-            this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
-        }
-//        airResistance();
-
-//        if(alive == false){
-//            dispose();
-//       }
+        if (mousePos != null) this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
     }
 }

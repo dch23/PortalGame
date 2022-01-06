@@ -28,6 +28,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
 	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
+	static final CollisionListener COLLISION_LISTENER = new CollisionListener();
 
 	protected static final float SCENE_WIDTH = 1920f;
 	protected static final float SCENE_HEIGHT = 1080f;
@@ -86,6 +87,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Initialize Physics World
 		world = new World(gravity, false);
+		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
+
 //		System.out.println(world);
 
 		//Maps

@@ -21,8 +21,7 @@ public class Portals {
 
     public Portals(World world) {
         this.world = world;
-        // sensor collisions with walls
-        world.setContactListener(new CollisionListener(this));
+
 
 
         portals = new Portal[2];

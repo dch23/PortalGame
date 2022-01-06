@@ -131,7 +131,7 @@ public class Entity {
             portals.suckEntity(portalEntering, this);
 
             if (reflectEntity == null) {
-                reflectEntity = new ReflectEntity(this.world, getName(), new Vector2(0, 0), this.size,
+                reflectEntity = new ReflectEntity(this.world, "reflect " + getName(), new Vector2(0, 0), this.size,
                         BodyDef.BodyType.StaticBody, getSprite().getColor(), getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
