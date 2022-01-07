@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,11 +10,14 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.holidaystudios.tools.GifDecoder;
+import sun.awt.image.GifImageDecoder;
 
 import java.text.Bidi;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class Entity {
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
@@ -25,6 +29,9 @@ public class Entity {
     protected Body body;
     protected Vector2 gravity;
     protected Vector2 size;
+
+    //animations
+    HashMap<String, Animation<TextureRegion>> animations;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
@@ -89,23 +96,6 @@ public class Entity {
 
         // Creating an Floating Dynamic Object
         if (!gravityEnabled) this.body.setGravityScale(0f);
-    }
-
-    // Attempt to Gather the vertices that make up the FIRST Fixture of the Physics Body Object
-    private float[] getVertices() {
-        PolygonShape shape = (PolygonShape) this.body.getFixtureList().first().getShape();
-        float[] vertices = new float[shape.getVertexCount()*2];
-        for (int i=0; i<shape.getVertexCount(); i++) {
-            Vector2 vertex = Vector2.Zero;
-            shape.getVertex(i, vertex);
-            vertices[i * 2] = vertex.x; vertices[i * 2 + 1] = vertex.y;
-        }
-        for (float f : vertices) System.out.print(f+ " ");
-//        System.out.println();
-        Polygon polygon = new Polygon(vertices);
-        polygon.setPosition(this.body.getPosition().x, this.body.getPosition().y);
-        polygon.rotate(this.body.getAngle());
-        return polygon.getTransformedVertices();
     }
 
     public void updateReflection(Portals portals) {
@@ -226,7 +216,6 @@ public class Entity {
         renderer.renderSprite(this.sprite, this.body.getPosition(), this.size,
                 new Vector2(this.size.x/2f, this.size.y/2f),
                 (float) Math.toDegrees(this.body.getAngle()));
-
 //        System.out.println(this.body.getPosition());
 //        PolygonShape polygonShape = (PolygonShape) this.body.getFixtureList().first().getShape();
 
@@ -259,10 +248,6 @@ public class Entity {
     public void applyForce(Vector2 forceVector) {
         this.body.applyForceToCenter(forceVector, true);
     }
-
-
-
-
 
     // Accessor Methods
     public Body getBody() {
@@ -324,6 +309,13 @@ public class Entity {
 
     static Entity entityFromName(String name) {
         return entityFromNameMap.get(name);
+    }
+
+    public void addAnimation(String name, String gifDirectory, boolean loop) {
+        Animation.PlayMode playMode = Animation.PlayMode.NORMAL;
+        if (loop) playMode = Animation.PlayMode.LOOP;
+        Animation<TextureRegion> animation = GifDecoder.loadGIFAnimation(playMode, Gdx.files.internal(gifDirectory).read());
+        animations.put(name, animation);
     }
 
 }

@@ -51,6 +51,8 @@ public class Player extends Entity {
         this.portals = new Portals(this.world);     // create the portals instance
         this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
 
+        addAnimation("idle", "", true);
+
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {           // if a key is pressed down (holding the key only fires this function once still)
