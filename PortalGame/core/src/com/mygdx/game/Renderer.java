@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Renderer {
@@ -106,12 +107,18 @@ class RenderEntity {
         this.entity.sprite.setRotation(this.entity.getBody().getAngle());
         this.entity.sprite.draw(this.spriteBatch);
 
+        //animation
+//        if (this.entity.currentAnimation != null) {
+//            System.out.println(this.entity.currentAnimation);
+//            AnimationManager.playAnimation(spriteBatch, this.entity.getAnimation(this.entity.currentAnimation), this.entity.getPosition());
+//        }
+
+
 //        // reflect entity
         if (this.entity.reflectEntity == null) return;
         if (this.entity.reflectEntity.sprite == null) return;
 
 
-//        System.out.println("rendering reflection");
 
 
         // render reflect entity
