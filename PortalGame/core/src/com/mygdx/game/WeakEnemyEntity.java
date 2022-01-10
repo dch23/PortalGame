@@ -20,28 +20,23 @@ public class WeakEnemyEntity extends EnemyEntity {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
     }
     static public void initialize(World world){
-        world.setContactListener(new WeakEnemyCollisionListener());
+//        world.setContactListener(new WeakEnemyCollisionListener());
     }
     private boolean hitWall() {
         raysHitInfo = new ArrayList<>();            // refresh the rays information list
-        closestRayHitInfo = null;   // reset the closest ray to nothing
-
+        closestRayHitInfo = null;                   // reset the closest ray to nothing
 
         // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                 if (fixture == null || point == null || normal == null) return 0;
-
-//                mousePos = point;
-//                System.out.println("HIT");
                 // Multiple hits
                 raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
                 return 1;
             }
         };
 
-//
         // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
         int xDirection = (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
         world.rayCast(callback, this.body.getPosition(), new Vector2(maxRayDistance*xDirection, 0f));
@@ -49,21 +44,20 @@ public class WeakEnemyEntity extends EnemyEntity {
         // Finding the closest ray hit through a searching algorithm
         if (raysHitInfo != null) {
             if (raysHitInfo.size() == 0) return false;
-            closestRayHitInfo = raysHitInfo.get(0);
             for (RayHitInfo rayHitInfo : raysHitInfo) {
+                if (!rayHitInfo.fixture.isSensor()) if (closestRayHitInfo == null) closestRayHitInfo = rayHitInfo;
+                if (closestRayHitInfo == null) continue;
+
                 float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()));
                 float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
-                if (distance2 < distance1) {
+                if (distance2 < distance1 && !rayHitInfo.fixture.isSensor()) {
                     closestRayHitInfo = rayHitInfo;
                 }
             }
         }
-//
-
-
-        if(PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()))-this.size.x/2f < closeEnoughCollisionRange) {
-            return true;
-        } else {return false;}
+        if (closestRayHitInfo == null) return false;
+        float distanceFromWall = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition())) - this.size.x/2f;
+        return distanceFromWall < closeEnoughCollisionRange;
     }
 
 

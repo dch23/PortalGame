@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,15 +10,19 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.holidaystudios.tools.GifDecoder;
+import sun.awt.image.GifImageDecoder;
 
 import java.text.Bidi;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class Entity {
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
     static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
+    static float frameRate = 1f/60f;
 
     protected World world;
     protected String name;
@@ -25,6 +30,10 @@ public class Entity {
     protected Body body;
     protected Vector2 gravity;
     protected Vector2 size;
+
+    //animations
+    HashMap<String, Animation> animations = new HashMap<>();
+    String currentAnimation = null;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
@@ -42,6 +51,9 @@ public class Entity {
     private float reflectionExtrudeOffset = 0.02f;
 //
     public Entity reflectEntity;
+
+    // properties
+    public boolean alive = true;
 
     public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
@@ -88,23 +100,6 @@ public class Entity {
         if (!gravityEnabled) this.body.setGravityScale(0f);
     }
 
-    // Attempt to Gather the vertices that make up the FIRST Fixture of the Physics Body Object
-    private float[] getVertices() {
-        PolygonShape shape = (PolygonShape) this.body.getFixtureList().first().getShape();
-        float[] vertices = new float[shape.getVertexCount()*2];
-        for (int i=0; i<shape.getVertexCount(); i++) {
-            Vector2 vertex = Vector2.Zero;
-            shape.getVertex(i, vertex);
-            vertices[i * 2] = vertex.x; vertices[i * 2 + 1] = vertex.y;
-        }
-        for (float f : vertices) System.out.print(f+ " ");
-        System.out.println();
-        Polygon polygon = new Polygon(vertices);
-        polygon.setPosition(this.body.getPosition().x, this.body.getPosition().y);
-        polygon.rotate(this.body.getAngle());
-        return polygon.getTransformedVertices();
-    }
-
     public void updateReflection(Portals portals) {
         if (portals.portals[0].getSurface() == null || portals.portals[1].getSurface() == null) return;
 
@@ -121,8 +116,8 @@ public class Entity {
 
             if (!properPositionToReflect()) {
                 if (inPortal) {
-                    portals.unlinkPortal(getBody().getFixtureList().first());
-                    inPortal = false;
+//                    portals.unlinkPortal(getBody().getFixtureList().first());
+//                    inPortal = false;
                 }
                 return;
             };
@@ -131,7 +126,7 @@ public class Entity {
             portals.suckEntity(portalEntering, this);
 
             if (reflectEntity == null) {
-                reflectEntity = new ReflectEntity(this.world, getName(), new Vector2(0, 0), this.size,
+                reflectEntity = new ReflectEntity(this.world, "reflect " + getName(), new Vector2(0, 0), this.size,
                         BodyDef.BodyType.StaticBody, getSprite().getColor(), getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
@@ -186,6 +181,7 @@ public class Entity {
 
 
             if (intrudingWidth >= sizeAxis + reflectionExtrudeOffset) {
+//                System.out.println(intrudingWidth);
                 if (portals.isGoingIntoPortal(this, portalEntering)) {
                     portals.unlinkPortal(getBody().getFixtureList().first());
                 }
@@ -212,6 +208,7 @@ public class Entity {
             botBoundPortal = portalEntering.getPosition().x - Portal.portalLength / 2f + size.x / 2f;
             ePositionAxis = getPosition().x;
         }
+//        System.out.println(ePositionAxis + " >= " + botBoundPortal + " && " + ePositionAxis + " <= " + topBoundPortal);
         return ePositionAxis >= botBoundPortal && ePositionAxis <= topBoundPortal;
     }
 
@@ -221,7 +218,6 @@ public class Entity {
         renderer.renderSprite(this.sprite, this.body.getPosition(), this.size,
                 new Vector2(this.size.x/2f, this.size.y/2f),
                 (float) Math.toDegrees(this.body.getAngle()));
-
 //        System.out.println(this.body.getPosition());
 //        PolygonShape polygonShape = (PolygonShape) this.body.getFixtureList().first().getShape();
 
@@ -255,10 +251,6 @@ public class Entity {
         this.body.applyForceToCenter(forceVector, true);
     }
 
-
-
-
-
     // Accessor Methods
     public Body getBody() {
         return this.body;
@@ -282,16 +274,23 @@ public class Entity {
         getBody().setTransform(pos, getBody().getAngle());
     }
 
+    public void setAngle(float angle, boolean centerOrigin) {
+        getBody().setTransform(getPosition(), (float) Math.toRadians(angle));
+        if (!centerOrigin) {
+            Vector2 offset = new Vector2(-this.size.x/2f,0);
+            Vector2 angleDirection = new Vector2((float) Math.cos(Math.toRadians(angle)), (float) Math.sin(Math.toRadians(angle)));
+            offset = PMath.addVector2(offset, PMath.multVector2(angleDirection, this.size.x/2f));
+
+            getBody().setTransform(PMath.addVector2(getPosition(),offset), getBody().getAngle());
+        }
+    }
+
     public String getName() {
         return this.name;
     }
 
     public Sprite getSprite() {
         return this.sprite;
-    }
-
-    public Vector2 reflectedPosition() {
-        return null;
     }
     // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
     static void disposeAll() {
@@ -313,5 +312,35 @@ public class Entity {
     static Entity entityFromName(String name) {
         return entityFromNameMap.get(name);
     }
+
+
+    private Animation<TextureRegion> animationFromSpriteSheet(String animationDirectory, int numberOfFrames, Animation.PlayMode playMode) {
+        Texture animationSheet = new Texture(animationDirectory);
+        Vector2 sheetSize = new Vector2(animationSheet.getWidth(), animationSheet.getHeight());
+
+        float frameWidth = sheetSize.x / (float) numberOfFrames;
+        TextureRegion[][] framesChart = TextureRegion.split(animationSheet, (int) frameWidth, (int) sheetSize.y);
+        TextureRegion[] frames = framesChart[0];
+
+        Animation animation = new Animation(Entity.frameRate, frames);
+        animation.setPlayMode(playMode);
+        return animation;
+    }
+
+
+    public void addAnimation(String name, String animationDirectory, int numberOfFrames, boolean loop) {
+        Animation.PlayMode playMode = Animation.PlayMode.NORMAL;
+        if (loop) playMode = Animation.PlayMode.LOOP;
+        Animation animation =
+                animationDirectory.endsWith("gif") ? GifDecoder.loadGIFAnimation(playMode, Gdx.files.internal(animationDirectory).read())
+                : animationFromSpriteSheet(animationDirectory, numberOfFrames, playMode);
+        animations.put(name, animation);
+    }
+
+    public Animation getAnimation(String animationName) {
+        return animations.get(animationName);
+    }
+
+
 
 }
