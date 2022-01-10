@@ -15,6 +15,19 @@ com/mygdx/game/GameMap.java
  com.mygdx.game.GameMap
 com/mygdx/game/ReflectEntity.java
  com.mygdx.game.ReflectEntity
+com/mygdx/game/CollisionListener.java
+ com.mygdx.game.CollisionListener
+com/mygdx/game/WeakEnemyEntity.java
+ com.mygdx.game.WeakEnemyEntity
+ com.mygdx.game.WeakEnemyEntity$1
+com/mygdx/game/Entity.java
+ com.mygdx.game.Entity
+com/mygdx/game/Portals.java
+ com.mygdx.game.Portal
+ com.mygdx.game.Portals
+com/mygdx/game/Renderer.java
+ com.mygdx.game.RenderEntity
+ com.mygdx.game.Renderer
 com/mygdx/game/Player.java
  com.mygdx.game.Player
  com.mygdx.game.Player$1
@@ -24,16 +37,3 @@ com/mygdx/game/MyGdxGame.java
  com.mygdx.game.MyGdxGame
 com/mygdx/game/WeakEnemyCollisionListener.java
  com.mygdx.game.WeakEnemyCollisionListener
-com/mygdx/game/Portals.java
- com.mygdx.game.Portal
- com.mygdx.game.Portals
-com/mygdx/game/Renderer.java
- com.mygdx.game.RenderEntity
- com.mygdx.game.Renderer
-com/mygdx/game/Entity.java
- com.mygdx.game.Entity
-com/mygdx/game/WeakEnemyEntity.java
- com.mygdx.game.WeakEnemyEntity
- com.mygdx.game.WeakEnemyEntity$1
-com/mygdx/game/CollisionListener.java
- com.mygdx.game.CollisionListener
