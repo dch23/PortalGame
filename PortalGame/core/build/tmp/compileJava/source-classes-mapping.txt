@@ -33,6 +33,8 @@ com/mygdx/game/Entity.java
 com/mygdx/game/Renderer.java
  com.mygdx.game.RenderEntity
  com.mygdx.game.Renderer
+com/mygdx/game/AnimationManager.java
+ com.mygdx.game.AnimationManager
 com/mygdx/game/CollisionListener.java
  com.mygdx.game.CollisionListener
 com/holidaystudios/tools/GifDecoder.java

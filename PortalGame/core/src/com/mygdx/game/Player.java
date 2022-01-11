@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.Ray;
@@ -41,6 +42,9 @@ public class Player extends Entity {
 
     // Player Properties
 
+    //animations
+
+
 
     public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // constructor similarity to the entity is set with super
@@ -51,7 +55,7 @@ public class Player extends Entity {
         this.portals = new Portals(this.world);     // create the portals instance
         this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
 
-        addAnimation("idle", "", true);
+        addAnimation("idle", "Characters/Wizard Pack/Idle.png", 6, true);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -146,6 +150,13 @@ public class Player extends Entity {
             float direction = (inputHoriz.x - inputHoriz.y);
 
             body.setLinearVelocity(Math.max(speed, Math.abs(body.getLinearVelocity().x)) * direction, body.getLinearVelocity().y);
+
+            //animate
+            if (onGround() && this.alive) {
+
+                this.currentAnimation = "idle";
+//                AnimationManager.playAnimation(getAnimation("idle"));
+            }
 //
 //            if (Math.abs(getBody().getLinearVelocity().x) <= speed) {
 //                applyForce(new Vector2(1,0), 30 * direction);

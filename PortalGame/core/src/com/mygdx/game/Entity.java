@@ -22,6 +22,7 @@ import java.util.Map;
 public class Entity {
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
     static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
+    static float frameRate = 1f/60f;
 
     protected World world;
     protected String name;
@@ -31,7 +32,8 @@ public class Entity {
     protected Vector2 size;
 
     //animations
-    HashMap<String, Animation<TextureRegion>> animations;
+    HashMap<String, Animation> animations = new HashMap<>();
+    String currentAnimation = null;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
@@ -311,11 +313,34 @@ public class Entity {
         return entityFromNameMap.get(name);
     }
 
-    public void addAnimation(String name, String gifDirectory, boolean loop) {
+
+    private Animation<TextureRegion> animationFromSpriteSheet(String animationDirectory, int numberOfFrames, Animation.PlayMode playMode) {
+        Texture animationSheet = new Texture(animationDirectory);
+        Vector2 sheetSize = new Vector2(animationSheet.getWidth(), animationSheet.getHeight());
+
+        float frameWidth = sheetSize.x / (float) numberOfFrames;
+        TextureRegion[][] framesChart = TextureRegion.split(animationSheet, (int) frameWidth, (int) sheetSize.y);
+        TextureRegion[] frames = framesChart[0];
+
+        Animation animation = new Animation(Entity.frameRate, frames);
+        animation.setPlayMode(playMode);
+        return animation;
+    }
+
+
+    public void addAnimation(String name, String animationDirectory, int numberOfFrames, boolean loop) {
         Animation.PlayMode playMode = Animation.PlayMode.NORMAL;
         if (loop) playMode = Animation.PlayMode.LOOP;
-        Animation<TextureRegion> animation = GifDecoder.loadGIFAnimation(playMode, Gdx.files.internal(gifDirectory).read());
+        Animation animation =
+                animationDirectory.endsWith("gif") ? GifDecoder.loadGIFAnimation(playMode, Gdx.files.internal(animationDirectory).read())
+                : animationFromSpriteSheet(animationDirectory, numberOfFrames, playMode);
         animations.put(name, animation);
     }
+
+    public Animation getAnimation(String animationName) {
+        return animations.get(animationName);
+    }
+
+
 
 }
