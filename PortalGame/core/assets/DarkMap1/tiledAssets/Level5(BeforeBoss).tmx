@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="17">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="19">
  <tileset firstgid="1" source="01 background.tsx"/>
  <tileset firstgid="625" source="02 background.tsx"/>
  <tileset firstgid="1249" source="03 background A.tsx"/>
@@ -275,7 +275,23 @@
   <object id="14" x="737.428" y="78.0037" width="15.0753" height="209.101"/>
   <object id="15" x="15.4045" y="80.298" width="15.0753" height="318.568"/>
  </objectgroup>
- <objectgroup id="11" name="Exit" visible="0">
-  <object id="16" x="399.85" y="351.343" width="32.7745" height="47.8508"/>
+ <objectgroup id="11" name="Doors">
+  <object id="16" x="399.85" y="351.343" width="32.7745" height="47.8508">
+   <properties>
+    <property name="name" value="exit"/>
+   </properties>
+  </object>
+  <object id="17" x="95.0462" y="347.41" width="32.7745" height="47.8508">
+   <properties>
+    <property name="name" value="enter"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="12" name="enemies">
+  <object id="18" x="595.186" y="262.196" width="25.5641" height="23.5977">
+   <properties>
+    <property name="weakEnemy" value=""/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
