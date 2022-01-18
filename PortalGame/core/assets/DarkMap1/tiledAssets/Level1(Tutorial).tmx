@@ -164,7 +164,7 @@
 </data>
   </layer>
  </group>
- <layer id="7" name="PillarsGround" width="48" height="27">
+ <layer id="7" name="Pillars" width="48" height="27">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -226,9 +226,6 @@
     <property name="name" value="enter"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup id="13" name="Death">
-  <object id="14" x="236" y="426" width="208.667" height="16.6667"/>
  </objectgroup>
  <layer id="9" name="Foreground" width="48" height="27">
   <data encoding="csv">
