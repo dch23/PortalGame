@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="16">
- <tileset firstgid="1" source="tiledAssets/main_lev_build.tsx"/>
- <tileset firstgid="10241" source="tiledAssets/01 background.tsx"/>
- <tileset firstgid="10865" source="tiledAssets/05 background.tsx"/>
- <tileset firstgid="11489" source="tiledAssets/04 background.tsx"/>
- <tileset firstgid="12113" source="tiledAssets/03 background A.tsx"/>
- <tileset firstgid="12737" source="tiledAssets/02 background.tsx"/>
- <tileset firstgid="13361" source="tiledAssets/other_and_decorative.tsx"/>
+ <tileset firstgid="1" source="main_lev_build.tsx"/>
+ <tileset firstgid="10241" source="01 background.tsx"/>
+ <tileset firstgid="10865" source="05 background.tsx"/>
+ <tileset firstgid="11489" source="04 background.tsx"/>
+ <tileset firstgid="12113" source="03 background A.tsx"/>
+ <tileset firstgid="12737" source="02 background.tsx"/>
+ <tileset firstgid="13361" source="other_and_decorative.tsx"/>
  <group id="6" name="Background">
   <layer id="1" name="Sky" width="48" height="27">
    <data encoding="csv">
