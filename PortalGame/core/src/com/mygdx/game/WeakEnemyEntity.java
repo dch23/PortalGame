@@ -39,7 +39,7 @@ public class WeakEnemyEntity extends EnemyEntity {
 
         // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
         int xDirection = (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
-        world.rayCast(callback, this.body.getPosition(), new Vector2(maxRayDistance*xDirection, 0f));
+        world.rayCast(callback, this.body.getPosition(), new Vector2(maxRayDistance*xDirection, this.body.getPosition().y));
 
         // Finding the closest ray hit through a searching algorithm
         if (raysHitInfo != null) {

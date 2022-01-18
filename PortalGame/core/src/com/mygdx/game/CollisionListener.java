@@ -48,7 +48,7 @@ public class CollisionListener implements ContactListener {
 
         switch (contactString) {
             case "not sensor Player, not sensor weakEnemy":
-                e1.alive = false;
+//                e1.alive = false;
                 break;
             case "is sensor map object, not sensor weakEnemy":
             case "not sensor Player, is sensor map object":

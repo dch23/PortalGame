@@ -278,7 +278,7 @@ public class Portals {
     }
 
     public void linkPortal(Fixture solid, int portalNumber) {
-        System.out.println("link portal");
+//        System.out.println("link portal");
         Entity entity = Entity.entityFromBody(solid.getBody());
         Portal portalEntering = portals[portalNumber];
         Portal portalExiting = portalEntering.getOtherPortal();
@@ -287,54 +287,10 @@ public class Portals {
         entity.portalExiting = portalExiting;
 
         entity.inPortal = true;
-
-        Vector2 directionFromSolidToPortal = PMath.normalizeVector2(PMath.subVector2(portalEntering.getPosition(), entity.getPosition()));
-
-
-//        FixtureDef reflectFixture = new FixtureDef();
-//
-//        PolygonShape entityShape = (PolygonShape) entity.getBody().getFixtureList().first().getShape();
-//        float width = entity.size.x, height = entity.size.y, angle = 0;
-//        Vector2 offset = new Vector2(-1,1);
-//
-//        PolygonShape shape = new PolygonShape();
-//        shape.setAsBox(width, height, offset, angle);
-//
-//        reflectFixture.shape = shape;
-//        solid.getBody().createFixture(reflectFixture);
-
-//        new Entity(this.world, new String(entity.getName()), position, new Vector2(entity.size),
-//                BodyDef.BodyType.StaticBody, new Color(entity.getSprite().getColor()), entity.getBody().getFixtureList().first().getDensity(),
-//                entity.getBody().getFixtureList().first().getFriction(), false, new Sprite(entity.getSprite()));
-
-//        entity.reflectPosition
-
-
-//        Vector2 position = entity.reflectedPosition();
-//        Vector2 position = new Vector2(1,1);
-//        System.out.println(this.world);
-//        System.out.println(entity.getName());
-//        System.out.println(entity.size);
-//        System.out.println(entity.getSprite().getColor());
-//        System.out.println(entity.getBody().getFixtureList().first().getDensity());
-//        System.out.println(entity.getBody().getFixtureList().first().getFriction());
-//        System.out.println(entity.getSprite());
-//        System.out.println(new ReflectEntity(this.world, entity.getName(), position, entity.size,
-//                BodyDef.BodyType.StaticBody, entity.getSprite().getColor(), entity.getBody().getFixtureList().first().getDensity(),
-//                entity.getBody().getFixtureList().first().getFriction(), false, entity.getSprite()));
-
-
-
-
-//        entity.reflectEntity.exitPortal = portalEntering.getOtherPortal();
-//        entity.reflectEntity.updatePosition();
-
-//        Sprite sprite = entity.getSprite();
-//        this.reflectEntity.sprite = sprite;
     }
 
     public void unlinkPortal(Fixture solid) {
-        System.out.println("unlink portal");
+//        System.out.println("unlink portal");
 
         Entity entity = Entity.entityFromBody(solid.getBody());
 
@@ -437,7 +393,7 @@ public class Portals {
 }
 
 class Portal {
-    static final float portalLength = 0.4f;
+    static final float portalLength = 0.7f;
 
     private Portal otherPortal;
 

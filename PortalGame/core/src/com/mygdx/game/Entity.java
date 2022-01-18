@@ -22,7 +22,7 @@ import java.util.Map;
 public class Entity {
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
     static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
-    static float frameRate = 1f/60f;
+    static float frameRate = 1f/30f;
 
     protected World world;
     protected String name;
@@ -34,6 +34,10 @@ public class Entity {
     //animations
     HashMap<String, Animation> animations = new HashMap<>();
     String currentAnimation = null;
+    float animationTextureSizeScale = 1.5f;
+    int horizontalFaceDirection = 1;
+    float closeEnoughToGround = 0.05f;
+    float maxGroundRayDistance = 3f;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
@@ -127,7 +131,7 @@ public class Entity {
 
             if (reflectEntity == null) {
                 reflectEntity = new ReflectEntity(this.world, "reflect " + getName(), new Vector2(0, 0), this.size,
-                        BodyDef.BodyType.StaticBody, getSprite().getColor(), getBody().getFixtureList().first().getDensity(),
+                        BodyDef.BodyType.StaticBody, color, getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
 
@@ -314,7 +318,7 @@ public class Entity {
     }
 
 
-    private Animation<TextureRegion> animationFromSpriteSheet(String animationDirectory, int numberOfFrames, Animation.PlayMode playMode) {
+    private Animation animationFromSpriteSheet(String animationDirectory, int numberOfFrames, Animation.PlayMode playMode, float frameRate) {
         Texture animationSheet = new Texture(animationDirectory);
         Vector2 sheetSize = new Vector2(animationSheet.getWidth(), animationSheet.getHeight());
 
@@ -322,18 +326,18 @@ public class Entity {
         TextureRegion[][] framesChart = TextureRegion.split(animationSheet, (int) frameWidth, (int) sheetSize.y);
         TextureRegion[] frames = framesChart[0];
 
-        Animation animation = new Animation(Entity.frameRate, frames);
+        Animation animation = new Animation(frameRate, frames);
         animation.setPlayMode(playMode);
         return animation;
     }
 
 
-    public void addAnimation(String name, String animationDirectory, int numberOfFrames, boolean loop) {
+    public void addAnimation(String name, String animationDirectory, int numberOfFrames, boolean loop, float speedScale) {
         Animation.PlayMode playMode = Animation.PlayMode.NORMAL;
         if (loop) playMode = Animation.PlayMode.LOOP;
         Animation animation =
-                animationDirectory.endsWith("gif") ? GifDecoder.loadGIFAnimation(playMode, Gdx.files.internal(animationDirectory).read())
-                : animationFromSpriteSheet(animationDirectory, numberOfFrames, playMode);
+                animationDirectory.endsWith("gif") ? GifDecoder.loadGIFAnimation(playMode, Gdx.files.internal(animationDirectory).read(), frameRate / speedScale)
+                : animationFromSpriteSheet(animationDirectory, numberOfFrames, playMode, frameRate / speedScale);
         animations.put(name, animation);
     }
 
