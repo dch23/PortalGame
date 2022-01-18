@@ -95,16 +95,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera, entityRenderer);
 
 		// Initialize Objects in Physics World
-		player = new Player(world, camera, "Player", new Vector2(4f, 3f), new Vector2(0.15f,0.25f),
+		player = new Player(world, camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
-				10f, 0.0f, true, squareSprite);
+				10f, 0.0f, true, null);
 		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
 
 		// Initialize Enemies
 		WeakEnemyEntity.initialize(world);
 		enemy = new WeakEnemyEntity(world, "weakEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, squareSprite);
-
 
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
@@ -123,7 +122,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
 //		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 180f, 0.02f, 10));
-		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+//		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 //		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
 //		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 

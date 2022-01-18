@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="4">
  <tileset firstgid="1" source="main_lev_build.tsx"/>
  <tileset firstgid="10241" source="other_and_decorative.tsx"/>
  <layer id="1" name="Background" width="48" height="27">
@@ -33,7 +33,22 @@
 1844,1845,1481,1482,1483,1484,1485,1489,1844,1845,1481,1354,1355,1356,1357,1489,1844,1845,1481,1482,1483,1484,1361,1844,1845,1481,1484,1485,1486,1489,1844,1845,1481,1485,1486,1487,1488,1489,1844,1845,1481,1483,1484,1485,1486,1489,1844,1845
 </data>
  </layer>
- <layer id="2" name="Platform" width="48" height="27">
+ <objectgroup id="4" name="collisions">
+  <object id="1" x="48.4678" y="384.468" width="670.035" height="36.6784"/>
+ </objectgroup>
+ <objectgroup id="5" name="Doors">
+  <object id="2" x="542.971" y="332.725" width="36.0234" height="51.0877">
+   <properties>
+    <property name="name" value="exit"/>
+   </properties>
+  </object>
+  <object id="3" x="189.287" y="334.69" width="35.3684" height="48.4678">
+   <properties>
+    <property name="name" value="enter"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="2" name="Foreground" width="48" height="27">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

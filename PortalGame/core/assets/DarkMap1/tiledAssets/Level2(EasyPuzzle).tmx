@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="14">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="15">
  <tileset firstgid="1" source="01 background.tsx"/>
  <tileset firstgid="625" source="02 background.tsx"/>
  <tileset firstgid="1249" source="03 background A.tsx"/>
@@ -195,10 +195,19 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="9" name="Entrance">
-  <object id="1" x="671.878" y="155.351" width="32.7745" height="51.1283"/>
+ <objectgroup id="9" name="Door">
+  <object id="1" x="671.878" y="155.351" width="32.7745" height="51.1283">
+   <properties>
+    <property name="name" value="exit"/>
+   </properties>
+  </object>
+  <object id="14" x="55.7167" y="332.989" width="33.43" height="65.5491">
+   <properties>
+    <property name="name" value="enter"/>
+   </properties>
+  </object>
  </objectgroup>
- <layer id="7" name="Border" width="48" height="27">
+ <layer id="7" name="Foreground" width="48" height="27">
   <data encoding="csv">
 7476,7477,6708,6709,6710,6711,6712,6713,6720,6721,6722,6723,6724,6725,6726,6727,6728,6729,6720,6721,6722,6723,6724,6725,6726,6727,6728,6729,6720,6721,6720,6721,6722,6723,6724,6725,6726,6727,6728,6729,6740,6741,6742,6743,6744,6745,7476,7477,
 6708,6709,6836,6837,6838,6839,6840,6841,6848,6849,6850,6851,6852,6853,6854,6855,6856,6857,6848,6849,6850,6851,6852,6853,6854,6855,6856,6857,6848,6849,6848,6849,6850,6851,6852,6853,6854,6855,6856,6857,6868,6869,6870,6871,6872,6873,6744,6745,

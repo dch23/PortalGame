@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -95,39 +96,42 @@ class RenderEntity {
     }
 
     public void render() {
-        if (this.spriteBatch == null || this.entity.sprite == null || this.entity.getPosition() == null || this.entity.size == null) {
-            System.out.println("Cannot render item");
+
+
+
+        if (this.spriteBatch == null) {
+//            System.out.println("Cannot render item");
             return;
         }
-        // render entity
-        Vector2 offset = PMath.divideVector2(this.entity.size, 2f);
-        this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
-        this.entity.sprite.setPosition(this.entity.getPosition().x - offset.x, this.entity.getPosition().y - offset.y);
-        this.entity.sprite.setOriginCenter();
-        this.entity.sprite.setRotation(this.entity.getBody().getAngle());
-        this.entity.sprite.draw(this.spriteBatch);
+        if (entity.getSprite() != null) {
+            // render entity
+            Vector2 offset = PMath.divideVector2(this.entity.size, 2f);
+            this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
+            this.entity.sprite.setPosition(this.entity.getPosition().x - offset.x, this.entity.getPosition().y - offset.y);
+            this.entity.sprite.setOriginCenter();
+            this.entity.sprite.setRotation(this.entity.getBody().getAngle());
+            this.entity.sprite.draw(this.spriteBatch);
 
-        //animation
-//        if (this.entity.currentAnimation != null) {
-//            System.out.println(this.entity.currentAnimation);
-//            AnimationManager.playAnimation(spriteBatch, this.entity.getAnimation(this.entity.currentAnimation), this.entity.getPosition());
-//        }
+            if (this.entity.reflectEntity == null) return;
+            if (this.entity.reflectEntity.sprite == null) return;
+
+            // render reflect entity
+            offset = PMath.divideVector2(this.entity.reflectEntity.size, 2f);
+            this.entity.reflectEntity.sprite.setSize(this.entity.reflectEntity.size.x, this.entity.reflectEntity.size.y);
+            this.entity.reflectEntity.sprite.setPosition(this.entity.reflectEntity.getPosition().x - offset.x,
+                    this.entity.reflectEntity.getPosition().y - offset.y);
+            this.entity.reflectEntity.sprite.setOriginCenter();
+            this.entity.reflectEntity.sprite.setRotation(this.entity.reflectEntity.getBody().getAngle());
+            this.entity.reflectEntity.sprite.draw(this.spriteBatch);
+        }
 
 
-//        // reflect entity
-        if (this.entity.reflectEntity == null) return;
-        if (this.entity.reflectEntity.sprite == null) return;
-
-
-
-
-        // render reflect entity
-        offset = PMath.divideVector2(this.entity.reflectEntity.size, 2f);
-        this.entity.reflectEntity.sprite.setSize(this.entity.reflectEntity.size.x, this.entity.reflectEntity.size.y);
-        this.entity.reflectEntity.sprite.setPosition(this.entity.reflectEntity.getPosition().x - offset.x,
-                this.entity.reflectEntity.getPosition().y - offset.y);
-        this.entity.reflectEntity.sprite.setOriginCenter();
-        this.entity.reflectEntity.sprite.setRotation(this.entity.reflectEntity.getBody().getAngle());
-        this.entity.reflectEntity.sprite.draw(this.spriteBatch);
+        // animation
+        if (this.entity.currentAnimation != null) {
+            AnimationManager.playAnimation(this.entity, spriteBatch, this.entity.getAnimation(this.entity.currentAnimation));
+            if (this.entity.reflectEntity != null) {
+                AnimationManager.playAnimation(this.entity.reflectEntity, spriteBatch, this.entity.getAnimation(this.entity.currentAnimation));
+            }
+        }
     }
 }
