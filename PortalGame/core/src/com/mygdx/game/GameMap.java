@@ -59,10 +59,10 @@ public class GameMap {
         // collision entities
         MapLayers layers = this.tiledMap.getLayers();
         MapLayer collisionLayer = layers.get("Collision");
-        MapObjects objects = collisionLayer.getObjects();
-        
-        for (int i = 0; i < objects.getCount(); i++) {
-            MapObject object = objects.get(i);
+        MapObjects collisionObjects = collisionLayer.getObjects();
+
+        for (int i = 0; i < collisionObjects.getCount(); i++) {
+            MapObject object = collisionObjects.get(i);
 
             Vector2 position = new Vector2((float)object.getProperties().get("x"), (float)object.getProperties().get("y"));
             Vector2 size = new Vector2((float)object.getProperties().get("width"), (float)object.getProperties().get("height"));
@@ -79,10 +79,19 @@ public class GameMap {
             float density = 1;
             float friction = 0.1f;
 
-            Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody, null, density, friction, false, null);
+            Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody,
+                    null, density, friction, false, null);
             if (angle != null) {
                 newEntity.setAngle(angle, false);
             }
+        }
+
+        // Enemies
+        MapLayer enemiesLayer = layers.get("Enemies");
+        MapObjects enemiesObjects = enemiesLayer.getObjects();
+        for (int i = 0; i < enemiesObjects.getCount(); i++) {
+            MapObject object = enemiesObjects.get(i);
+            
         }
 
         // foreground and background indexes for rendering order
