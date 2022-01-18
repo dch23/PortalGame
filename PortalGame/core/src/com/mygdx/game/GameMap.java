@@ -63,7 +63,7 @@ public class GameMap {
         MapLayers layers = this.tiledMap.getLayers();
         MapLayer collisionLayer = layers.get("Collision");
         MapObjects objects = collisionLayer.getObjects();
-        System.out.println(objects.getCount());
+
         for (int i = 0; i < objects.getCount(); i++) {
             MapObject object = objects.get(i);
 
@@ -88,17 +88,23 @@ public class GameMap {
                 newEntity.setAngle(angle, false);
             }
         }
+
         wallLayer = layers.get("Border");
 
 
         // foreground and background indexes for rendering order
         ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
         ArrayList<Integer> foregroundIndexesList = new ArrayList<>();
-        for (int i = 0; i < layers.size(); ++i) {
-            MapLayer mapLayer = layers.get(i);
-            if (mapLayer.getName().equals("Border") || mapLayer.getName().equals("Windows")) foregroundIndexesList.add(i);
-            else backgroundIndexesList.add(i);
-        }
+
+        backgroundIndexesList.add(layers.getIndex("Background"));
+        foregroundIndexesList.add(layers.getIndex("Foreground"));
+
+//        for (int i = 0; i < layers.size(); ++i) {
+//            MapLayer mapLayer = layers.get(i);
+//            System.out.println(mapLayer.getName());
+//            if (mapLayer.getName().equals("Border") || mapLayer.getName().equals("Windows")) foregroundIndexesList.add(i);
+//            else backgroundIndexesList.add(i);
+//        }
 
         backgroundIndexes = new int[backgroundIndexesList.size()];
         foregroundIndexes = new int[foregroundIndexesList.size()];
