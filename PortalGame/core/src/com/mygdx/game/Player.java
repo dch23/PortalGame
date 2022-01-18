@@ -29,10 +29,6 @@ public class Player extends Entity {
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
     private Vector2 inputHoriz = Vector2.Zero;
 
-    // not used
-    private float groundDistance = 0f;
-    private float groundDistanceJumpThreshold = 0.4f;
-
     // the portal variables
     public Portals portals;
     private float maxShootPortalDistance = 100f;                    // the farthest you can shoot a portal
@@ -125,43 +121,15 @@ public class Player extends Entity {
 
     // right now the on ground function just returns true, havent found a good way to check if on ground
     private boolean onGround() {
-        final ArrayList<RayHitInfo> myRaysHitInfo = new ArrayList<>();            // refresh the rays information list
-        RayHitInfo myClosestRayHitInfo = null;                   // reset the closest ray to nothing
+        RayHitInfo groundRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(0,-1), maxGroundRayDistance, false);
 
-        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
-        RayCastCallback callback = new RayCastCallback() {
-            @Override
-            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture == null || point == null || normal == null) return 0;
-                // Multiple hits
-                myRaysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
-                return 1;
-            }
-        };
-
-        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
-        Vector2 endOfRay = PMath.addVector2(getPosition(), new Vector2(0, -maxGroundRayDistance));
-        world.rayCast(callback, getPosition(), endOfRay);
-
-        // Finding the closest ray hit through a searching algorithm
-        if (myRaysHitInfo != null) {
-            if (myRaysHitInfo.size() == 0) return false;
-            for (RayHitInfo rayHitInfo : myRaysHitInfo) {
-                if (!rayHitInfo.fixture.isSensor()) if (myClosestRayHitInfo == null) myClosestRayHitInfo = rayHitInfo;
-                if (myClosestRayHitInfo == null) continue;
-
-                float distance1 = PMath.magnitude(PMath.subVector2(myClosestRayHitInfo.point, this.body.getPosition()));
-                float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
-                if (distance2 < distance1 && !rayHitInfo.fixture.isSensor()) {
-                    myClosestRayHitInfo = rayHitInfo;
-                }
-            }
+        boolean grounded = false;
+        if (groundRayHitInfo != null) {
+            Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0,-size.y/2f));
+            float distanceFromGround = PMath.magnitude(PMath.subVector2(groundRayHitInfo.point, bottom));
+            grounded = distanceFromGround <= closeEnoughToGround;
         }
-        if (myClosestRayHitInfo == null) return false;
-
-        Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0, -size.y/2f));
-        float distanceFromGround = PMath.magnitude(PMath.subVector2(myClosestRayHitInfo.point, bottom));
-        return distanceFromGround < closeEnoughToGround;
+        return grounded;
     }
 
     // the control function allows for input reactions

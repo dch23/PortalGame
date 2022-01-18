@@ -81,7 +81,6 @@ public class GameMap {
 
             float density = 1;
             float friction = 0.1f;
-//            System.out.println("position: " + position + ", size: " + size);
 
             Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody, null, density, friction, false, null);
             if (angle != null) {
@@ -94,11 +93,8 @@ public class GameMap {
         // foreground and background indexes for rendering order
         ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
         ArrayList<Integer> foregroundIndexesList = new ArrayList<>();
-        for (int i = 0; i < layers.size(); ++i) {
-            MapLayer mapLayer = layers.get(i);
-            if (mapLayer.getName().equals("Border") || mapLayer.getName().equals("Windows")) foregroundIndexesList.add(i);
-            else backgroundIndexesList.add(i);
-        }
+        backgroundIndexesList.add(layers.getIndex("Background"));
+        foregroundIndexesList.add(layers.getIndex("Foreground"));
 
         backgroundIndexes = new int[backgroundIndexesList.size()];
         foregroundIndexes = new int[foregroundIndexesList.size()];
