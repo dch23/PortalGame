@@ -23,8 +23,6 @@ public class Portals {
     public Portals(World world) {
         this.world = world;
 
-
-
         portals = new Portal[2];
         portals[0] = new Portal(world);
         portals[1] = new Portal(world);

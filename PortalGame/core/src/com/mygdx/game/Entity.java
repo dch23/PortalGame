@@ -20,10 +20,12 @@ import java.util.Map;
 
 
 public class Entity {
+    // statics
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
     static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
     static float frameRate = 1f/30f;
 
+    // properties
     protected World world;
     protected String name;
     protected Map<String,Boolean> tags;
@@ -31,33 +33,27 @@ public class Entity {
     protected Vector2 gravity;
     protected Vector2 size;
 
-    //animations
+    public boolean alive = true;
+    float closeEnoughToGround = 0.05f;
+    float maxGroundRayDistance = 3f;
+    private Color color;
+    Sprite sprite;
+
+
+    // animation
     HashMap<String, Animation> animations = new HashMap<>();
     String currentAnimation = null;
     float animationTextureSizeScale = 1.5f;
     int horizontalFaceDirection = 1;
-    float closeEnoughToGround = 0.05f;
-    float maxGroundRayDistance = 3f;
 
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
 
-    PolygonRegion polygonRegion;
-    TextureRegion textureRegion;
-    PolygonSprite polygonSprite;
-    Sprite sprite;
-
-    private Color color;
-
+    // portals
     public boolean inPortal = false;
     public Portal portalEntering;
     public Portal portalExiting;
     private float reflectionExtrudeOffset = 0.02f;
-//
     public Entity reflectEntity;
 
-    // properties
-    public boolean alive = true;
 
     public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
@@ -102,6 +98,9 @@ public class Entity {
 
         // Creating an Floating Dynamic Object
         if (!gravityEnabled) this.body.setGravityScale(0f);
+
+        // add to render layer
+        MyGdxGame.entityRenderer.addToRenderLayer(1, this);
     }
 
     public void updateReflection(Portals portals) {

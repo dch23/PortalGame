@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -18,6 +19,8 @@ public class WeakEnemyEntity extends EnemyEntity {
 
     public WeakEnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+        animationTextureSizeScale = 3f;
+        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/redImpWalk.gif", 6, true, 0.5f);
     }
     static public void initialize(World world){
 //        world.setContactListener(new WeakEnemyCollisionListener());
@@ -66,5 +69,9 @@ public class WeakEnemyEntity extends EnemyEntity {
             wanderDirection *= -1;
         }
         this.body.setLinearVelocity(this.speed * wanderDirection, this.body.getLinearVelocity().y);
+
+        // animate
+        currentAnimation = "Walk";
+        horizontalFaceDirection = wanderDirection;
     }
 }

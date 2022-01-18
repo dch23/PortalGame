@@ -59,11 +59,7 @@ public class CollisionListener implements ContactListener {
                 Entity e = Entity.entityFromBody(solidFixture.getBody());
                 if (e.inPortal) return;
 
-
                 Portals portals = ((Player) Entity.entityFromName("Player")).portals;
-
-
-
 
                 Integer portalNumber = null;
                 if (portals.portals[0].getSurface() == portals.portals[1].getSurface()) {

@@ -98,21 +98,22 @@ public class MyGdxGame extends ApplicationAdapter {
 		player = new Player(world, camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
 				10f, 0.0f, true, null);
-		entityRenderer.addToRenderLayer(1, player);
+//		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
 
 		// Initialize Enemies
 		WeakEnemyEntity.initialize(world);
-		enemy = new WeakEnemyEntity(world, "weakEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, squareSprite);
+		enemy = new WeakEnemyEntity(world, "weakEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.35f),
+				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
 
 		walls = new ArrayList<>();
 		boxes = new ArrayList<>();
 
 		// Add Boxes To Physics World
-		for (int i=0; i<0; i++) {
-			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
-			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
-		}
+//		for (int i=0; i<0; i++) {
+//			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
+//			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
+//		}
 
 		// Add walls and floor
 //		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
@@ -133,16 +134,18 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	// a function for adding a box to the physics world by supplying the entity constructor with proper values
-	private void addBox(Vector2 position, Vector2 size) {
-		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody, new Color(0,1,0,1), 10f, 1f, true, squareSprite);
-		entityRenderer.addToRenderLayer(1, newBox);
-		boxes.add(newBox);
-	}
-
-	private void addWall(Vector2 position, Vector2 size) {
-		Entity newWall = new Entity(world, "Wall", position, size, BodyDef.BodyType.StaticBody, new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
-		walls.add(newWall);
-	}
+//	private void addBox(Vector2 position, Vector2 size) {
+//		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody,
+//				new Color(0,1,0,1), 10f, 1f, true, squareSprite);
+////		entityRenderer.addToRenderLayer(1, newBox);
+//		boxes.add(newBox);
+//	}
+//
+//	private void addWall(Vector2 position, Vector2 size) {
+//		Entity newWall = new Entity(world, "Wall", position, size, BodyDef.BodyType.StaticBody,
+//				new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
+//		walls.add(newWall);
+//	}
 
 //	private void addSprites() {
 //		Array<TextureAtlas.AtlasRegion> regions = textureAtlas.getRegions();

@@ -23,7 +23,6 @@ public class GameMap {
 
     protected TiledMap tiledMap;
     protected OrthographicCamera camera;
-    protected MapLayer wallLayer;
 
     protected float renderScale;
 
@@ -57,13 +56,11 @@ public class GameMap {
 //            }
 //        }
 
-
-
         // collision entities
         MapLayers layers = this.tiledMap.getLayers();
         MapLayer collisionLayer = layers.get("Collision");
         MapObjects objects = collisionLayer.getObjects();
-        System.out.println(objects.getCount());
+        
         for (int i = 0; i < objects.getCount(); i++) {
             MapObject object = objects.get(i);
 
@@ -87,8 +84,6 @@ public class GameMap {
                 newEntity.setAngle(angle, false);
             }
         }
-        wallLayer = layers.get("Border");
-
 
         // foreground and background indexes for rendering order
         ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
