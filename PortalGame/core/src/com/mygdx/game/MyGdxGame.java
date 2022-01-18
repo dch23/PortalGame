@@ -92,7 +92,7 @@ public class MyGdxGame extends ApplicationAdapter {
 //		System.out.println(world);
 
 		//Maps
-		map = new GameMap(world,"DarkMap1/tiledAssets/Level1(Tutorial).tmx", this.camera, entityRenderer);
+		map = new GameMap(world,"DarkMap1/tiledAssets/DarkMap(starterlevel).tmx", this.camera, entityRenderer);
 
 		// Initialize Objects in Physics World
 		player = new Player(world, camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
