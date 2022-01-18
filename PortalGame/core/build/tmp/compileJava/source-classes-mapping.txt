@@ -2,9 +2,8 @@ com/holidaystudios/tools/GifDecoder.java
  com.holidaystudios.tools.GifDecoder
  com.holidaystudios.tools.GifDecoder$DixieMap
  com.holidaystudios.tools.GifDecoder$GifFrame
-com/mygdx/game/Inputs.java
- com.mygdx.game.Inputs
- com.mygdx.game.Inputs$Keys
+com/mygdx/game/CollisionListener.java
+ com.mygdx.game.CollisionListener
 com/mygdx/game/PMath.java
  com.mygdx.game.PMath
 com/mygdx/game/RayHitInfo.java
@@ -12,8 +11,9 @@ com/mygdx/game/RayHitInfo.java
 com/mygdx/game/Laser.java
  com.mygdx.game.Laser
  com.mygdx.game.Laser$1
-com/mygdx/game/AnimationManager.java
- com.mygdx.game.AnimationManager
+com/mygdx/game/Inputs.java
+ com.mygdx.game.Inputs
+ com.mygdx.game.Inputs$Keys
 com/mygdx/game/EnemyEntity.java
  com.mygdx.game.EnemyEntity
  com.mygdx.game.EnemyEntity$1
@@ -36,8 +36,8 @@ com/mygdx/game/Entity.java
 com/mygdx/game/Renderer.java
  com.mygdx.game.RenderEntity
  com.mygdx.game.Renderer
+com/mygdx/game/AnimationManager.java
+ com.mygdx.game.AnimationManager
 com/mygdx/game/WeakEnemyEntity.java
  com.mygdx.game.WeakEnemyEntity
  com.mygdx.game.WeakEnemyEntity$1
-com/mygdx/game/CollisionListener.java
- com.mygdx.game.CollisionListener

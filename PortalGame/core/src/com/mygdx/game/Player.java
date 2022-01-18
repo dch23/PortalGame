@@ -22,8 +22,8 @@ public class Player extends Entity {
     Renderer debugRenderer;
 
     // variables that control the player values
-    private float speed = 1.4f;
-    private float jumpHeight = 2.3f;
+    private float speed = 2f;
+    private float jumpHeight = 4f;
     private float frictionMagnitude = 0.6f;
 
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
@@ -55,7 +55,10 @@ public class Player extends Entity {
         this.portals = new Portals(this.world);     // create the portals instance
         this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
 
-        addAnimation("idle", "Characters/Wizard Pack/Idle.png", 6, true);
+        addAnimation("Idle", "Characters/Wizard Pack/Idle.png", 6, true, 0.3f);
+        addAnimation("Run", "Characters/Wizard Pack/Run.png", 8, true, 0.3f);
+        addAnimation("Jump", "Characters/Wizard Pack/Jump.png", 2, true, 0.3f);
+        addAnimation("Fall", "Characters/Wizard Pack/Fall.png", 2, true, 0.3f);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -122,21 +125,43 @@ public class Player extends Entity {
 
     // right now the on ground function just returns true, havent found a good way to check if on ground
     private boolean onGround() {
+        final ArrayList<RayHitInfo> myRaysHitInfo = new ArrayList<>();            // refresh the rays information list
+        RayHitInfo myClosestRayHitInfo = null;                   // reset the closest ray to nothing
+
+        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                groundDistance = body.getPosition().y - point.y;
-                return 0;
+                if (fixture == null || point == null || normal == null) return 0;
+                // Multiple hits
+                myRaysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
+                return 1;
             }
         };
-        Vector2 bottom = body.getPosition();
-//        Vector2 bottom = new Vector2(body.getPosition().x, body.getPosition().y - size.y/2f);
-        Vector2 endRay = new Vector2(bottom);
-        endRay.add(0,-100f);
 
-        world.rayCast(callback, bottom, endRay);
-        return true;
-//        return (groundDistance < groundDistanceJumpThreshold);
+        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
+        Vector2 endOfRay = PMath.addVector2(getPosition(), new Vector2(0, -maxGroundRayDistance));
+        world.rayCast(callback, getPosition(), endOfRay);
+
+        // Finding the closest ray hit through a searching algorithm
+        if (myRaysHitInfo != null) {
+            if (myRaysHitInfo.size() == 0) return false;
+            for (RayHitInfo rayHitInfo : myRaysHitInfo) {
+                if (!rayHitInfo.fixture.isSensor()) if (myClosestRayHitInfo == null) myClosestRayHitInfo = rayHitInfo;
+                if (myClosestRayHitInfo == null) continue;
+
+                float distance1 = PMath.magnitude(PMath.subVector2(myClosestRayHitInfo.point, this.body.getPosition()));
+                float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
+                if (distance2 < distance1 && !rayHitInfo.fixture.isSensor()) {
+                    myClosestRayHitInfo = rayHitInfo;
+                }
+            }
+        }
+        if (myClosestRayHitInfo == null) return false;
+
+        Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0, -size.y/2f));
+        float distanceFromGround = PMath.magnitude(PMath.subVector2(myClosestRayHitInfo.point, bottom));
+        return distanceFromGround < closeEnoughToGround;
     }
 
     // the control function allows for input reactions
@@ -146,22 +171,32 @@ public class Player extends Entity {
         if (inputHoriz.x - inputHoriz.y != 0) { // if the right and left input values have a difference other than 0, then set the player velocity to a value,
                                                 // the only case that they would have a difference of 0 is when both of them are pressed,
                                                 // so you wouldn't want to change the velocity if right and left are pressed down.
-//            System.out.println(body.getTransform().getClass());
             float direction = (inputHoriz.x - inputHoriz.y);
 
             body.setLinearVelocity(Math.max(speed, Math.abs(body.getLinearVelocity().x)) * direction, body.getLinearVelocity().y);
+            horizontalFaceDirection = (int) direction;
 
-            //animate
-            if (onGround() && this.alive) {
-
-                this.currentAnimation = "idle";
-//                AnimationManager.playAnimation(getAnimation("idle"));
+            if (this.alive && onGround()) {
+                this.currentAnimation = "Run";
             }
-//
-//            if (Math.abs(getBody().getLinearVelocity().x) <= speed) {
-//                applyForce(new Vector2(1,0), 30 * direction);
-//            }
         }
+        else {
+            if (this.alive) {
+                if (onGround()) {
+                    this.currentAnimation = "Idle";
+                }
+            }
+        }
+        if (!onGround() && alive) {
+            if (getBody().getLinearVelocity().y > 0) {
+                this.currentAnimation = "Jump";
+            }
+            else if (getBody().getLinearVelocity().y < 0) {
+                this.currentAnimation = "Fall";
+            }
+        }
+
+
 
     }
 
