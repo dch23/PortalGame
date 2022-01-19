@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class AnimationManager {
     static HashMap<Animation, Float> animationElapseTimes = new HashMap<>();
 
-    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale) {
+    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale, int horizontalFaceDirection) {
         if (!animationElapseTimes.containsKey(animation)) animationElapseTimes.put(animation, 0f);
 
         TextureRegion keyFrame = (TextureRegion) animation.getKeyFrame(animationElapseTimes.get(animation),true);
@@ -24,7 +24,7 @@ public class AnimationManager {
         pos.y = pos.y - entity.size.y/2f + size.y/2f;
 
 
-        if (entity.horizontalFaceDirection == 1) {
+        if (horizontalFaceDirection == 1) {
             if (keyFrame.isFlipX()) {
                 keyFrame.flip(true, false);
             }
@@ -42,10 +42,10 @@ public class AnimationManager {
         animationElapseTimes.put(animation, animationElapseTimes.get(animation) + Gdx.graphics.getDeltaTime());
     }
 
-    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, String animationName, float textureScale) {
+    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, String animationName, float textureScale, int horizontalFlipDirection) {
         Animation animation = entity.getAnimation(animationName);
         if (animation == null) return;
-        playAnimation(entity, spriteBatch, animation, textureScale);
+        playAnimation(entity, spriteBatch, animation, textureScale, horizontalFlipDirection);
     }
 
     static private void resetAnimation(Animation animation) {

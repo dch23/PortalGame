@@ -18,6 +18,9 @@ import javax.sound.sampled.Port;
 import java.util.ArrayList;
 
 public class Player extends Entity {
+    static private Player player;
+    static public Vector2 regularSize = new Vector2(0.3f,0.4f);
+
     // used for drawing a debug line for the mouse (line from player to mouse)
     Renderer debugRenderer;
 
@@ -116,6 +119,7 @@ public class Player extends Entity {
                 return true;
             }
         });
+        player = this;
     }
 
 
@@ -262,19 +266,25 @@ public class Player extends Entity {
         }
     }
 
-    public void operate() {
+    static public void operate() {
         // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
 
 
-        if (alive) {
-            control();
+        if (player.alive) {
+            player.control();
         }
         else {
-            die();
+            player.die();
         }
-        friction();
+        player.friction();
 
-        if (mousePos != null) this.debugRenderer.debugLine(this.body.getPosition(), mousePos, Color.WHITE);
+        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
+        player.updateReflection(player.portals);
+
+    }
+
+    static public void renderPortals() {
+        player.portals.renderPortals(MyGdxGame.entityRenderer.getBatch());
     }
 
     private void die() {
