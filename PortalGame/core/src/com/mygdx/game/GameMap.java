@@ -91,7 +91,7 @@ public class GameMap {
         MapObjects enemiesObjects = enemiesLayer.getObjects();
         for (int i = 0; i < enemiesObjects.getCount(); i++) {
             MapObject object = enemiesObjects.get(i);
-            
+
         }
 
         // foreground and background indexes for rendering order
