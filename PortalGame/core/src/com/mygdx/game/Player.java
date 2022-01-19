@@ -122,7 +122,8 @@ public class Player extends Entity {
     // right now the on ground function just returns true, havent found a good way to check if on ground
     private boolean onGround() {
         RayHitInfo groundRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(0,-1), maxGroundRayDistance, false);
-
+//        Entity entity = Entity.entityFromBody(groundRayHitInfo.fixture.getBody());
+//        String name = entity.getName();
         boolean grounded = false;
         if (groundRayHitInfo != null) {
             Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0,-size.y/2f));
