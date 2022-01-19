@@ -87,6 +87,11 @@ public class CollisionListener implements ContactListener {
                     }
                 }
                 break;
+            case "not sensor Player, is sensor exit door":
+                if (MyGdxGame.currentLevel+1 == MyGdxGame.maps.size()) break;
+                MyGdxGame.currentLevel += 1;
+                MyGdxGame.updateLevel = true;
+                break;
         }
 
 //        if (f1.isSensor() || f2.isSensor()) {

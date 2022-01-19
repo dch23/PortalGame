@@ -18,7 +18,7 @@ import javax.sound.sampled.Port;
 import java.util.ArrayList;
 
 public class Player extends Entity {
-    static private Player player;
+    static protected Player player;
     static public Vector2 regularSize = new Vector2(0.3f,0.4f);
 
     // used for drawing a debug line for the mouse (line from player to mouse)
@@ -45,9 +45,9 @@ public class Player extends Entity {
 
 
 
-    public Player(World world, OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+    public Player(OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // constructor similarity to the entity is set with super
-        super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+        super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
 
         // lock the rotation of the player
         this.body.setFixedRotation(true);
@@ -268,8 +268,7 @@ public class Player extends Entity {
 
     static public void operate() {
         // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
-
-
+        if (player == null) return;
         if (player.alive) {
             player.control();
         }
@@ -284,6 +283,7 @@ public class Player extends Entity {
     }
 
     static public void renderPortals() {
+        if (player == null) return;
         player.portals.renderPortals(MyGdxGame.entityRenderer.getBatch());
     }
 

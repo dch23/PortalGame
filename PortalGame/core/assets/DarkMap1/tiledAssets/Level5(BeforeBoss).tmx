@@ -287,7 +287,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="12" name="enemies">
+ <objectgroup id="12" name="Enemies">
   <object id="18" x="595.186" y="262.196" width="25.5641" height="23.5977">
    <properties>
     <property name="weakEnemy" value=""/>

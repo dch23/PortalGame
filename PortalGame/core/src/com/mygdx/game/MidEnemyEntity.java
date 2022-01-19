@@ -18,8 +18,8 @@ public class MidEnemyEntity extends EnemyEntity{
 
     float maxRayDistance = 100;
 
-    public MidEnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
-        super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+    public MidEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+        super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
     }
     static public void initialize(World world){
 //        world.setContactListener(new WeakEnemyCollisionListener());
@@ -63,7 +63,7 @@ public class MidEnemyEntity extends EnemyEntity{
     }
 
     private boolean seeEnemy(){
-
+        return false;
     }
     public void operate() {
         if(hitWall()) {

@@ -30,9 +30,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static final float SCENE_WIDTH = 1920f;
 	protected static final float SCENE_HEIGHT = 1080f;
+	public static int currentLevel = 0;
+	public static boolean updateLevel = false;
 
-	// Maps
-	GameMap map;
+	static ArrayList<GameMap> maps = new ArrayList<>();
+	static GameMap currentMap;
 
 	// Physics World
 	private World world;
@@ -53,8 +55,22 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Laser> lasers;
 	float angle = 0f;
 
+	public static void changeLevel(int level) {
+		currentMap.unload();
+		currentMap = maps.get(level);
+		currentMap.load();
+		currentLevel = level;
+	}
+
 	@Override
 	public void create () {
+		// Initialize Physics World
+		world = new World(gravity, false);
+		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
+
+		// initialize Entity world
+		Entity.setWorld(world);
+
 
 		// Initialize Debug Renderer for making debug lines and debug shapes for the physics objects
 		b2dr = new Box2DDebugRenderer();
@@ -71,13 +87,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
-		// Initialize Physics World
-		world = new World(gravity, false);
-		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
-
 		//Maps
-		map = new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer);
-		map.load();
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
+
+		currentMap = maps.get(0);
+		currentMap.load();
+//		map.unload();
 
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
@@ -100,7 +116,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		WeakEnemyEntity.operate();
 
-		map.renderBackground();
+		currentMap.renderBackground();
 
 		Laser.beginRender();
 		angle+=1f;
@@ -115,7 +131,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.render();
 		entityRenderer.endRender();
 
-		map.renderForeground();
+		currentMap.renderForeground();
 
 		Player.renderPortals();
 
@@ -126,6 +142,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Update the Camera
 		camera.update();
 
+
+		if (updateLevel) {
+			changeLevel(currentLevel);
+			updateLevel = false;
+		}
+
 		// Next Physics frame
 		stepWorld();
 	}
@@ -135,7 +157,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
 		Entity.disposeAll();
 		world.dispose();
-		map.dispose();
+		for (GameMap map : maps) {
+			map.dispose();
+		}
+		maps = null;
 	}
 
 	private void stepWorld() {

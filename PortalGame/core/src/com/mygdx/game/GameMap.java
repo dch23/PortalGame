@@ -18,21 +18,23 @@ import java.util.Iterator;
 import java.util.Properties;
 
 public class GameMap {
-    static protected TiledMapRenderer tiledMapRenderer;
-    static protected TmxMapLoader tmxMapLoader = new TmxMapLoader();
+    protected TiledMapRenderer tiledMapRenderer;
+    protected TmxMapLoader tmxMapLoader = new TmxMapLoader();
 
     protected World world;
     protected TiledMap tiledMap;
     protected OrthographicCamera camera;
 
     protected float renderScale;
-    protected Vector2 exitDoorPosition;
 
     protected int[] backgroundIndexes;
     protected int[] foregroundIndexes;
 
+    protected boolean loaded = false;
+
     public void load() {
         if (tiledMap == null) return;
+        if (loaded) return;
 
         // collision entities
         MapLayers layers = this.tiledMap.getLayers();
@@ -57,7 +59,7 @@ public class GameMap {
             float density = 1;
             float friction = 0.1f;
 
-            Entity newEntity = new Entity(world, "map object", position, size, BodyDef.BodyType.StaticBody,
+            Entity newEntity = new Entity("map object", position, size, BodyDef.BodyType.StaticBody,
                     null, density, friction, false, null);
             if (angle != null) {
                 newEntity.setAngle(angle, false);
@@ -82,17 +84,24 @@ public class GameMap {
             if (objectName.equals("enter")) enterDoor = object;
             else if (objectName.equals("exit")) exitDoor = object;
         }
-        Vector2 doorPosition = new Vector2((float) enterDoor.getProperties().get("x"),
+        Vector2 enterDoorPosition = new Vector2((float) enterDoor.getProperties().get("x"),
                 (float) enterDoor.getProperties().get("y"));
-        Vector2 doorSize = new Vector2((float) enterDoor.getProperties().get("width"), (float) enterDoor.getProperties().get("height"));
-        doorPosition = PMath.addVector2(doorPosition, new Vector2(doorSize.x/2f, doorSize.y/2f));
-        doorPosition = PMath.multVector2(doorPosition, this.renderScale);
-        spawnPlayer(doorPosition);
+        Vector2 enterDoorSize = new Vector2((float) enterDoor.getProperties().get("width"), (float) enterDoor.getProperties().get("height"));
+        enterDoorPosition = PMath.addVector2(enterDoorPosition, new Vector2(enterDoorSize.x/2f, enterDoorSize.y/2f));
+        enterDoorPosition = PMath.multVector2(enterDoorPosition, this.renderScale);
+        spawnPlayer(enterDoorPosition);
 
         // assign exit door
         Vector2 exitDoorPosition = new Vector2((float) exitDoor.getProperties().get("x"),
                 (float) exitDoor.getProperties().get("y"));
+        Vector2 exitDoorSize = new Vector2((float) exitDoor.getProperties().get("width"), (float) exitDoor.getProperties().get("height"));
+        exitDoorPosition = PMath.addVector2(exitDoorPosition, new Vector2(exitDoorSize.x/2f, exitDoorSize.y/2f));
         exitDoorPosition = PMath.multVector2(exitDoorPosition, this.renderScale);
+        exitDoorSize = PMath.multVector2(exitDoorSize, this.renderScale);
+
+        Entity exitDoorEntity = new Entity("exit door", exitDoorPosition, exitDoorSize, BodyDef.BodyType.StaticBody,
+                null, 0.1f, 0.1f, false, null);
+        exitDoorEntity.getBody().getFixtureList().first().setSensor(true);
 
         // foreground and background indexes for rendering order
         ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
@@ -105,6 +114,9 @@ public class GameMap {
 
         for (int i = 0; i < backgroundIndexes.length; ++i) backgroundIndexes[i] = backgroundIndexesList.get(i);
         for (int i = 0; i < foregroundIndexes.length; ++i) foregroundIndexes[i] = foregroundIndexesList.get(i);
+
+        // loaded
+        loaded = true;
     }
 
     public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera, Renderer entityRenderer) {
@@ -142,18 +154,24 @@ public class GameMap {
         if (ray != null) {
             playerPosition = PMath.addVector2(ray.point, new Vector2(0, Player.regularSize.y));
         }
-        Player player = new Player(world, camera, "Player", playerPosition, Player.regularSize,
+        Player player = new Player(camera, "Player", playerPosition, Player.regularSize,
                 BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
                 10f, 0.0f, true, null);
     }
 
     public void renderBackground () {
+        if (!loaded) return;
 //        tiledMapRenderer.setView(this.camera);
         if (backgroundIndexes == null) return;
+        for (int i=0; i<backgroundIndexes.length; i++) {
+            System.out.print(backgroundIndexes[i] + " ");
+        }
+        System.out.println();
         tiledMapRenderer.render(backgroundIndexes);
     }
 
     public void renderForeground () {
+        if (!loaded) return;
         tiledMapRenderer.render(this.foregroundIndexes);
     }
 
@@ -163,6 +181,7 @@ public class GameMap {
 
     private void addEnemy(MapObject object) {
         String enemyName = (String) object.getProperties().get("name");
+        if (enemyName == null) return;
         Vector2 position = new Vector2((float) object.getProperties().get("x"),
                 (float) object.getProperties().get("y"));
         position = PMath.multVector2(position, renderScale);
@@ -177,9 +196,14 @@ public class GameMap {
             case "weakEnemy":
                 regularSize = WeakEnemyEntity.getSize();
                 position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new WeakEnemyEntity(world, enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 0.1f, 0.1f, true, null);
+                new WeakEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 0.1f, 0.1f, true, null);
                 break;
         }
     }
 
+    public void unload() {
+        if (!loaded) return;
+        Entity.disposeAll();
+        loaded = false;
+    }
 }
