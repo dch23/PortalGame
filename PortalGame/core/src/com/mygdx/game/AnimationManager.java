@@ -12,21 +12,19 @@ import java.util.HashMap;
 public class AnimationManager {
     static HashMap<Animation, Float> animationElapseTimes = new HashMap<>();
 
-    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation) {
+    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale, int horizontalFaceDirection) {
         if (!animationElapseTimes.containsKey(animation)) animationElapseTimes.put(animation, 0f);
 
         TextureRegion keyFrame = (TextureRegion) animation.getKeyFrame(animationElapseTimes.get(animation),true);
-
-//        Texture keyFrame = (Texture) animation.getKeyFrame(animationElapseTimes.get(animation),true);
-        Vector2 size = new Vector2(keyFrame.getRegionWidth() * MyGdxGame.GAME_SCALE * entity.animationTextureSizeScale,
-                keyFrame.getRegionHeight() * MyGdxGame.GAME_SCALE * entity.animationTextureSizeScale);
+        Vector2 size = new Vector2(keyFrame.getRegionWidth() * MyGdxGame.GAME_SCALE * textureScale,
+                keyFrame.getRegionHeight() * MyGdxGame.GAME_SCALE * textureScale);
         Vector2 pos = new Vector2(entity.getPosition());
         pos.x -= size.x/2f;
         pos.y -= size.y/2f;
         pos.y = pos.y - entity.size.y/2f + size.y/2f;
 
 
-        if (entity.horizontalFaceDirection == 1) {
+        if (horizontalFaceDirection == 1) {
             if (keyFrame.isFlipX()) {
                 keyFrame.flip(true, false);
             }
@@ -37,11 +35,17 @@ public class AnimationManager {
             }
         }
 
+        // draw onto screen
         spriteBatch.draw(keyFrame, pos.x, pos.y, size.x, size.y);
 
-//        System.out.println(texture);
-
+        // increment elapse time
         animationElapseTimes.put(animation, animationElapseTimes.get(animation) + Gdx.graphics.getDeltaTime());
+    }
+
+    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, String animationName, float textureScale, int horizontalFlipDirection) {
+        Animation animation = entity.getAnimation(animationName);
+        if (animation == null) return;
+        playAnimation(entity, spriteBatch, animation, textureScale, horizontalFlipDirection);
     }
 
     static private void resetAnimation(Animation animation) {

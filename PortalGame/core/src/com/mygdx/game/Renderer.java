@@ -128,9 +128,10 @@ class RenderEntity {
 
         // animation
         if (this.entity.currentAnimation != null) {
-            AnimationManager.playAnimation(this.entity, spriteBatch, this.entity.getAnimation(this.entity.currentAnimation));
+            AnimationManager.playAnimation(this.entity, spriteBatch, this.entity.currentAnimation, entity.animationTextureSizeScale, entity.horizontalFaceDirection);
             if (this.entity.reflectEntity != null) {
-                AnimationManager.playAnimation(this.entity.reflectEntity, spriteBatch, this.entity.getAnimation(this.entity.currentAnimation));
+                AnimationManager.playAnimation(this.entity.reflectEntity, spriteBatch,
+                        this.entity.getAnimation(this.entity.currentAnimation), entity.animationTextureSizeScale, entity.horizontalFaceDirection);
             }
         }
     }

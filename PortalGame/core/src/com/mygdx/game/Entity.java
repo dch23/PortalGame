@@ -20,51 +20,47 @@ import java.util.Map;
 
 
 public class Entity {
+    // statics
+    static World world;
+    static ArrayList<Entity> allEntities = new ArrayList<>();
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
     static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
     static float frameRate = 1f/30f;
 
-    protected World world;
+    // properties
     protected String name;
     protected Map<String,Boolean> tags;
     protected Body body;
     protected Vector2 gravity;
     protected Vector2 size;
 
-    //animations
+    public boolean alive = true;
+    float closeEnoughToGround = 0.05f;
+    float maxGroundRayDistance = 3f;
+    private Color color;
+    Sprite sprite;
+
+
+    // animation
     HashMap<String, Animation> animations = new HashMap<>();
     String currentAnimation = null;
     float animationTextureSizeScale = 1.5f;
     int horizontalFaceDirection = 1;
-    float closeEnoughToGround = 0.05f;
-    float maxGroundRayDistance = 3f;
 
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private PolygonSpriteBatch polygonSpriteBatch = new PolygonSpriteBatch();
 
-    PolygonRegion polygonRegion;
-    TextureRegion textureRegion;
-    PolygonSprite polygonSprite;
-    Sprite sprite;
-
-    private Color color;
-
+    // portals
     public boolean inPortal = false;
     public Portal portalEntering;
     public Portal portalExiting;
     private float reflectionExtrudeOffset = 0.02f;
-//
     public Entity reflectEntity;
 
-    // properties
-    public boolean alive = true;
 
-    public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+    public Entity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
         // Initialize Variables
-        this.world = world;
         this.name = name;
-        this.gravity = world.getGravity();
+        this.gravity = Entity.world.getGravity();
         this.color = color;
         this.size = size;
 
@@ -96,12 +92,20 @@ public class Entity {
         // add entity to entity map
         entityFromBodyMap.put(this.body, this);
         entityFromNameMap.put(this.name, this);
+        allEntities.add(this);
 
         // Free memory
         shape.dispose();
 
         // Creating an Floating Dynamic Object
         if (!gravityEnabled) this.body.setGravityScale(0f);
+
+        // add to render layer
+        MyGdxGame.entityRenderer.addToRenderLayer(1, this);
+    }
+
+    public static void setWorld(World world) {
+        Entity.world = world;
     }
 
     public void updateReflection(Portals portals) {
@@ -130,7 +134,7 @@ public class Entity {
             portals.suckEntity(portalEntering, this);
 
             if (reflectEntity == null) {
-                reflectEntity = new ReflectEntity(this.world, "reflect " + getName(), new Vector2(0, 0), this.size,
+                reflectEntity = new ReflectEntity(world, "reflect " + getName(), new Vector2(0, 0), this.size,
                         BodyDef.BodyType.StaticBody, color, getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
@@ -268,6 +272,7 @@ public class Entity {
     }
 
     public Vector2 getPosition() {
+//        if (this.body == null) return;
         return this.body.getPosition();
     }
 //    public Vector2 getSize() {
@@ -295,18 +300,6 @@ public class Entity {
 
     public Sprite getSprite() {
         return this.sprite;
-    }
-    // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
-    static void disposeAll() {
-        // MUST DISPOSE ALL SHAPE RENDERERS
-//        shapeRenderer.dispose();
-        // MUST DISPOSE ALL ENTITIES;
-    }
-
-    public void dispose() {
-        if(this.body == null) return;
-        this.world.destroyBody(this.body);
-        this.body = null;
     }
 
     static Entity entityFromBody(Body body) {
@@ -345,6 +338,24 @@ public class Entity {
         return animations.get(animationName);
     }
 
+    // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
+    static void disposeAll() {
+        for (Entity e : allEntities) {
+            e.dispose();
+        }
+        allEntities = new ArrayList<>();
+        Player.player = null;
+        WeakEnemyEntity.weakEnemyEntities = new ArrayList<>();
+        // MUST DISPOSE ALL SHAPE RENDERERS
+//        shapeRenderer.dispose();
+        // MUST DISPOSE ALL ENTITIES;
+    }
+
+    public void dispose() {
+        if(this.body == null) return;
+        world.destroyBody(this.body);
+        this.body = null;
+    }
 
 
 }
