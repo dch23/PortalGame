@@ -184,7 +184,9 @@ public class Player extends Entity {
         Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
         Vector2 shootDirection = PMath.normalizeVector2(PMath.subVector2(mousePosition,getPosition()));
         RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, false);
-
+//        if (Entity.entityFromBody(closestRayHitInfo.fixture.getBody()).getName() == "exit door") {
+//            System.out.println(closestRayHitInfo.fixture.isSensor());
+//        }
 //        raysHitInfo = new ArrayList<>();            // refresh the rays information list
 //        closestRayHitInfo = null;                   // reset the closest ray to nothing
 //

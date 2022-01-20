@@ -43,9 +43,11 @@ public class GameMap {
         MapProperties mapProperties = tiledMap.getProperties();
 
         // Create scale
-        float mapWidth = (mapProperties.get("width", Integer.class) * mapProperties.get("tilewidth", Integer.class)) * MyGdxGame.GAME_SCALE;
-        float mapHeight = (mapProperties.get("height", Integer.class) * mapProperties.get("tileheight", Integer.class)) * MyGdxGame.GAME_SCALE;
-        this.renderScale = Math.min(MyGdxGame.SCENE_WIDTH / mapWidth, MyGdxGame.SCENE_HEIGHT / mapHeight);
+        int mapWidth = (mapProperties.get("width", Integer.class) * mapProperties.get("tilewidth", Integer.class));
+        int mapHeight = (mapProperties.get("height", Integer.class) * mapProperties.get("tileheight", Integer.class));
+        this.renderScale = Math.min(MyGdxGame.SCENE_WIDTH / mapWidth * MyGdxGame.GAME_SCALE,
+                MyGdxGame.SCENE_HEIGHT / mapHeight * MyGdxGame.GAME_SCALE
+        );
 
         // Create Renderer
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, this.renderScale);
@@ -67,9 +69,22 @@ public class GameMap {
     }
 
     private void camCenterMap(float mapWidth, float mapHeight) {
-        
-//        this.camera.position.x = MyGdxGame.SCENE_WIDTH/2f - mapWidth/2f;
-//        this.camera.position.y = MyGdxGame.SCENE_HEIGHT/2f - mapHeight/2f;
+//        float widthScale = MyGdxGame.SCENE_WIDTH / mapWidth;
+//        float heightScale = MyGdxGame.SCENE_HEIGHT / mapHeight;
+//        float scale = Math.min(widthScale, heightScale);
+//        mapWidth *= scale;
+//        mapHeight *= scale;
+//        System.out.println(mapWidth + " " + mapHeight + " vs " + MyGdxGame.SCENE_WIDTH + " " + MyGdxGame.SCENE_HEIGHT);
+//        if (mapWidth != MyGdxGame.SCENE_WIDTH) {
+////            float extraSpace = Math.abs(mapWidth - MyGdxGame.SCENE_WIDTH);
+////            camera.translate(new Vector2(extraSpace/2f,0));
+//        }
+//        else if (mapHeight != MyGdxGame.SCENE_HEIGHT) {
+//            float extraSpace = Math.abs(mapHeight - MyGdxGame.SCENE_HEIGHT);
+//            extraSpace *= MyGdxGame.GAME_SCALE;
+//            camera.translate(new Vector2(0,-extraSpace/2f));
+//        }
+////        camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
     }
 
     public void load() {

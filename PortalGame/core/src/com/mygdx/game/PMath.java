@@ -59,10 +59,11 @@ public class PMath {
 
         // Finding the closest ray hit through a searching algorithm
         if (raysHitInfo.size()==0) return null;
-        RayHitInfo closestRayHitInfo = raysHitInfo.get(0);
+        RayHitInfo closestRayHitInfo = null;
         if (raysHitInfo != null) {
             for (RayHitInfo rayHitInfo : raysHitInfo) {
                 if (!detectSensor) if (rayHitInfo.fixture.isSensor()) continue;
+                if (closestRayHitInfo == null) closestRayHitInfo = rayHitInfo;
                 float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, startPoint));
                 float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, startPoint));
                 if (distance2 < distance1) closestRayHitInfo = rayHitInfo;
