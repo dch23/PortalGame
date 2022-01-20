@@ -344,6 +344,8 @@ public class Entity {
             e.dispose();
         }
         allEntities = new ArrayList<>();
+        entityFromBodyMap = new HashMap<>();
+        entityFromNameMap = new HashMap<>();
         Player.player = null;
         WeakEnemyEntity.weakEnemyEntities = new ArrayList<>();
         // MUST DISPOSE ALL SHAPE RENDERERS
@@ -352,6 +354,7 @@ public class Entity {
     }
 
     public void dispose() {
+        animations = new HashMap<>();
         if(this.body == null) return;
         world.destroyBody(this.body);
         this.body = null;

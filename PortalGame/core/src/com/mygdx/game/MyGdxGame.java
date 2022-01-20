@@ -28,9 +28,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
 	static final CollisionListener COLLISION_LISTENER = new CollisionListener();
 
-	protected static final float SCENE_WIDTH = 1920f;
-	protected static final float SCENE_HEIGHT = 1080f;
-	public static int currentLevel = 0;
+	protected static float SCENE_WIDTH;
+	protected static float SCENE_HEIGHT;
+	public static int currentLevel = 1;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -54,6 +54,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	// lasers are not used rn
 	ArrayList<Laser> lasers;
 	float angle = 0f;
+
+	public MyGdxGame(float screenWidth, float screenHeight) {
+		SCENE_WIDTH = screenWidth;
+		SCENE_HEIGHT = screenHeight;
+	}
 
 	public static void changeLevel(int level) {
 		currentMap.unload();
@@ -88,10 +93,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.update();
 
 		//Maps
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level1(Tutorial).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level2(EasyPuzzle).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
 
-		currentMap = maps.get(0);
+		currentMap = maps.get(currentLevel);
 		currentMap.load();
 //		map.unload();
 
@@ -107,7 +116,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		// Set Screen Background Colour to White with an Alpha of 100%
-		ScreenUtils.clear(1, 1, 1, 1);
+		ScreenUtils.clear(0, 0, 0, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);

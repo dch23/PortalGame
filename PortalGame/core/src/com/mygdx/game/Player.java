@@ -181,53 +181,57 @@ public class Player extends Entity {
 
 
     private void shootPortal(final int portalNumber) {
-        raysHitInfo = new ArrayList<>();            // refresh the rays information list
-        closestRayHitInfo = null;                   // reset the closest ray to nothing
-
-        // Set portal
         Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
+        Vector2 shootDirection = PMath.normalizeVector2(PMath.subVector2(mousePosition,getPosition()));
+        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, false);
 
-        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
-        RayCastCallback callback = new RayCastCallback() {
-            @Override
-            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture == null || point == null || normal == null) return 0;
-
-//                mousePos = point;
-//                System.out.println("HIT");
-                // Multiple hits
-                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
-                return 1;
-            }
-        };
-
-//        mousePos = PMath.addVector2(this.body.getPosition(),
-//                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance));
-
-        // call raycast in world from player position to the max distance away from it based off the maxShootPortalDistance
-        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
-        world.rayCast(callback, this.body.getPosition(), PMath.addVector2(this.body.getPosition(),
-                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance)));
-
-        // Finding the closest ray hit through a searching algorithm
-        if (raysHitInfo!=null) {
-            if (raysHitInfo.size() == 0) return;
-            closestRayHitInfo = raysHitInfo.get(0);
-            for (RayHitInfo rayHitInfo : raysHitInfo) {
-                float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()));
-                float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
-                if (distance2 < distance1) {
-                    closestRayHitInfo = rayHitInfo;
-                }
-            }
-        }
-//        for (RayHitInfo r : raysHitInfo) {
-//            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
-//            r.print();
+//        raysHitInfo = new ArrayList<>();            // refresh the rays information list
+//        closestRayHitInfo = null;                   // reset the closest ray to nothing
+//
+//        // Set portal
+//
+//
+//        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
+//        RayCastCallback callback = new RayCastCallback() {
+//            @Override
+//            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+//                if (fixture == null || point == null || normal == null) return 0;
+//
+////                mousePos = point;
+////                System.out.println("HIT");
+//                // Multiple hits
+//                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
+//                return 1;
+//            }
+//        };
+//
+////        mousePos = PMath.addVector2(this.body.getPosition(),
+////                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance));
+//
+//        // call raycast in world from player position to the max distance away from it based off the maxShootPortalDistance
+//        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
+//        world.rayCast(callback, this.body.getPosition(), PMath.addVector2(this.body.getPosition(),
+//                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance)));
+//
+//        // Finding the closest ray hit through a searching algorithm
+//        if (raysHitInfo!=null) {
+//            if (raysHitInfo.size() == 0) return;
+//            closestRayHitInfo = raysHitInfo.get(0);
+//            for (RayHitInfo rayHitInfo : raysHitInfo) {
+//                float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()));
+//                float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
+//                if (distance2 < distance1) {
+//                    closestRayHitInfo = rayHitInfo;
+//                }
+//            }
 //        }
-//        System.out.println();
-        // ngl, i have no idea why i added the next line
-        closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
+////        for (RayHitInfo r : raysHitInfo) {
+////            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
+////            r.print();
+////        }
+////        System.out.println();
+//        // ngl, i have no idea why i added the next line
+//        closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
 
         // set a portal to the closest plausible surface in the direction you click the mouse
         if (closestRayHitInfo != null) {
