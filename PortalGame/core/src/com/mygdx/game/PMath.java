@@ -77,6 +77,13 @@ public class PMath {
         return getClosestRayHitInfo(world, startPoint, endPoint, detectSensor);
     }
 
+    public static int getRandomRangeInt(int min, int max) {
+        return (int) (Math.random() * (max - min) + min);
+    }
+
+    public static float getRandomRangeFloat(float min, float max) {
+        return (float) (Math.random() * (max - min) + min);
+    }
 }
 
 

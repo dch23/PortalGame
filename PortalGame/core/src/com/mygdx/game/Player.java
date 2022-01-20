@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -54,10 +55,15 @@ public class Player extends Entity {
         this.portals = new Portals(this.world);     // create the portals instance
         this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
 
+        // animations
         addAnimation("Idle", "Characters/Wizard Pack/Idle.png", 6, true, 0.3f);
         addAnimation("Run", "Characters/Wizard Pack/Run.png", 8, true, 0.3f);
         addAnimation("Jump", "Characters/Wizard Pack/Jump.png", 2, true, 0.3f);
         addAnimation("Fall", "Characters/Wizard Pack/Fall.png", 2, true, 0.3f);
+
+        // sounds
+        sounds.put("Jump1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump1.mp3")));
+        sounds.put("Jump2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump2.mp3")));
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -125,16 +131,29 @@ public class Player extends Entity {
 
     // right now the on ground function just returns true, havent found a good way to check if on ground
     private boolean onGround() {
-        RayHitInfo groundRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(0,-1), maxGroundRayDistance, false);
-//        Entity entity = Entity.entityFromBody(groundRayHitInfo.fixture.getBody());
-//        String name = entity.getName();
         boolean grounded = false;
-        if (groundRayHitInfo != null) {
-            Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0,-size.y/2f));
-            float distanceFromGround = PMath.magnitude(PMath.subVector2(groundRayHitInfo.point, bottom));
-            grounded = distanceFromGround <= closeEnoughToGround;
+        ArrayList<RayHitInfo> rays = new ArrayList<>();
+
+        rays.add(PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(0,-1), maxGroundRayDistance, false));
+        rays.add(PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(-size.x/2f, 0)), new Vector2(0,-1), maxGroundRayDistance, false));
+        rays.add(PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(size.x/2f, 0)), new Vector2(0,-1), maxGroundRayDistance, false));
+
+        Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0,-size.y/2f));
+        for (RayHitInfo ray : rays) {
+            if (ray == null) continue;
+            float distanceFromGround = Math.abs(ray.point.y - bottom.y);
+            if (distanceFromGround <= closeEnoughToGround) {
+                grounded = true;
+                break;
+            }
         }
         return grounded;
+
+//        if (groundRayHitInfo != null) {
+//            Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0,-size.y/2f));
+//            float distanceFromGround = PMath.magnitude(PMath.subVector2(groundRayHitInfo.point, bottom));
+//            grounded = distanceFromGround <= closeEnoughToGround;
+//        }
     }
 
     // the control function allows for input reactions
@@ -176,6 +195,10 @@ public class Player extends Entity {
     private void jump() {
         if (onGround() && alive) {
             body.setLinearVelocity(body.getLinearVelocity().x, jumpHeight);     // if on the ground, then set the y speed to the jump height, this simulates a sort of impact force upwards
+
+            int jumpNumber = PMath.getRandomRangeInt(1,3);
+            Sound jumpSound = (jumpNumber==1 ? sounds.get("Jump1") : sounds.get("Jump2"));
+            AudioManager.playSound(jumpSound, 1, false);
         }
     }
 
