@@ -32,6 +32,61 @@ public class GameMap {
 
     protected boolean loaded = false;
 
+
+
+    public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera, Renderer entityRenderer) {
+        this.world = world;
+        this.camera = camera;
+
+        // Load map
+        this.tiledMap = tmxMapLoader.load(tiledMapDirectory);
+        MapProperties mapProperties = tiledMap.getProperties();
+
+        // Create scale
+        int mapWidth = (mapProperties.get("width", Integer.class) * mapProperties.get("tilewidth", Integer.class));
+        int mapHeight = (mapProperties.get("height", Integer.class) * mapProperties.get("tileheight", Integer.class));
+        this.renderScale = Math.min(MyGdxGame.SCENE_WIDTH / mapWidth * MyGdxGame.GAME_SCALE,
+                MyGdxGame.SCENE_HEIGHT / mapHeight * MyGdxGame.GAME_SCALE
+        );
+
+        // Create Renderer
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, this.renderScale);
+        tiledMapRenderer.setView(this.camera);
+
+        // move camera to center the map
+        camCenterMap(mapWidth, mapHeight);
+
+        // Create Bodies
+//        Iterator<TiledMapTileSet> tiledSetsIterator = this.tiledMap.getTileSets().iterator();
+//        for (TiledMapTileSet tiledSets = tiledSetsIterator.next(); tiledSetsIterator.hasNext(); tiledSets = tiledSetsIterator.next()) {
+//            Iterator<TiledMapTile> tiledMapTileIterator = tiledSets.iterator();
+//            for (TiledMapTile tile = tiledMapTileIterator.next(); tiledMapTileIterator.hasNext(); tile = tiledMapTileIterator.next()) {
+//                Iterator<> tile.getProperties().getKeys();
+//            }
+//        }
+
+
+    }
+
+    private void camCenterMap(float mapWidth, float mapHeight) {
+//        float widthScale = MyGdxGame.SCENE_WIDTH / mapWidth;
+//        float heightScale = MyGdxGame.SCENE_HEIGHT / mapHeight;
+//        float scale = Math.min(widthScale, heightScale);
+//        mapWidth *= scale;
+//        mapHeight *= scale;
+//        System.out.println(mapWidth + " " + mapHeight + " vs " + MyGdxGame.SCENE_WIDTH + " " + MyGdxGame.SCENE_HEIGHT);
+//        if (mapWidth != MyGdxGame.SCENE_WIDTH) {
+////            float extraSpace = Math.abs(mapWidth - MyGdxGame.SCENE_WIDTH);
+////            camera.translate(new Vector2(extraSpace/2f,0));
+//        }
+//        else if (mapHeight != MyGdxGame.SCENE_HEIGHT) {
+//            float extraSpace = Math.abs(mapHeight - MyGdxGame.SCENE_HEIGHT);
+//            extraSpace *= MyGdxGame.GAME_SCALE;
+//            camera.translate(new Vector2(0,-extraSpace/2f));
+//        }
+////        camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
+    }
+
     public void load() {
         if (tiledMap == null) return;
         if (loaded) return;
@@ -119,35 +174,6 @@ public class GameMap {
         loaded = true;
     }
 
-    public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera, Renderer entityRenderer) {
-        this.world = world;
-        this.camera = camera;
-
-        // Load map
-        this.tiledMap = tmxMapLoader.load(tiledMapDirectory);
-        MapProperties mapProperties = tiledMap.getProperties();
-
-        // Create scale
-        this.renderScale = Math.min(MyGdxGame.SCENE_WIDTH / (mapProperties.get("width", Integer.class) * mapProperties.get("tilewidth", Integer.class)) * MyGdxGame.GAME_SCALE,
-                MyGdxGame.SCENE_HEIGHT / (mapProperties.get("height", Integer.class) * mapProperties.get("tileheight", Integer.class)) * MyGdxGame.GAME_SCALE
-        );
-
-        // Create Renderer
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, this.renderScale);
-        tiledMapRenderer.setView(this.camera);
-
-        // Create Bodies
-//        Iterator<TiledMapTileSet> tiledSetsIterator = this.tiledMap.getTileSets().iterator();
-//        for (TiledMapTileSet tiledSets = tiledSetsIterator.next(); tiledSetsIterator.hasNext(); tiledSets = tiledSetsIterator.next()) {
-//            Iterator<TiledMapTile> tiledMapTileIterator = tiledSets.iterator();
-//            for (TiledMapTile tile = tiledMapTileIterator.next(); tiledMapTileIterator.hasNext(); tile = tiledMapTileIterator.next()) {
-//                Iterator<> tile.getProperties().getKeys();
-//            }
-//        }
-
-
-    }
-
     private void spawnPlayer(Vector2 enterDoorPosition) {
         Vector2 playerPosition = enterDoorPosition;
         RayHitInfo ray = PMath.getClosestRayHitInfo(world, playerPosition, new Vector2(0, -1), 10, false);
@@ -163,10 +189,10 @@ public class GameMap {
         if (!loaded) return;
 //        tiledMapRenderer.setView(this.camera);
         if (backgroundIndexes == null) return;
-        for (int i=0; i<backgroundIndexes.length; i++) {
-            System.out.print(backgroundIndexes[i] + " ");
-        }
-        System.out.println();
+//        for (int i=0; i<backgroundIndexes.length; i++) {
+//            System.out.print(backgroundIndexes[i] + " ");
+//        }
+//        System.out.println();
         tiledMapRenderer.render(backgroundIndexes);
     }
 

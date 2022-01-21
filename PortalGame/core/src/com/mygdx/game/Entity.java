@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,9 +15,7 @@ import com.holidaystudios.tools.GifDecoder;
 import sun.awt.image.GifImageDecoder;
 
 import java.text.Bidi;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Entity {
@@ -54,6 +53,9 @@ public class Entity {
     public Portal portalExiting;
     private float reflectionExtrudeOffset = 0.02f;
     public Entity reflectEntity;
+
+    // sounds
+    public HashMap<String, Sound> sounds = new HashMap<>();
 
 
     public Entity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
@@ -344,6 +346,8 @@ public class Entity {
             e.dispose();
         }
         allEntities = new ArrayList<>();
+        entityFromBodyMap = new HashMap<>();
+        entityFromNameMap = new HashMap<>();
         Player.player = null;
         WeakEnemyEntity.weakEnemyEntities = new ArrayList<>();
         // MUST DISPOSE ALL SHAPE RENDERERS
@@ -352,6 +356,21 @@ public class Entity {
     }
 
     public void dispose() {
+        // delete animations
+        animations = new HashMap<>();
+
+        // delete sounds
+        Set<Map.Entry<String, Sound>> soundSet = sounds.entrySet();
+        Iterator<Map.Entry<String, Sound>> soundsIterator = soundSet.iterator();
+        Object[] array = soundSet.toArray();
+        for (Object object : array) {
+            Map.Entry<String, Sound> e = (Map.Entry<String, Sound>) object;
+            Sound sound = e.getValue();
+            sound.dispose();
+        }
+        sounds = new HashMap<>();
+
+        // delete body
         if(this.body == null) return;
         world.destroyBody(this.body);
         this.body = null;

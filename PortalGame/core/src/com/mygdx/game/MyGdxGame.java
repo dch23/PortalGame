@@ -28,9 +28,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
 	static final CollisionListener COLLISION_LISTENER = new CollisionListener();
 
-	protected static final float SCENE_WIDTH = 1920f;
-	protected static final float SCENE_HEIGHT = 1080f;
-	public static int currentLevel = 0;
+	protected static float SCENE_WIDTH;
+	protected static float SCENE_HEIGHT;
+	public static int currentLevel = 1;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -43,6 +43,16 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Camera
 	OrthographicCamera camera;
 
+
+	// Objects in the physics world
+	Player player;
+	WeakEnemyEntity enemy;
+	MidEnemyEntity midEnemy;
+	Entity floor;
+	ArrayList<Entity> boxes;
+	ArrayList<Entity> walls;
+
+
 	// Rendered variables for the entities
 	static Renderer entityRenderer;
 	Texture squareTexture;
@@ -54,6 +64,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	// lasers are not used rn
 	ArrayList<Laser> lasers;
 	float angle = 0f;
+
+	public MyGdxGame(float screenWidth, float screenHeight) {
+		SCENE_WIDTH = screenWidth;
+		SCENE_HEIGHT = screenHeight;
+	}
 
 	public static void changeLevel(int level) {
 		currentMap.unload();
@@ -87,13 +102,45 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
-		//Maps
+		// Initialize Objects in Physics World
+		player = new Player(camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
+				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
+				10f, 0.0f, true, null);
+//		entityRenderer.addToRenderLayer(1, player);
+		//Create Enemy
+
+		// Initialize Enemies
+		enemy = new WeakEnemyEntity( "weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
+				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
+
+		midEnemy = new MidEnemyEntity( "midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
+				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
+
+		walls = new ArrayList<>();
+		boxes = new ArrayList<>();
+
+		// Add Boxes To Physics World
+//		for (int i=0; i<0; i++) {
+//			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
+//			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
+//		}
+
+		// Add walls and floor
+//		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
+//		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+//		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
+
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level1(Tutorial).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level2(EasyPuzzle).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
 
-		currentMap = maps.get(0);
+		currentMap = maps.get(currentLevel);
 		currentMap.load();
 //		map.unload();
+
 
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
@@ -107,7 +154,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		// Set Screen Background Colour to White with an Alpha of 100%
-		ScreenUtils.clear(1, 1, 1, 1);
+		ScreenUtils.clear(0, 0, 0, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
@@ -116,7 +163,15 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		WeakEnemyEntity.operate();
 
+
+		enemy.operate();
+		midEnemy.operate();
+
+		enemy.updateReflection(player.portals);
+
+
 		currentMap.renderBackground();
+
 
 		Laser.beginRender();
 		angle+=1f;
