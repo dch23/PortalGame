@@ -102,24 +102,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
-		//Maps
-
-		map = new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer);
-
 		// Initialize Objects in Physics World
-		player = new Player(world, camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
+		player = new Player(camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
 				10f, 0.0f, true, null);
 //		entityRenderer.addToRenderLayer(1, player);
 		//Create Enemy
 
 		// Initialize Enemies
-		WeakEnemyEntity.initialize(world);
-		enemy = new WeakEnemyEntity(world, "weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
+		enemy = new WeakEnemyEntity( "weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
 
-		MidEnemyEntity.initialize(world);
-		midEnemy = new MidEnemyEntity(world, "midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
+		midEnemy = new MidEnemyEntity( "midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
 
 		walls = new ArrayList<>();
@@ -175,7 +169,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		enemy.updateReflection(player.portals);
 
-		map.renderBackground();
 
 		currentMap.renderBackground();
 

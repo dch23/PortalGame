@@ -18,16 +18,17 @@ com/mygdx/game/WeakEnemyEntity.java
 com/mygdx/game/Inputs.java
  com.mygdx.game.Inputs
  com.mygdx.game.Inputs$Keys
-com/mygdx/game/MidEnemyEntity.java
- com.mygdx.game.MidEnemyEntity
- com.mygdx.game.MidEnemyEntity$1
+com/mygdx/game/CollisionListener.java
+ com.mygdx.game.CollisionListener
 com/mygdx/game/GameMap.java
  com.mygdx.game.GameMap
 com/mygdx/game/Player.java
  com.mygdx.game.Player
  com.mygdx.game.Player$1
-com/mygdx/game/MyGdxGame.java
- com.mygdx.game.MyGdxGame
+com/holidaystudios/tools/GifDecoder.java
+ com.holidaystudios.tools.GifDecoder
+ com.holidaystudios.tools.GifDecoder$DixieMap
+ com.holidaystudios.tools.GifDecoder$GifFrame
 com/mygdx/game/RayHitInfo.java
  com.mygdx.game.RayHitInfo
 com/mygdx/game/Entity.java
@@ -39,9 +40,8 @@ com/mygdx/game/AnimationManager.java
  com.mygdx.game.AnimationManager
 com/mygdx/game/AudioManager.java
  com.mygdx.game.AudioManager
-com/mygdx/game/CollisionListener.java
- com.mygdx.game.CollisionListener
-com/holidaystudios/tools/GifDecoder.java
- com.holidaystudios.tools.GifDecoder
- com.holidaystudios.tools.GifDecoder$DixieMap
- com.holidaystudios.tools.GifDecoder$GifFrame
+com/mygdx/game/MyGdxGame.java
+ com.mygdx.game.MyGdxGame
+com/mygdx/game/MidEnemyEntity.java
+ com.mygdx.game.MidEnemyEntity
+ com.mygdx.game.MidEnemyEntity$1
