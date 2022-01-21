@@ -80,6 +80,7 @@ public class MidEnemyEntity extends EnemyEntity{
 
     }
     public void operate() {
+        if(getBody()==null) return;
         if(hitWall()) {
 
             wanderDirection *= -1;

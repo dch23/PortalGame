@@ -110,11 +110,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		//Create Enemy
 
 		// Initialize Enemies
-		WeakEnemyEntity.initialize(world);
-		enemy = new WeakEnemyEntity("weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
+		enemy = new WeakEnemyEntity( "weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
 
-		midEnemy = new MidEnemyEntity("midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
+		midEnemy = new MidEnemyEntity( "midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
 
 		walls = new ArrayList<>();
