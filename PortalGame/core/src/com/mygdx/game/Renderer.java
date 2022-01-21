@@ -125,7 +125,6 @@ class RenderEntity {
             this.entity.reflectEntity.sprite.draw(this.spriteBatch);
         }
 
-
         // animation
         if (this.entity.currentAnimation != null) {
             AnimationManager.playAnimation(this.entity, spriteBatch, this.entity.currentAnimation, entity.animationTextureSizeScale);

@@ -46,6 +46,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Objects in the physics world
 	Player player;
 	WeakEnemyEntity enemy;
+	MidEnemyEntity midEnemy;
 	Entity floor;
 	ArrayList<Entity> boxes;
 	ArrayList<Entity> walls;
@@ -103,7 +104,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Initialize Enemies
 		WeakEnemyEntity.initialize(world);
-		enemy = new WeakEnemyEntity(world, "weakEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.35f),
+		enemy = new WeakEnemyEntity(world, "weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
+				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
+
+		MidEnemyEntity.initialize(world);
+		midEnemy = new MidEnemyEntity(world, "midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
 				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
 
 		walls = new ArrayList<>();
@@ -215,6 +220,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.updateReflection(player.portals);
 
 		enemy.operate();
+		midEnemy.operate();
 
 		enemy.updateReflection(player.portals);
 
