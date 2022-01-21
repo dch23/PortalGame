@@ -21,19 +21,14 @@ public class MidEnemyEntity extends EnemyEntity{
     float maxRayDistance = 100;
 
 
-    public MidEnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
-        super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
-        this.speed = initialSpeed;
-        animationTextureSizeScale = 3f;
-        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6,true, 0.3f);
-        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.5f);
-
     public MidEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+        this.speed = initialSpeed;
+        animationTextureSizeScale = 3f;
+        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.3f);
+        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.5f);
     }
-    static public void initialize(World world){
-//        world.setContactListener(new WeakEnemyCollisionListener());
-    }
+
     private boolean hitWall() {
         raysHitInfo = new ArrayList<>();            // refresh the rays information list
         closestRayHitInfo = null;                   // reset the closest ray to nothing
@@ -82,8 +77,6 @@ public class MidEnemyEntity extends EnemyEntity{
         String sight = entity.getName();
 
         return sight.equals("Player");
-
-        return false;
 
     }
     public void operate() {
