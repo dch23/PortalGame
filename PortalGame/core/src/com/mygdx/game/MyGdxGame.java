@@ -30,7 +30,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-	public static int currentLevel = 1;
+	public static int currentLevel = 0;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();

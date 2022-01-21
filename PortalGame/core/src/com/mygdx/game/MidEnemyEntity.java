@@ -73,6 +73,7 @@ public class MidEnemyEntity extends EnemyEntity{
         int xDirection = getBody().getLinearVelocity().x == 0 ? 1
                 : (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
         RayHitInfo sightRay = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection*100,0), maxRayDistance, false);
+        if (sightRay == null) return false;
         Entity entity = Entity.entityFromBody(sightRay.fixture.getBody());
         String sight = entity.getName();
 
