@@ -136,27 +136,31 @@ public class GameMap {
         for (int i=0; i<doorObjects.getCount(); i++) {
             MapObject object = doorObjects.get(i);
             String objectName = (String) object.getProperties().get("name");
+            if (objectName == null) continue;
             if (objectName.equals("enter")) enterDoor = object;
             else if (objectName.equals("exit")) exitDoor = object;
         }
-        Vector2 enterDoorPosition = new Vector2((float) enterDoor.getProperties().get("x"),
-                (float) enterDoor.getProperties().get("y"));
-        Vector2 enterDoorSize = new Vector2((float) enterDoor.getProperties().get("width"), (float) enterDoor.getProperties().get("height"));
-        enterDoorPosition = PMath.addVector2(enterDoorPosition, new Vector2(enterDoorSize.x/2f, enterDoorSize.y/2f));
-        enterDoorPosition = PMath.multVector2(enterDoorPosition, this.renderScale);
-        spawnPlayer(enterDoorPosition);
-
+        if (enterDoor != null) {
+            Vector2 enterDoorPosition = new Vector2((float) enterDoor.getProperties().get("x"),
+                    (float) enterDoor.getProperties().get("y"));
+            Vector2 enterDoorSize = new Vector2((float) enterDoor.getProperties().get("width"), (float) enterDoor.getProperties().get("height"));
+            enterDoorPosition = PMath.addVector2(enterDoorPosition, new Vector2(enterDoorSize.x / 2f, enterDoorSize.y / 2f));
+            enterDoorPosition = PMath.multVector2(enterDoorPosition, this.renderScale);
+            spawnPlayer(enterDoorPosition);
+        }
         // assign exit door
-        Vector2 exitDoorPosition = new Vector2((float) exitDoor.getProperties().get("x"),
-                (float) exitDoor.getProperties().get("y"));
-        Vector2 exitDoorSize = new Vector2((float) exitDoor.getProperties().get("width"), (float) exitDoor.getProperties().get("height"));
-        exitDoorPosition = PMath.addVector2(exitDoorPosition, new Vector2(exitDoorSize.x/2f, exitDoorSize.y/2f));
-        exitDoorPosition = PMath.multVector2(exitDoorPosition, this.renderScale);
-        exitDoorSize = PMath.multVector2(exitDoorSize, this.renderScale);
+        if (exitDoor != null) {
+            Vector2 exitDoorPosition = new Vector2((float) exitDoor.getProperties().get("x"),
+                    (float) exitDoor.getProperties().get("y"));
+            Vector2 exitDoorSize = new Vector2((float) exitDoor.getProperties().get("width"), (float) exitDoor.getProperties().get("height"));
+            exitDoorPosition = PMath.addVector2(exitDoorPosition, new Vector2(exitDoorSize.x / 2f, exitDoorSize.y / 2f));
+            exitDoorPosition = PMath.multVector2(exitDoorPosition, this.renderScale);
+            exitDoorSize = PMath.multVector2(exitDoorSize, this.renderScale);
 
-        Entity exitDoorEntity = new Entity("exit door", exitDoorPosition, exitDoorSize, BodyDef.BodyType.StaticBody,
-                null, 0.1f, 0.1f, false, null);
-        exitDoorEntity.getBody().getFixtureList().first().setSensor(true);
+            Entity exitDoorEntity = new Entity("exit door", exitDoorPosition, exitDoorSize, BodyDef.BodyType.StaticBody,
+                    null, 0.1f, 0.1f, false, null);
+            exitDoorEntity.getBody().getFixtureList().first().setSensor(true);
+        }
 
         // foreground and background indexes for rendering order
         ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
