@@ -25,7 +25,7 @@ public class WeakEnemyEntity extends EnemyEntity {
     public WeakEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         animationTextureSizeScale = 3f;
-        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/redImpWalk.gif", 6, true, 0.5f);
+        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/redImpWalk.gif", 6, true, 0.25f);
         weakEnemyEntities.add(this);
     }
     static public void initialize(World world){

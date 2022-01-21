@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class EnemyEntity extends Entity {
 
-    protected float speed = 1.0f;
+    protected float speed = 0.6f;
     protected float frictionMagnitude = 0.6f;
 
     private float groundDistance = 0f;
