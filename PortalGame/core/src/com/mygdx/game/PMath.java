@@ -74,6 +74,7 @@ public class PMath {
 
     static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 direction, float length, boolean detectSensor) {
         Vector2 endPoint = addVector2(startPoint, PMath.multVector2(direction, length));
+//        System.out.println("end point found: " + endPoint);
         return getClosestRayHitInfo(world, startPoint, endPoint, detectSensor);
     }
 
