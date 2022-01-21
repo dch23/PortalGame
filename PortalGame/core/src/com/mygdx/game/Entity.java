@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,19 +15,18 @@ import com.holidaystudios.tools.GifDecoder;
 import sun.awt.image.GifImageDecoder;
 
 import java.text.Bidi;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Entity {
     // statics
+    static World world;
+    static ArrayList<Entity> allEntities = new ArrayList<>();
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
     static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
     static float frameRate = 1f/30f;
 
     // properties
-    protected World world;
     protected String name;
     protected Map<String,Boolean> tags;
     protected Body body;
@@ -54,13 +54,15 @@ public class Entity {
     private float reflectionExtrudeOffset = 0.02f;
     public Entity reflectEntity;
 
+    // sounds
+    public HashMap<String, Sound> sounds = new HashMap<>();
 
-    public Entity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+
+    public Entity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
 
         // Initialize Variables
-        this.world = world;
         this.name = name;
-        this.gravity = world.getGravity();
+        this.gravity = Entity.world.getGravity();
         this.color = color;
         this.size = size;
 
@@ -92,6 +94,7 @@ public class Entity {
         // add entity to entity map
         entityFromBodyMap.put(this.body, this);
         entityFromNameMap.put(this.name, this);
+        allEntities.add(this);
 
         // Free memory
         shape.dispose();
@@ -101,6 +104,10 @@ public class Entity {
 
         // add to render layer
         MyGdxGame.entityRenderer.addToRenderLayer(1, this);
+    }
+
+    public static void setWorld(World world) {
+        Entity.world = world;
     }
 
     public void updateReflection(Portals portals) {
@@ -129,7 +136,7 @@ public class Entity {
             portals.suckEntity(portalEntering, this);
 
             if (reflectEntity == null) {
-                reflectEntity = new ReflectEntity(this.world, "reflect " + getName(), new Vector2(0, 0), this.size,
+                reflectEntity = new ReflectEntity(world, "reflect " + getName(), new Vector2(0, 0), this.size,
                         BodyDef.BodyType.StaticBody, color, getBody().getFixtureList().first().getDensity(),
                         getBody().getFixtureList().first().getFriction(), false, getSprite());
             }
@@ -267,6 +274,7 @@ public class Entity {
     }
 
     public Vector2 getPosition() {
+//        if (this.body == null) return;
         return this.body.getPosition();
     }
 //    public Vector2 getSize() {
@@ -294,18 +302,6 @@ public class Entity {
 
     public Sprite getSprite() {
         return this.sprite;
-    }
-    // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
-    static void disposeAll() {
-        // MUST DISPOSE ALL SHAPE RENDERERS
-//        shapeRenderer.dispose();
-        // MUST DISPOSE ALL ENTITIES;
-    }
-
-    public void dispose() {
-        if(this.body == null) return;
-        this.world.destroyBody(this.body);
-        this.body = null;
     }
 
     static Entity entityFromBody(Body body) {
@@ -344,6 +340,41 @@ public class Entity {
         return animations.get(animationName);
     }
 
+    // Free up memory when Game is closed, MUST LOOK AT CAREFULLY!
+    static void disposeAll() {
+        for (Entity e : allEntities) {
+            e.dispose();
+        }
+        allEntities = new ArrayList<>();
+        entityFromBodyMap = new HashMap<>();
+        entityFromNameMap = new HashMap<>();
+        Player.player = null;
+        WeakEnemyEntity.weakEnemyEntities = new ArrayList<>();
+        // MUST DISPOSE ALL SHAPE RENDERERS
+//        shapeRenderer.dispose();
+        // MUST DISPOSE ALL ENTITIES;
+    }
+
+    public void dispose() {
+        // delete animations
+        animations = new HashMap<>();
+
+        // delete sounds
+        Set<Map.Entry<String, Sound>> soundSet = sounds.entrySet();
+        Iterator<Map.Entry<String, Sound>> soundsIterator = soundSet.iterator();
+        Object[] array = soundSet.toArray();
+        for (Object object : array) {
+            Map.Entry<String, Sound> e = (Map.Entry<String, Sound>) object;
+            Sound sound = e.getValue();
+            sound.dispose();
+        }
+        sounds = new HashMap<>();
+
+        // delete body
+        if(this.body == null) return;
+        world.destroyBody(this.body);
+        this.body = null;
+    }
 
 
 }

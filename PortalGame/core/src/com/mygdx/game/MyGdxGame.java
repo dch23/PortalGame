@@ -21,8 +21,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
-	//
-
 	// Window size is initialized at DesktopLauncher Class
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
@@ -30,11 +28,13 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float GAME_SCALE = 1.0f/4.0f/4.0f/4.0f/4.0f;
 	static final CollisionListener COLLISION_LISTENER = new CollisionListener();
 
-	protected static final float SCENE_WIDTH = 1920f;
-	protected static final float SCENE_HEIGHT = 1080f;
+	protected static float SCENE_WIDTH;
+	protected static float SCENE_HEIGHT;
+	public static int currentLevel = 1;
+	public static boolean updateLevel = false;
 
-	// Maps
-	GameMap map;
+	static ArrayList<GameMap> maps = new ArrayList<>();
+	static GameMap currentMap;
 
 	// Physics World
 	private World world;
@@ -42,6 +42,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// Camera
 	OrthographicCamera camera;
+
 
 	// Objects in the physics world
 	Player player;
@@ -51,9 +52,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Entity> boxes;
 	ArrayList<Entity> walls;
 
+
 	// Rendered variables for the entities
 	static Renderer entityRenderer;
-	Texture img;
 	Texture squareTexture;
 	Sprite squareSprite;
 
@@ -64,13 +65,30 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Laser> lasers;
 	float angle = 0f;
 
+	public MyGdxGame(float screenWidth, float screenHeight) {
+		SCENE_WIDTH = screenWidth;
+		SCENE_HEIGHT = screenHeight;
+	}
+
+	public static void changeLevel(int level) {
+		currentMap.unload();
+		currentMap = maps.get(level);
+		currentMap.load();
+		currentLevel = level;
+	}
+
 	@Override
 	public void create () {
+		// Initialize Physics World
+		world = new World(gravity, false);
+		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
+
+		// initialize Entity world
+		Entity.setWorld(world);
+
 
 		// Initialize Debug Renderer for making debug lines and debug shapes for the physics objects
 		b2dr = new Box2DDebugRenderer();
-//		img = new Texture("badlogic.jpg");
-//		textureAtlas = new TextureAtlas();
 
 		// Sprite Render Initialization
 		squareTexture = new Texture("shapes/square.jpeg");
@@ -84,15 +102,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
-
-
-		// Initialize Physics World
-		world = new World(gravity, false);
-		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
-
-//		System.out.println(world);
-
 		//Maps
+
 		map = new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer);
 
 		// Initialize Objects in Physics World
@@ -125,6 +136,18 @@ public class MyGdxGame extends ApplicationAdapter {
 //		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
 //		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
 
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level1(Tutorial).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level2(EasyPuzzle).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
+
+		currentMap = maps.get(currentLevel);
+		currentMap.load();
+//		map.unload();
+
+
 		Laser.setProjectionMatrix(camera.combined);
 		lasers = new ArrayList<>();
 //		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 180f, 0.02f, 10));
@@ -132,92 +155,20 @@ public class MyGdxGame extends ApplicationAdapter {
 //		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
 //		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 
-
-
-
-//		box = new Entity(world, new Vector2(1.5f ,1.5f), new Vector2(0.2f,0.2f), BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 1f);
 	}
 
-	// a function for adding a box to the physics world by supplying the entity constructor with proper values
-//	private void addBox(Vector2 position, Vector2 size) {
-//		Entity newBox = new Entity(world, "Box", position, size, BodyDef.BodyType.DynamicBody,
-//				new Color(0,1,0,1), 10f, 1f, true, squareSprite);
-////		entityRenderer.addToRenderLayer(1, newBox);
-//		boxes.add(newBox);
-//	}
-//
-//	private void addWall(Vector2 position, Vector2 size) {
-//		Entity newWall = new Entity(world, "Wall", position, size, BodyDef.BodyType.StaticBody,
-//				new Color(0,0,0,1), 0.1f, 0.1f, false, squareSprite);
-//		walls.add(newWall);
-//	}
-
-//	private void addSprites() {
-//		Array<TextureAtlas.AtlasRegion> regions = textureAtlas.getRegions();
-//
-//		for (TextureAtlas.AtlasRegion region : regions) {
-//			Sprite sprite = textureAtlas.createSprite(region.name);
-//
-//			float width = scale(sprite.getWidth());
-//			float height = scale(sprite.getHeight());
-//
-//			sprite.setSize(width, height);
-//			sprite.setOrigin(0, 0);
-//
-//			sprites.put(region.name, sprite);
-//		}
-//	}
-	boolean m=true;
 	@Override
 	public void render () {
-//		System.out.println(this.world.getContactCount());
 		// Set Screen Background Colour to White with an Alpha of 100%
-		ScreenUtils.clear(1, 1, 1, 1);
+		ScreenUtils.clear(0, 0, 0, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
-//		map.renderBackground();
-		// Sprite Batch Draws Sprite/Texture
-//		batch.begin();
-//		batch.draw(img, 0, 0);
-//		batch.end();
 
-		// Entity Methods Testing
-//		floor.applyForce(new Vector2(1,0), 10000f);
-//		floor.render(camera);
-//		box.render(camera);
+		Player.operate();
 
-		// Operate Player Entity
-//		player.operate();
+		WeakEnemyEntity.operate();
 
-		// Render Boxes
-//		entityRenderer.getBatch().begin();
-//		for (Entity box : boxes) {
-//			box.render(entityRenderer, camera);
-//		}
-//		for (Entity wall : walls) {
-//			wall.render(entityRenderer, camera);
-//		}
-//		player.render(entityRenderer, camera);
-//		entityRenderer.getBatch().end();
-
-//		entityRenderer.beginRender();
-//
-//		entityRenderer.render();
-//
-//		entityRenderer.endRender();
-
-
-
-
-		for (Entity entity : boxes) {
-			entity.updateReflection(player.portals);
-		}
-
-
-		player.operate();
-
-		player.updateReflection(player.portals);
 
 		enemy.operate();
 		midEnemy.operate();
@@ -225,6 +176,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		enemy.updateReflection(player.portals);
 
 		map.renderBackground();
+
+		currentMap.renderBackground();
+
 
 		Laser.beginRender();
 		angle+=1f;
@@ -239,9 +193,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.render();
 		entityRenderer.endRender();
 
-		map.renderForeground();
+		currentMap.renderForeground();
 
-		player.portals.renderPortals(entityRenderer.getBatch());
+		Player.renderPortals();
 
 		// Render Debug Lines for Physics Object in Physics World
 		b2dr.render(world, camera.combined);
@@ -250,6 +204,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Update the Camera
 		camera.update();
 
+
+		if (updateLevel) {
+			changeLevel(currentLevel);
+			updateLevel = false;
+		}
+
 		// Next Physics frame
 		stepWorld();
 	}
@@ -257,18 +217,15 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
-//		batch.dispose();
-//		img.dispose();
 		Entity.disposeAll();
 		world.dispose();
-		for (Entity box : boxes) box.dispose();
-		for (Entity wall : walls) wall.dispose();
-		player.dispose();
-		map.dispose();
+		for (GameMap map : maps) {
+			map.dispose();
+		}
+		maps = null;
 	}
 
 	private void stepWorld() {
-//		float deltaTime = Gdx.graphics.getDeltaTime();
 		world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
@@ -279,7 +236,5 @@ public class MyGdxGame extends ApplicationAdapter {
 	static public Vector2 scale(Vector2 v) {
 		return Vector2.Zero.mulAdd(v,GAME_SCALE);
 	}
-
-
 
 }

@@ -15,8 +15,8 @@ public class EnemyEntity extends Entity {
 
     private float groundDistance = 0f;
 
-    public EnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
-        super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+    public EnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+        super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
     }
 

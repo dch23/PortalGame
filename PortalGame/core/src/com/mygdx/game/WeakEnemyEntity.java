@@ -8,8 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WeakEnemyEntity extends EnemyEntity {
+    static public ArrayList<WeakEnemyEntity> weakEnemyEntities = new ArrayList<>();
+    static private Vector2 regularSize = new Vector2(0.2f,0.35f);
+
+
     float closeEnoughCollisionRange = 0.02f;
     int wanderDirection = 1;
     ArrayList<RayHitInfo> raysHitInfo;
@@ -17,14 +22,20 @@ public class WeakEnemyEntity extends EnemyEntity {
 
     float maxRayDistance = 100;
 
-    public WeakEnemyEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
-        super(world, name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+    public WeakEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
+        super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         animationTextureSizeScale = 3f;
         addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/redImpWalk.gif", 6, true, 0.5f);
+        weakEnemyEntities.add(this);
     }
     static public void initialize(World world){
 //        world.setContactListener(new WeakEnemyCollisionListener());
     }
+
+    public static Vector2 getSize() {
+        return regularSize;
+    }
+
     private boolean hitWall() {
         raysHitInfo = new ArrayList<>();            // refresh the rays information list
         closestRayHitInfo = null;                   // reset the closest ray to nothing
@@ -64,14 +75,28 @@ public class WeakEnemyEntity extends EnemyEntity {
     }
 
 
-    public void operate() {
-        if(hitWall()) {
-            wanderDirection *= -1;
-        }
-        this.body.setLinearVelocity(this.speed * wanderDirection, this.body.getLinearVelocity().y);
+//    public void operate() {
+//        if(hitWall()) {
+//            wanderDirection *= -1;
+//        }
+//        this.body.setLinearVelocity(this.speed * wanderDirection, this.body.getLinearVelocity().y);
+//
+//        // animate
+//        currentAnimation = "Walk";
+//        horizontalFaceDirection = wanderDirection;
+//    }
 
-        // animate
-        currentAnimation = "Walk";
-        horizontalFaceDirection = wanderDirection;
+    static public void operate() {
+        for (WeakEnemyEntity enemy : weakEnemyEntities) {
+            if(enemy.hitWall()) {
+                enemy.wanderDirection *= -1;
+            }
+            enemy.body.setLinearVelocity(enemy.speed * enemy.wanderDirection, enemy.body.getLinearVelocity().y);
+
+            // animate
+            enemy.currentAnimation = "Walk";
+            enemy.horizontalFaceDirection = enemy.wanderDirection;
+            enemy.updateReflection(((Player) Entity.entityFromName("Player")).portals);
+        }
     }
 }
