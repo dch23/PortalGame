@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MidEnemyEntity extends EnemyEntity{
     float closeEnoughCollisionRange = 0.02f;
     int wanderDirection = 1;
-    float initialSpeed = 0.60f;
+    float initialSpeed = 0.6f;
     float doubleSpeed = 1.75f;
     ArrayList<RayHitInfo> raysHitInfo;
     RayHitInfo closestRayHitInfo;
