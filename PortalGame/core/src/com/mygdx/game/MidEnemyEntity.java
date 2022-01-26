@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MidEnemyEntity extends EnemyEntity{
     float closeEnoughCollisionRange = 0.02f;
     int wanderDirection = 1;
-    float initialSpeed = 1.0f;
+    float initialSpeed = 0.6f;
     float doubleSpeed = 1.75f;
     ArrayList<RayHitInfo> raysHitInfo;
     RayHitInfo closestRayHitInfo;
@@ -25,8 +25,8 @@ public class MidEnemyEntity extends EnemyEntity{
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.speed = initialSpeed;
         animationTextureSizeScale = 3f;
-        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.3f);
-        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.5f);
+        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.2f);
+        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.4f);
     }
 
     private boolean hitWall() {
@@ -73,6 +73,7 @@ public class MidEnemyEntity extends EnemyEntity{
         int xDirection = getBody().getLinearVelocity().x == 0 ? 1
                 : (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
         RayHitInfo sightRay = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection*100,0), maxRayDistance, false);
+        if (sightRay == null) return false;
         Entity entity = Entity.entityFromBody(sightRay.fixture.getBody());
         String sight = entity.getName();
 

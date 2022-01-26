@@ -27,7 +27,7 @@ public class Player extends Entity {
 
     // variables that control the player values
     private float speed = 2f;
-    private float jumpHeight = 4f;
+    private float jumpHeight = 2.5f;
     private float frictionMagnitude = 0.6f;
 
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
