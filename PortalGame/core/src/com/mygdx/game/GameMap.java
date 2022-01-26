@@ -32,8 +32,6 @@ public class GameMap {
 
     protected boolean loaded = false;
 
-
-
     public GameMap(World world, String tiledMapDirectory, OrthographicCamera camera, Renderer entityRenderer) {
         this.world = world;
         this.camera = camera;
