@@ -325,7 +325,7 @@
  <objectgroup id="12" name="Enemies">
   <object id="18" x="595.186" y="262.196" width="25.5641" height="23.5977">
    <properties>
-    <property name="weakEnemy" value=""/>
+    <property name="name" value="weakEnemy"/>
    </properties>
   </object>
   <object id="19" x="717.107" y="89.8023" width="18.3537" height="28.8416">

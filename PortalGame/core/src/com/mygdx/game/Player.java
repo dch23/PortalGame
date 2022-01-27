@@ -210,7 +210,7 @@ public class Player extends Entity {
     private void shootPortal(final int portalNumber) {
         Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
         Vector2 shootDirection = PMath.normalizeVector2(PMath.subVector2(mousePosition,getPosition()));
-        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, false);
+        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, true);
 
         // trail
         Vector2 trailEndPoint = PMath.addVector2(getPosition(), PMath.multVector2(shootDirection, 100));
@@ -222,6 +222,10 @@ public class Player extends Entity {
         AudioManager.playSound(shootSound, 1, false);
 
         if (closestRayHitInfo == null) return;
+
+        // see if it is a valid place to place a portal
+        Entity surfaceEntity = Entity.entityFromBody(closestRayHitInfo.fixture.getBody());
+        if (!surfaceEntity.canPortalOn) return;
 
         if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
             if (properPortalNormal(closestRayHitInfo.normal)) {

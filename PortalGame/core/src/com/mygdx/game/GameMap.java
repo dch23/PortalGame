@@ -117,6 +117,12 @@ public class GameMap {
             if (angle != null) {
                 newEntity.setAngle(angle, false);
             }
+
+            // can portal on this entity?
+            Object canPortalOnProperty = object.getProperties().get("canPortalOn");
+            boolean canPortalOn = true;
+            if (canPortalOnProperty != null) canPortalOn = (boolean) canPortalOnProperty;
+            newEntity.canPortalOn = canPortalOn;
         }
 
         // Enemies
@@ -222,9 +228,14 @@ public class GameMap {
         Vector2 regularSize = new Vector2(0.5f,0.5f);
         switch (enemyName) {
             case "weakEnemy":
-                regularSize = WeakEnemyEntity.getSize();
+                regularSize = WeakEnemyEntity.getRegularSize();
                 position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
                 new WeakEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 0.1f, 0.1f, true, null);
+                break;
+            case "midEnemy":
+                regularSize = MidEnemyEntity.getRegularSize();
+                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
+                new MidEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 0.1f, 0.1f, true, null);
                 break;
         }
     }

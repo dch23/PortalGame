@@ -34,6 +34,7 @@ public class Entity {
     protected Vector2 size;
 
     public boolean alive = true;
+    protected boolean canPortalOn = false;
     float closeEnoughToGround = 0.05f;
     float maxGroundRayDistance = 3f;
     private Color color;
@@ -353,6 +354,10 @@ public class Entity {
         // MUST DISPOSE ALL SHAPE RENDERERS
 //        shapeRenderer.dispose();
         // MUST DISPOSE ALL ENTITIES;
+    }
+
+    public Vector2 getSize() {
+        return this.size;
     }
 
     public void dispose() {
