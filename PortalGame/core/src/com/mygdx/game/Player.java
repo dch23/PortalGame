@@ -28,7 +28,8 @@ public class Player extends Entity {
     // variables that control the player values
     private float speed = 2f;
     private float jumpHeight = 2.5f;
-    private float frictionMagnitude = 0.6f;
+    private float groundFrictionMagnitude = 0.6f;
+    private float airFrictionMagnitude = 0.2f;
 
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
     private Vector2 inputHoriz = Vector2.Zero;
@@ -42,7 +43,7 @@ public class Player extends Entity {
 
     // Player Properties
 
-    //animations
+    // Animations
 
 
 
@@ -251,6 +252,7 @@ public class Player extends Entity {
         float direction = xVelocity / Math.abs(xVelocity);                          // getting the direction the player is traveling in the x axis
 
         // creating a variable that is the same as the x velocity except it is reduced by the friction magnitude and still pointed towards the direction it needs to go
+        float frictionMagnitude = (onGround() ? groundFrictionMagnitude : airFrictionMagnitude);
         float newXVelocity = (Math.abs(xVelocity) - frictionMagnitude) * direction;
         float newDirection = newXVelocity / Math.abs(newXVelocity);                 // getting the new direction that the nex x velocity is pointing to
         if (direction == newDirection) {                                            // if the old direction is the same as the new direction then

@@ -40,8 +40,7 @@ public class MidEnemyEntity extends EnemyEntity{
         return regularSize;
     }
 
-    private boolean seeEnemy(){
-
+    private boolean seeEnemy() {
         int xDirection = getBody().getLinearVelocity().x == 0 ? 1
                 : (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
         RayHitInfo sightRay = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection*100,0), maxRayDistance, false);
@@ -56,7 +55,6 @@ public class MidEnemyEntity extends EnemyEntity{
         for (MidEnemyEntity enemy : midEnemyEntities) {
             if (enemy.getBody() == null) return;
             if (enemy.hitWall()) {
-
                 enemy.wanderDirection *= -1;
                 enemy.speed = enemy.initialSpeed;
                 enemy.currentAnimation = "Walk";
