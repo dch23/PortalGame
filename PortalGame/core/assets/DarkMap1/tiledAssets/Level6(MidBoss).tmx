@@ -35,16 +35,22 @@
  </layer>
  <objectgroup id="6" name="Enemies"/>
  <objectgroup id="4" name="Collision">
-  <object id="1" x="48.4678" y="384.468" width="670.035" height="36.6784"/>
+  <object id="1" x="48.4678" y="384.468" width="670.035" height="36.6784">
+   <properties>
+    <property name="canPortalOn" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="5" name="Doors">
   <object id="2" x="542.971" y="332.725" width="36.0234" height="51.0877">
    <properties>
+    <property name="canPortalOn" value="false"/>
     <property name="name" value="exit"/>
    </properties>
   </object>
   <object id="3" x="189.287" y="334.69" width="35.3684" height="48.4678">
    <properties>
+    <property name="canPortalOn" value="false"/>
     <property name="name" value="enter"/>
    </properties>
   </object>
