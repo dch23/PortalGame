@@ -149,6 +149,9 @@ public class MyGdxGame extends ApplicationAdapter {
 //		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
 //		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 
+		// portal trails
+		PortalTrails.setProjectionMatrix(camera.combined);
+
 	}
 
 	@Override
@@ -181,6 +184,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		Laser.endRender();
 
+		PortalTrails.draw();
 
 		entityRenderer.beginRender();
 		entityRenderer.render();
