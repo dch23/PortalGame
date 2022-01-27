@@ -1,9 +1,13 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -24,8 +28,8 @@ public class Portals {
         this.world = world;
 
         portals = new Portal[2];
-        portals[0] = new Portal(world);
-        portals[1] = new Portal(world);
+        portals[0] = new Portal(world, Color.BLUE);
+        portals[1] = new Portal(world, Color.PURPLE);
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
@@ -406,10 +410,11 @@ class Portal {
     protected Vector2 suckDirection = null;
     protected ContactListener contactListener;
 
+    public Color trailColor;
 
-
-    public Portal(final World world) {
+    public Portal(final World world, Color trailColor) {
         this.world = world;
+        this.trailColor = trailColor;
     };
 
 
@@ -608,5 +613,87 @@ class Portal {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+}
+
+class PortalTrails {
+    private static ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private static float startOpacity = 1;
+    private static ArrayList<PortalTrail> trails = new ArrayList<>();
+
+    static public void setProjectionMatrix(Matrix4 matrix4) {
+        shapeRenderer.setProjectionMatrix(matrix4);
+    }
+
+    public static void addTrail(Vector2 start, Vector2 end, Color color) {
+        trails.add(new PortalTrail(start, end, startOpacity, new Color(color)));
+    }
+
+    public static void draw() {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        ArrayList<PortalTrail> awakeTrails = new ArrayList<>();
+        for (PortalTrail trail : trails) {
+            trail.fade();
+            trail.shrink();
+            trail.draw(shapeRenderer);
+            if (trail.getColor().a > 0 && trail.getWidth() > 0) awakeTrails.add(trail);
+        }
+
+
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        trails = awakeTrails;
+    }
+}
+
+class PortalTrail {
+    private Color color;
+    private Vector2 start;
+    private Vector2 end;
+    private float width = 0.04f;
+    private float fadeSpeed = 0.05f;
+    private float shrinkSpd = 0.0025f;
+
+    public PortalTrail (Vector2 start, Vector2 end, float opacity, Color color) {
+        this.start = start;
+        this.end = end;
+        this.color = color;
+        this.color.a = opacity;
+    }
+
+    public void draw(ShapeRenderer renderer) {
+        renderer.setColor(color);
+//        System.out.println(color.a);
+        renderer.rectLine(start, end, width);
+    }
+
+    public void fade() {
+        if (color.a <= 0.01f) {
+            color.a = 0.01f;
+            return;
+        }
+        color.a -= fadeSpeed;
+    }
+
+    public void shrink() {
+        if (width <= 0.001f) {
+            width = 0.001f;
+            return;
+        }
+        width -= shrinkSpd;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public float getWidth() {
+        return width;
     }
 }
