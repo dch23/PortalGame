@@ -136,6 +136,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level8(ElevatorShafts).tmx", this.camera, entityRenderer));
 
 		currentMap = maps.get(currentLevel);
 		currentMap.load();
