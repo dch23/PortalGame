@@ -14,31 +14,19 @@ import java.util.HashMap;
 public class WeakEnemyEntity extends EnemyEntity {
     static public ArrayList<WeakEnemyEntity> weakEnemyEntities = new ArrayList<>();
     static private Vector2 regularSize = new Vector2(0.2f,0.35f);
-
-
-
     int wanderDirection = 1;
-//    ArrayList<RayHitInfo> raysHitInfo;
-//    RayHitInfo closestRayHitInfo;
-
-
 
     public WeakEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         animationTextureSizeScale = 3f;
         addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/redImpWalk.gif", 6, true, 0.25f);
+
         weakEnemyEntities.add(this);
-    }
-    static public void initialize(World world){
-//        world.setContactListener(new WeakEnemyCollisionListener());
     }
 
     public static Vector2 getRegularSize() {
         return regularSize;
     }
-
-
-
 
     static public void operate() {
         for (WeakEnemyEntity enemy : weakEnemyEntities) {

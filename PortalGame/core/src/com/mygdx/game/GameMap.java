@@ -230,13 +230,15 @@ public class GameMap {
             case "weakEnemy":
                 regularSize = WeakEnemyEntity.getRegularSize();
                 position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new WeakEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 0.1f, 0.1f, true, null);
+                new WeakEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
                 break;
             case "midEnemy":
                 regularSize = MidEnemyEntity.getRegularSize();
                 position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new MidEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 0.1f, 0.1f, true, null);
+                new MidEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
                 break;
+            case "chargeEnemy":
+//                regularSize =
         }
     }
 

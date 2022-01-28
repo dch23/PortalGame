@@ -207,7 +207,6 @@ public class Player extends Entity {
         }
     }
 
-
     private void shootPortal(final int portalNumber) {
         Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
         Vector2 shootDirection = PMath.normalizeVector2(PMath.subVector2(mousePosition,getPosition()));
@@ -274,7 +273,7 @@ public class Player extends Entity {
         }
         player.friction();
 
-        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
+//        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
         player.updateReflection(player.portals);
 
     }
