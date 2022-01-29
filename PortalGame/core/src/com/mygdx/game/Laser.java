@@ -39,6 +39,8 @@ public class Laser {
         this.thickness = thickness;
         this.maxLength = maxLength;
         setAngle(angle);
+        //sounds
+//        sounds.put("LaserSound", Gdx.audio.newSound(Gdx.files.internal("music/laser sound.mp3")));
 
         // add to lasers list
         lasers.add(this);
