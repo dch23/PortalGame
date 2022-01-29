@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,14 @@ public class Boss extends EnemyEntity {
         getBody().getFixtureList().first().setSensor(true);
 
         boss = this;
+        sounds.put("I'll crush you", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/bosslaugh.mp3")));
+        sounds.put("Fire", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/bossfire.mp3")));
+        sounds.put("Hurt", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/Grunting-from-Being-Hit-A4-www.fesliyanstudios.com.mp3")));
+        sounds.put("Laugh", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/bosslaugh.mp3")));
+
+
+
+
     }
 
     public static void operate() {
