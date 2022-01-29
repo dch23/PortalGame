@@ -52,12 +52,16 @@ public class Laser {
     }
 
     public static void operate() {
+        if (lasers.size() == 0) return;
+
         beginRender();
         for (Laser laser : lasers) {
             laser.render();
         }
         endRender();
     }
+
+
 
     public void render() {
         shapeRenderer.setColor(this.color);
@@ -87,10 +91,22 @@ public class Laser {
         this.angle = angle;
     }
 
-    static public void dispose() {
+    private void dispose() {
+
+    }
+
+
+    public static void disposeALl() {
         shapeRenderer.dispose();
         for (Laser laser : lasers) {
-
+            laser.dispose();
         }
+        lasers = new ArrayList<>();
+
+        // reseting shaperenderer
+        Matrix4 matrix4 = shapeRenderer.getProjectionMatrix();
+        shapeRenderer = new ShapeRenderer();
+        setProjectionMatrix(matrix4);
+
     }
 }
