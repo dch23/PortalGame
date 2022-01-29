@@ -128,7 +128,7 @@ public class GameMap {
         position = PMath.multVector2(position, renderScale);
 
         // shoot ray down if this enemy isn't a laser
-        if (!enemyName.equals("laser")) {
+        if (!enemyName.equals("laser") && !enemyName.equals("Boss")) {
             RayHitInfo ray = PMath.getClosestRayHitInfo(world, position, new Vector2(0, -1), 10, false);
             if (ray != null) position = ray.point;
         }
@@ -153,6 +153,11 @@ public class GameMap {
             case "laser":
                 float angle = (float) object.getProperties().get("angle");
                 new Laser(world, position, Color.RED, angle, 0.03f, 10f);
+                break;
+            case "Boss":
+                regularSize = Boss.getRegularSize();
+                position = PMath.addVector2(position, new Vector2(regularSize.x/2f, regularSize.y/2f));
+                new Boss(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, false, null);
                 break;
         }
     }

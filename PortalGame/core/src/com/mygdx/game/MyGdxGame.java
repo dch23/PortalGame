@@ -31,7 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-	public static int currentLevel = 5;
+	public static int currentLevel = 7;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -157,6 +157,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		MidEnemyEntity.operate();
 		ChargeEnemyEntity.operate();
 		Laser.operate();
+		Boss.operate();
+		Fireball.operate();
 
 		// draw entities
 		entityRenderer.beginRender();

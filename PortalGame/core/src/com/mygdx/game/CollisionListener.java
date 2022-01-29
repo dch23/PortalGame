@@ -115,6 +115,9 @@ public class CollisionListener implements ContactListener {
                 MyGdxGame.currentLevel += 1;
                 MyGdxGame.updateLevel = true;
                 break;
+            case "is sensor Boss, not sensor Player":
+            case "not sensor Boss, not sensor Player":
+                Boss.boss.touchedPlayer = true;
         }
 
 //        if (f1.isSensor() || f2.isSensor()) {
