@@ -13,6 +13,8 @@ public class AnimationManager {
     static HashMap<Animation, Float> animationElapseTimes = new HashMap<>();
 
     static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale, int horizontalFaceDirection) {
+        if (animation == null) return;
+
         if (!animationElapseTimes.containsKey(animation)) animationElapseTimes.put(animation, 0f);
 
         TextureRegion keyFrame = (TextureRegion) animation.getKeyFrame(animationElapseTimes.get(animation),true);

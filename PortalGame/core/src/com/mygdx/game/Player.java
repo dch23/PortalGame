@@ -28,7 +28,8 @@ public class Player extends Entity {
     // variables that control the player values
     private float speed = 2f;
     private float jumpHeight = 2.5f;
-    private float frictionMagnitude = 0.6f;
+    private float groundFrictionMagnitude = 0.6f;
+    private float airFrictionMagnitude = 0.2f;
 
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
     private Vector2 inputHoriz = Vector2.Zero;
@@ -42,7 +43,7 @@ public class Player extends Entity {
 
     // Player Properties
 
-    //animations
+    // Animations
 
 
 
@@ -64,6 +65,8 @@ public class Player extends Entity {
         // sounds
         sounds.put("Jump1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump1.mp3")));
         sounds.put("Jump2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump2.mp3")));
+        sounds.put("PortalShoot1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot1.mp3")));
+        sounds.put("PortalShoot2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot2.mp3")));
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -110,12 +113,14 @@ public class Player extends Entity {
             // portal control
             @Override
             public boolean touchDown(int x, int y, int pointer, int button) {
+                int portalNumber = 0;
                 if (button == Input.Buttons.LEFT) {
 //                    mousePos = new Vector2(x * MyGdxGame.GAME_SCALE,(MyGdxGame.SCENE_HEIGHT-y) * MyGdxGame.GAME_SCALE);
                     shootPortal(0);
                 }
                 else {
                     shootPortal(1);
+                    portalNumber = 1;
                 }
 
                 return true;
@@ -202,68 +207,29 @@ public class Player extends Entity {
         }
     }
 
-
     private void shootPortal(final int portalNumber) {
         Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
         Vector2 shootDirection = PMath.normalizeVector2(PMath.subVector2(mousePosition,getPosition()));
-        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, false);
-//        if (Entity.entityFromBody(closestRayHitInfo.fixture.getBody()).getName() == "exit door") {
-//            System.out.println(closestRayHitInfo.fixture.isSensor());
-//        }
-//        raysHitInfo = new ArrayList<>();            // refresh the rays information list
-//        closestRayHitInfo = null;                   // reset the closest ray to nothing
-//
-//        // Set portal
-//
-//
-//        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
-//        RayCastCallback callback = new RayCastCallback() {
-//            @Override
-//            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-//                if (fixture == null || point == null || normal == null) return 0;
-//
-////                mousePos = point;
-////                System.out.println("HIT");
-//                // Multiple hits
-//                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
-//                return 1;
-//            }
-//        };
-//
-////        mousePos = PMath.addVector2(this.body.getPosition(),
-////                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance));
-//
-//        // call raycast in world from player position to the max distance away from it based off the maxShootPortalDistance
-//        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
-//        world.rayCast(callback, this.body.getPosition(), PMath.addVector2(this.body.getPosition(),
-//                PMath.multVector2(PMath.normalizeVector2(PMath.subVector2(mousePosition,this.body.getPosition())), maxShootPortalDistance)));
-//
-//        // Finding the closest ray hit through a searching algorithm
-//        if (raysHitInfo!=null) {
-//            if (raysHitInfo.size() == 0) return;
-//            closestRayHitInfo = raysHitInfo.get(0);
-//            for (RayHitInfo rayHitInfo : raysHitInfo) {
-//                float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()));
-//                float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
-//                if (distance2 < distance1) {
-//                    closestRayHitInfo = rayHitInfo;
-//                }
-//            }
-//        }
-////        for (RayHitInfo r : raysHitInfo) {
-////            float d = PMath.magnitude(PMath.subVector2(r.point, this.body.getPosition()));
-////            r.print();
-////        }
-////        System.out.println();
-//        // ngl, i have no idea why i added the next line
-//        closestRayHitInfo = getOriginalFixtureHitInfo(raysHitInfo, closestRayHitInfo);
+        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, true);
 
-        // set a portal to the closest plausible surface in the direction you click the mouse
-        if (closestRayHitInfo != null) {
-            if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
-                if (properPortalNormal(closestRayHitInfo.normal)) {
-                    portals.setPortal(world, portalNumber, closestRayHitInfo.point, closestRayHitInfo.normal, true, closestRayHitInfo.fixture);
-                }
+        // trail
+        Vector2 trailEndPoint = PMath.addVector2(getPosition(), PMath.multVector2(shootDirection, 100));
+        if (closestRayHitInfo != null) trailEndPoint = closestRayHitInfo.point;
+        PortalTrails.addTrail(getPosition(), trailEndPoint, portals.portals[portalNumber].trailColor);
+
+        //sound
+        Sound shootSound = (portalNumber == 1) ? sounds.get("PortalShoot1") : sounds.get("PortalShoot2");
+        AudioManager.playSound(shootSound, 1, false);
+
+        if (closestRayHitInfo == null) return;
+
+        // see if it is a valid place to place a portal
+        Entity surfaceEntity = Entity.entityFromBody(closestRayHitInfo.fixture.getBody());
+        if (!surfaceEntity.canPortalOn) return;
+
+        if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
+            if (properPortalNormal(closestRayHitInfo.normal)) {
+                portals.setPortal(world, portalNumber, closestRayHitInfo.point, closestRayHitInfo.normal, true, closestRayHitInfo.fixture);
             }
         }
     }
@@ -285,6 +251,7 @@ public class Player extends Entity {
         float direction = xVelocity / Math.abs(xVelocity);                          // getting the direction the player is traveling in the x axis
 
         // creating a variable that is the same as the x velocity except it is reduced by the friction magnitude and still pointed towards the direction it needs to go
+        float frictionMagnitude = (onGround() ? groundFrictionMagnitude : airFrictionMagnitude);
         float newXVelocity = (Math.abs(xVelocity) - frictionMagnitude) * direction;
         float newDirection = newXVelocity / Math.abs(newXVelocity);                 // getting the new direction that the nex x velocity is pointing to
         if (direction == newDirection) {                                            // if the old direction is the same as the new direction then
@@ -306,7 +273,7 @@ public class Player extends Entity {
         }
         player.friction();
 
-        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
+//        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
         player.updateReflection(player.portals);
 
     }

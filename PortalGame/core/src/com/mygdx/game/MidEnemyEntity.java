@@ -11,65 +11,36 @@ import com.badlogic.gdx.physics.box2d.World;
 import java.util.ArrayList;
 
 public class MidEnemyEntity extends EnemyEntity{
+    static public ArrayList<MidEnemyEntity> midEnemyEntities = new ArrayList<>();
+    public static Vector2 regularSize = new Vector2(0.3f,0.5f);
+
     float closeEnoughCollisionRange = 0.02f;
     int wanderDirection = 1;
-    float initialSpeed = 1.0f;
-    float doubleSpeed = 1.75f;
+    float initialSpeed = 0.5f;
+    float doubleSpeed = 1f;
     ArrayList<RayHitInfo> raysHitInfo;
     RayHitInfo closestRayHitInfo;
 
     float maxRayDistance = 100;
 
 
+
     public MidEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.speed = initialSpeed;
         animationTextureSizeScale = 3f;
-        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.3f);
-        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.5f);
+        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.16f);
+        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.3f);
+        currentAnimation = "Walk";
+
+        midEnemyEntities.add(this);
     }
 
-    private boolean hitWall() {
-        raysHitInfo = new ArrayList<>();            // refresh the rays information list
-        closestRayHitInfo = null;                   // reset the closest ray to nothing
-
-        // shooting a ray is done by ray callbacks, read about rays on libgdx docs, learn about Vector2 normal, most likely dont need to know about fraction variable
-        RayCastCallback callback = new RayCastCallback() {
-            @Override
-            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture == null || point == null || normal == null) return 0;
-                // Multiple hits
-                raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
-                return 1;
-            }
-        };
-
-        // look at the world.rayCast function on the libgdx docs and see what parameters you must provide
-        int xDirection = getBody().getLinearVelocity().x == 0 ? 1
-                : (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
-        world.rayCast(callback, this.body.getPosition(), new Vector2(maxRayDistance*xDirection, this.body.getPosition().y));
-
-        // Finding the closest ray hit through a searching algorithm
-        if (raysHitInfo != null) {
-            if (raysHitInfo.size() == 0) return false;
-            for (RayHitInfo rayHitInfo : raysHitInfo) {
-                if (!rayHitInfo.fixture.isSensor()) if (closestRayHitInfo == null) closestRayHitInfo = rayHitInfo;
-                if (closestRayHitInfo == null) continue;
-
-                float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition()));
-                float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, this.body.getPosition()));
-                if (distance2 < distance1 && !rayHitInfo.fixture.isSensor()) {
-                    closestRayHitInfo = rayHitInfo;
-                }
-            }
-        }
-        if (closestRayHitInfo == null) return false;
-        float distanceFromWall = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition())) - this.size.x/2f;
-        return distanceFromWall < closeEnoughCollisionRange;
+    public static Vector2 getRegularSize() {
+        return regularSize;
     }
 
-    private boolean seeEnemy(){
-
+    private boolean seeEnemy() {
         int xDirection = getBody().getLinearVelocity().x == 0 ? 1
                 : (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
         RayHitInfo sightRay = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection*100,0), maxRayDistance, false);
@@ -80,20 +51,23 @@ public class MidEnemyEntity extends EnemyEntity{
         return sight.equals("Player");
 
     }
-    public void operate() {
-        if(getBody()==null) return;
-        if(hitWall()) {
+    public static void operate() {
+        for (MidEnemyEntity enemy : midEnemyEntities) {
+            if (enemy.getBody() == null) return;
+            if (enemy.hitWall()) {
+                enemy.wanderDirection *= -1;
+                enemy.speed = enemy.initialSpeed;
+                enemy.currentAnimation = "Walk";
+            }
+            if (enemy.seeEnemy()) {
+                enemy.speed = enemy.doubleSpeed;
+                enemy.currentAnimation = "Run";
+            }
+            enemy.body.setLinearVelocity(enemy.speed * enemy.wanderDirection, enemy.body.getLinearVelocity().y);
+            enemy.horizontalFaceDirection = enemy.wanderDirection;
 
-            wanderDirection *= -1;
-            this.speed = initialSpeed;
-            currentAnimation = "Walk";
+            // reflection
+            enemy.updateReflection(((Player) Entity.entityFromName("Player")).portals);
         }
-        if(seeEnemy()){
-            this.speed = doubleSpeed;
-            currentAnimation = "Run";
-        }
-        this.body.setLinearVelocity(this.speed * wanderDirection, this.body.getLinearVelocity().y);
-
-        horizontalFaceDirection = wanderDirection;
     }
 }

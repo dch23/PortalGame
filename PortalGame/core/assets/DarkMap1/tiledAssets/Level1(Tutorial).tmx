@@ -227,34 +227,72 @@
 </data>
  </layer>
  <objectgroup id="10" name="Collision">
-  <object id="1" x="0.655491" y="401.16" width="272.029" height="13.7653"/>
-  <object id="2" x="401.816" y="399.85" width="203.858" height="16.3873"/>
-  <object id="3" x="464.088" y="351.31" width="31.4636" height="47.8844"/>
+  <object id="1" x="0.655491" y="401.16" width="272.029" height="13.7653">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="2" x="401.816" y="399.85" width="203.858" height="16.3873">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" x="464.088" y="351.31" width="31.4636" height="47.8844">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="4" x="492.5" y="322.5">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
    <polygon points="3,0.333333 -4.5,4.5 -7,12.5 -10.5,14.5 -12.5,18 -15.5,18 -18.5,27.5 3.5,27.5"/>
   </object>
   <object id="6" x="497.333" y="378">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
    <polygon points="0,0 10.6667,2.33333 17.6667,10.6667 26.3333,14 32,21.3333 -0.666667,21.3333"/>
   </object>
   <object id="7" x="608" y="400">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
    <polygon points="0,0 96,-48 95.3333,-31.3333 -0.666667,15.3333"/>
   </object>
   <object id="9" x="449" y="398.5">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
    <polygon points="0,0 6,-4 14,-9 14,0.5"/>
   </object>
-  <object id="12" x="704.667" y="351.333" width="63.3333" height="16"/>
-  <object id="16" x="768" y="0" width="16" height="432"/>
-  <object id="17" x="-16" y="0" width="16" height="432"/>
+  <object id="12" x="704.667" y="351.333" width="63.3333" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="16" x="768" y="0" width="16" height="432">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="17" x="-16" y="0" width="16" height="432">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="15" name="Enemies"/>
  <objectgroup id="12" name="Doors">
   <object id="13" x="726" y="279.492" width="36" height="67.3333">
    <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="exit"/>
    </properties>
   </object>
-  <object id="15" x="18.5615" y="319.823" width="45.5" height="75">
+  <object id="15" x="17.2547" y="325.704" width="45.5" height="75">
    <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="enter"/>
    </properties>
   </object>

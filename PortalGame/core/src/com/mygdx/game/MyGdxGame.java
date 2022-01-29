@@ -30,7 +30,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-	public static int currentLevel = 0;
+	public static int currentLevel = 2;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -46,12 +46,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// Objects in the physics world
 	Player player;
-	WeakEnemyEntity enemy;
-	MidEnemyEntity midEnemy;
-	Entity floor;
-	ArrayList<Entity> boxes;
-	ArrayList<Entity> walls;
-
 
 	// Rendered variables for the entities
 	static Renderer entityRenderer;
@@ -86,7 +80,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		// initialize Entity world
 		Entity.setWorld(world);
 
-
 		// Initialize Debug Renderer for making debug lines and debug shapes for the physics objects
 		b2dr = new Box2DDebugRenderer();
 
@@ -102,40 +95,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
-		// Initialize Objects in Physics World
-		player = new Player(camera, "Player", new Vector2(4f, 3f), new Vector2(0.3f,0.4f),
-				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
-				10f, 0.0f, true, null);
-//		entityRenderer.addToRenderLayer(1, player);
-		//Create Enemy
-
-		// Initialize Enemies
-		enemy = new WeakEnemyEntity( "weakEnemy", new Vector2(1f,1f), new Vector2(0.2f,0.35f),
-				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
-
-		midEnemy = new MidEnemyEntity( "midEnemy", new Vector2(4f,1f), new Vector2(0.2f,0.46f),
-				BodyDef.BodyType.DynamicBody, new Color(1,0,0,1), 10f, 1f, true, null);
-
-		walls = new ArrayList<>();
-		boxes = new ArrayList<>();
-
-		// Add Boxes To Physics World
-//		for (int i=0; i<0; i++) {
-//			addBox(new Vector2(2f ,2f), new Vector2(0.1f, 0.1f));
-//			addBox(new Vector2(1.4f ,3f), new Vector2(0.2f, 0.2f));
-//		}
-
-		// Add walls and floor
-//		addWall(new Vector2(camera.viewportWidth/2f,0.15f), new Vector2(camera.viewportWidth,0.3f));
-//		addWall(new Vector2(0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
-//		addWall(new Vector2(camera.viewportWidth-0.15f,camera.viewportHeight/2f), new Vector2(0.3f,camera.viewportHeight));
-
+		// levels
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level1(Tutorial).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level2(EasyPuzzle).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level8(ElevatorShafts).tmx", this.camera, entityRenderer));
 
 		currentMap = maps.get(currentLevel);
 		currentMap.load();
@@ -148,6 +115,9 @@ public class MyGdxGame extends ApplicationAdapter {
 //		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 //		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
 //		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
+
+		// portal trails
+		PortalTrails.setProjectionMatrix(camera.combined);
 
 	}
 
@@ -162,13 +132,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Player.operate();
 
 		WeakEnemyEntity.operate();
-
-
-		enemy.operate();
-		midEnemy.operate();
-
-		enemy.updateReflection(player.portals);
-
+		MidEnemyEntity.operate();
 
 		currentMap.renderBackground();
 
@@ -181,6 +145,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		Laser.endRender();
 
+		PortalTrails.draw();
 
 		entityRenderer.beginRender();
 		entityRenderer.render();

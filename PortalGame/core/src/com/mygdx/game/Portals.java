@@ -1,9 +1,13 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -24,8 +28,8 @@ public class Portals {
         this.world = world;
 
         portals = new Portal[2];
-        portals[0] = new Portal(world);
-        portals[1] = new Portal(world);
+        portals[0] = new Portal(world, Color.BLUE);
+        portals[1] = new Portal(world, Color.PURPLE);
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
@@ -73,11 +77,17 @@ public class Portals {
             if (portals[portalNumber].getOtherPortal().getSurface() == fixtureHit.getBody().getFixtureList().first()) {
                 portals[portalNumber].reset(world, fixtureHit);
             }
+
+//            System.out.println("add");
         }
         else {
             // if the portal already has a surface, must reset that surface before attaching to another surface
             portals[portalNumber].reset(world, fixtureHit);
+//            System.out.println("reset");
         }
+
+        // update portal colliders position and orientation
+        for (Portal portal : portals) portal.setCollider();
 
         Entity surfaceEntity = Entity.entityFromBody(portals[portalNumber].getSurface().getBody());
         Vector2 surfacePosition = new Vector2(surfaceEntity.getPosition());
@@ -296,14 +306,19 @@ public class Portals {
 
         if (entity.reflectEntity != null) {
             entity.setPosition(entity.reflectEntity.getPosition());
-            if (entity.portalExiting.getNormal().y == 0) {
-                //            System.out.println(entity.getBody().getLinearVelocity());
-                entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
-                        entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
-            } else {
-                entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
-                        Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
-            }
+
+            float velocityMag = PMath.magnitude(entity.getBody().getLinearVelocity());
+            Vector2 exitingVelocity = PMath.multVector2(entity.portalExiting.getNormal(), velocityMag);
+            entity.getBody().setLinearVelocity(exitingVelocity);
+
+//            if (entity.portalExiting.getNormal().y == 0) {
+//                //            System.out.println(entity.getBody().getLinearVelocity());
+//                entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
+//                        entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
+//            } else {
+//                entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
+//                        Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
+//            }
         }
 //        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);
 
@@ -330,6 +345,7 @@ public class Portals {
             eVelocity = e.getBody().getLinearVelocity().y;
             normal = (int) p.getNormal().y;
         }
+        if (eVelocity == 0) return false;
 
         if (eVelocity != null && normal != null && eVelocity != 0) {
             int eDirection = (int) (eVelocity / Math.abs(eVelocity));
@@ -392,6 +408,8 @@ public class Portals {
 
 class Portal {
     static final float portalLength = 0.7f;
+    private static float portalThickness = 0.2f;
+    private static float intrudeLength = 0.01f;
 
     private Portal otherPortal;
 
@@ -406,12 +424,16 @@ class Portal {
     protected Vector2 suckDirection = null;
     protected ContactListener contactListener;
 
+    protected Entity collider = new Entity("portal collider", new Vector2(-10, -10), new Vector2(Portal.portalThickness, portalLength),
+            BodyDef.BodyType.StaticBody, null, 0.1f, 0.1f, false, null);
 
+    public Color trailColor;
 
-    public Portal(final World world) {
+    public Portal(final World world, Color trailColor) {
         this.world = world;
+        this.trailColor = trailColor;
+        this.collider.getBody().getFixtureList().first().setSensor(true);
     };
-
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
@@ -426,12 +448,6 @@ class Portal {
 
     public Sprite getSprite() {
         return this.sprite;
-    }
-
-    public Portal(Vector2 position, Vector2 normal, Fixture surface) {
-        this.position = position;
-        this.normal = normal;
-        this.surface = surface;
     }
 
     public void reset(World world, Fixture fixtureHit) {
@@ -563,6 +579,8 @@ class Portal {
         // set sprite position and rotation
         resetSprite();
 
+
+
     }
 
     private void resetSprite() {
@@ -592,8 +610,6 @@ class Portal {
 
     }
 
-
-
     public Vector2 getNormal() {
         return normal;
     }
@@ -608,5 +624,102 @@ class Portal {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setCollider() {
+        // set position of collider
+        if (getPosition() == null) return;
+        Vector2 inWallPosition = getPosition();
+        Vector2 dirIntoWall = PMath.multVector2(getNormal(), -1);
+        inWallPosition = PMath.addVector2(inWallPosition, PMath.multVector2(dirIntoWall, portalThickness/2f + intrudeLength));
+
+        collider.setPosition(inWallPosition);
+        float angle = (getNormal().y == 0 ? 0 : 90);
+        collider.setAngle(angle,true);
+    }
+
+    public Fixture getColliderFixture() {
+        return collider.getBody().getFixtureList().first();
+    }
+}
+
+class PortalTrails {
+    private static ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private static float startOpacity = 1;
+    private static ArrayList<PortalTrail> trails = new ArrayList<>();
+
+    static public void setProjectionMatrix(Matrix4 matrix4) {
+        shapeRenderer.setProjectionMatrix(matrix4);
+    }
+
+    public static void addTrail(Vector2 start, Vector2 end, Color color) {
+        trails.add(new PortalTrail(start, end, startOpacity, new Color(color)));
+    }
+
+    public static void draw() {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        ArrayList<PortalTrail> awakeTrails = new ArrayList<>();
+        for (PortalTrail trail : trails) {
+            trail.fade();
+            trail.shrink();
+            trail.draw(shapeRenderer);
+            if (trail.getColor().a > 0 && trail.getWidth() > 0) awakeTrails.add(trail);
+        }
+
+
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        trails = awakeTrails;
+    }
+}
+
+class PortalTrail {
+    private Color color;
+    private Vector2 start;
+    private Vector2 end;
+    private float width = 0.04f;
+    private float fadeSpeed = 0.05f;
+    private float shrinkSpd = 0.0025f;
+
+    public PortalTrail (Vector2 start, Vector2 end, float opacity, Color color) {
+        this.start = start;
+        this.end = end;
+        this.color = color;
+        this.color.a = opacity;
+    }
+
+    public void draw(ShapeRenderer renderer) {
+        renderer.setColor(color);
+//        System.out.println(color.a);
+        renderer.rectLine(start, end, width);
+    }
+
+    public void fade() {
+        if (color.a <= 0.01f) {
+            color.a = 0.01f;
+            return;
+        }
+        color.a -= fadeSpeed;
+    }
+
+    public void shrink() {
+        if (width <= 0.001f) {
+            width = 0.001f;
+            return;
+        }
+        width -= shrinkSpd;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public float getWidth() {
+        return width;
     }
 }
