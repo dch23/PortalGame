@@ -121,6 +121,7 @@ public class GameMap {
             // can portal on this entity?
             Object canPortalOnProperty = object.getProperties().get("canPortalOn");
             boolean canPortalOn = true;
+
             if (canPortalOnProperty != null) canPortalOn = (boolean) canPortalOnProperty;
             newEntity.canPortalOn = canPortalOn;
         }
@@ -214,15 +215,18 @@ public class GameMap {
     }
 
     private void addEnemy(MapObject object) {
+        // get name
         String enemyName = (String) object.getProperties().get("name");
         if (enemyName == null) return;
-        Vector2 position = new Vector2((float) object.getProperties().get("x"),
-                (float) object.getProperties().get("y"));
+
+        // get position and scale it
+        Vector2 position = new Vector2((float) object.getProperties().get("x"), (float) object.getProperties().get("y"));
         position = PMath.multVector2(position, renderScale);
-//        System.out.println(position);
-        RayHitInfo ray = PMath.getClosestRayHitInfo(world, position, new Vector2(0,-1), 10, false);
-        if (ray != null) {
-            position = ray.point;
+
+        // shoot ray down if this enemy isn't a laser
+        if (!enemyName.equals("laser")) {
+            RayHitInfo ray = PMath.getClosestRayHitInfo(world, position, new Vector2(0, -1), 10, false);
+            if (ray != null) position = ray.point;
         }
 
         Vector2 regularSize = new Vector2(0.5f,0.5f);
@@ -238,7 +242,14 @@ public class GameMap {
                 new MidEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
                 break;
             case "chargeEnemy":
-//                regularSize =
+                regularSize = ChargeEnemyEntity.getRegularSize();
+                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
+                new ChargeEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
+                break;
+            case "laser":
+                float angle = (float) object.getProperties().get("angle");
+                new Laser(world, position, Color.RED, angle, 0.05f, 10f);
+                break;
         }
     }
 

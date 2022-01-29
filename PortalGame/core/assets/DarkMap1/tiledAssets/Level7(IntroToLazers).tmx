@@ -207,6 +207,7 @@
  <objectgroup id="6" name="Enemies">
   <object id="15" x="589.38" y="359.378" width="18.2956" height="30.7105">
    <properties>
+    <property name="angle" type="float" value="180"/>
     <property name="name" value="laser"/>
    </properties>
   </object>

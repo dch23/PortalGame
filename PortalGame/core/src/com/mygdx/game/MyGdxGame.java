@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,11 +31,14 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-	public static int currentLevel = 2;
+	public static int currentLevel = 5;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
 	static GameMap currentMap;
+
+	// music
+
 
 	// Physics World
 	private World world;
@@ -73,6 +77,12 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+
+		// start music
+		Sound music = Gdx.audio.newSound(Gdx.files.internal("music/craz3.mp3"));
+		AudioManager.playSound(music, 1.4f, true);
+
+
 		// Initialize Physics World
 		world = new World(gravity, false);
 		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
@@ -108,13 +118,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		currentMap.load();
 //		map.unload();
 
-
+		// Lasers set up
 		Laser.setProjectionMatrix(camera.combined);
-		lasers = new ArrayList<>();
-//		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 180f, 0.02f, 10));
-//		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
-//		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
-//		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 
 		// portal trails
 		PortalTrails.setProjectionMatrix(camera.combined);
@@ -123,50 +128,50 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+
+		// next level
+		if (updateLevel) {
+			changeLevel(currentLevel);
+			updateLevel = false;
+		}
+
 		// Set Screen Background Colour to White with an Alpha of 100%
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
 
-		Player.operate();
 
-		WeakEnemyEntity.operate();
-		MidEnemyEntity.operate();
 
+		// draw background
 		currentMap.renderBackground();
 
-
-		Laser.beginRender();
-		angle+=1f;
-		for (Laser laser : lasers) {
-			laser.setAngle(angle);
-			laser.render();
-		}
-		Laser.endRender();
-
+		// draw portal trails
 		PortalTrails.draw();
 
+		// operate
+		Player.operate();
+		WeakEnemyEntity.operate();
+		MidEnemyEntity.operate();
+		ChargeEnemyEntity.operate();
+		Laser.operate();
+
+		// draw entities
 		entityRenderer.beginRender();
 		entityRenderer.render();
 		entityRenderer.endRender();
 
+		// draw foreground
 		currentMap.renderForeground();
 
+		// draw the portals
 		Player.renderPortals();
 
 		// Render Debug Lines for Physics Object in Physics World
 		b2dr.render(world, camera.combined);
 
-
 		// Update the Camera
 		camera.update();
-
-
-		if (updateLevel) {
-			changeLevel(currentLevel);
-			updateLevel = false;
-		}
 
 		// Next Physics frame
 		stepWorld();

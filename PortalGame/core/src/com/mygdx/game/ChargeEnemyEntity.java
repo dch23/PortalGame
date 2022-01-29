@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import java.util.ArrayList;
 
 public class ChargeEnemyEntity extends EnemyEntity {
-    static public ArrayList<MidEnemyEntity> chargeEnemyEntities = new ArrayList<>();
+    static public ArrayList<ChargeEnemyEntity> chargeEnemyEntities = new ArrayList<>();
     public static Vector2 regularSize = new Vector2(0.3f,0.5f);
 
     float closeEnoughCollisionRange = 0.02f;
