@@ -103,7 +103,7 @@ public class Laser {
         }
         lasers = new ArrayList<>();
 
-        // reseting shaperenderer
+        // reset Shape Renderer
         Matrix4 matrix4 = shapeRenderer.getProjectionMatrix();
         shapeRenderer = new ShapeRenderer();
         setProjectionMatrix(matrix4);
