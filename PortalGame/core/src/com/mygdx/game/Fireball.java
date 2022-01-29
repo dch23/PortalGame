@@ -10,15 +10,20 @@ import java.util.ArrayList;
 public class Fireball extends Entity {
     private static ArrayList<Fireball> fireballs = new ArrayList<>();
 
-    public Fireball(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
-        super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+    public Fireball(Vector2 position, Vector2 size, Vector2 direction) {
+        super("fireball", position, size, BodyDef.BodyType.DynamicBody, null, 10, 0.1f, false, null);
+
+
         fireballs.add(this);
     }
 
-
     public static void operate() {
         for (Fireball ball : fireballs) {
-            
+        
         }
+    }
+
+    public static void disposeAll() {
+        fireballs = new ArrayList<>();
     }
 }
