@@ -408,7 +408,7 @@ public class Portals {
 
 class Portal {
     static final float portalLength = 0.7f;
-    private static float portalThickness = 0.2f;
+    private static float portalThickness = 0.4f;
     private static float intrudeLength = 0.01f;
 
     private Portal otherPortal;
