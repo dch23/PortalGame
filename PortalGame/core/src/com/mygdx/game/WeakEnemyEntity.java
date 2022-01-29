@@ -22,6 +22,8 @@ public class WeakEnemyEntity extends EnemyEntity {
         addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/redImpWalk.gif", 6, true, 0.25f);
 
         weakEnemyEntities.add(this);
+        //sounds
+        sounds.put("EnemyGrowl", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/imp_red/sounds/enemygrowl.mp3")));
     }
 
     public static Vector2 getRegularSize() {
@@ -39,6 +41,7 @@ public class WeakEnemyEntity extends EnemyEntity {
             enemy.currentAnimation = "Walk";
             enemy.horizontalFaceDirection = enemy.wanderDirection;
             enemy.updateReflection(((Player) Entity.entityFromName("Player")).portals);
+
         }
     }
 }

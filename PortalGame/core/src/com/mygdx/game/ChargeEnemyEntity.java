@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -31,6 +32,8 @@ public class ChargeEnemyEntity extends EnemyEntity {
         currentAnimation = "Walk";
 
         chargeEnemyEntities.add(this);
+        sounds.put("AngryScream", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/sounds/angryenemy.mp3")));
+
     }
 
 
