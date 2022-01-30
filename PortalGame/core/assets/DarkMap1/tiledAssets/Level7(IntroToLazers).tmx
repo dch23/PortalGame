@@ -128,13 +128,13 @@
 </data>
  </layer>
  <objectgroup id="4" name="Doors">
-  <object id="1" x="64" y="64" width="35.2844" height="48.3527">
+  <object id="1" x="61.421" y="60.7676" width="35.2844" height="48.3527">
    <properties>
     <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="enter"/>
    </properties>
   </object>
-  <object id="2" x="672" y="192" width="33.3242" height="48.3527">
+  <object id="2" x="671.711" y="190.797" width="33.3242" height="48.3527">
    <properties>
     <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="exit"/>
@@ -142,37 +142,37 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="Collision">
-  <object id="3" x="32" y="16" width="190.144" height="16.3354">
+  <object id="3" x="33.3242" y="13.0683" width="190.144" height="17.6422">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="4" x="224" y="16" width="18.9493" height="302.532">
+  <object id="4" x="225.101" y="13.395" width="18.9493" height="305.799">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="5" x="124.733" y="112" width="17.6425" height="287.503">
+  <object id="5" x="124.475" y="113.041" width="18.9493" height="287.503">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="6" x="736" y="144" width="18.9493" height="116.962">
+  <object id="6" x="737.379" y="141.138" width="18.9493" height="116.962">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="7" x="608" y="240" width="18.9493" height="160.741">
+  <object id="7" x="608.656" y="240.456" width="18.9493" height="160.741">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="8" x="16" y="10.7727" width="14.3754" height="101.933">
+  <object id="8" x="14.0483" y="13.0679" width="18.9493" height="101.28">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="9" x="128" y="400" width="503.783" height="17.6422">
+  <object id="9" x="123.822" y="400.87" width="503.783" height="17.6422">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
@@ -182,22 +182,22 @@
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="11" x="242.614" y="304" width="284.889" height="16.3354">
+  <object id="11" x="245.357" y="301.551" width="281.622" height="17.6422">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="12" x="508.08" y="144" width="229.348" height="17.6422">
+  <object id="12" x="510.317" y="142.118" width="225.428" height="17.6422">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="13" x="629.227" y="240" width="107.813" height="17.6422">
+  <object id="13" x="628.259" y="240.783" width="107.813" height="17.6422">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="14" x="507.426" y="160" width="18.9493" height="143.098">
+  <object id="14" x="509.337" y="161.393" width="18.9493" height="139.831">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>

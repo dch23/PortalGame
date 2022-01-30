@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="17">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="16">
  <tileset firstgid="1" source="main_lev_build.tsx"/>
  <group id="8" name="Background">
   <layer id="2" name="Tile Layer 2" width="48" height="27">
@@ -130,79 +130,28 @@
  <objectgroup id="4" name="Doors">
   <object id="1" x="61.421" y="60.7676" width="35.2844" height="48.3527">
    <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="enter"/>
    </properties>
   </object>
   <object id="2" x="671.711" y="190.797" width="33.3242" height="48.3527">
    <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="exit"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Collision">
-  <object id="3" x="33.3242" y="13.0683" width="190.144" height="17.6422">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="4" x="225.101" y="13.395" width="18.9493" height="305.799">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="5" x="124.475" y="113.041" width="18.9493" height="287.503">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="6" x="737.379" y="141.138" width="18.9493" height="116.962">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="7" x="608.656" y="240.456" width="18.9493" height="160.741">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="8" x="14.0483" y="13.0679" width="18.9493" height="101.28">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="9" x="123.822" y="400.87" width="503.783" height="17.6422">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="10" x="13.3949" y="113.368" width="110.427" height="17.6422">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="11" x="245.357" y="301.551" width="281.622" height="17.6422">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="12" x="510.317" y="142.118" width="225.428" height="17.6422">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="13" x="628.259" y="240.783" width="107.813" height="17.6422">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="14" x="509.337" y="161.393" width="18.9493" height="139.831">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="16" x="731.171" y="-35.2844"/>
+ <objectgroup id="5" name="Collision" visible="0">
+  <object id="3" x="33.3242" y="13.0683" width="190.144" height="17.6422"/>
+  <object id="4" x="225.101" y="30.3838" width="18.9493" height="287.503"/>
+  <object id="5" x="124.475" y="113.041" width="18.9493" height="287.503"/>
+  <object id="6" x="737.379" y="158.78" width="18.9493" height="82.3307"/>
+  <object id="7" x="608.656" y="240.456" width="18.9493" height="160.741"/>
+  <object id="8" x="14.0483" y="30.7101" width="18.9493" height="83.638"/>
+  <object id="9" x="144.078" y="400.87" width="463.271" height="17.6422"/>
+  <object id="10" x="33.6508" y="113.368" width="90.1715" height="17.6422"/>
+  <object id="11" x="246.664" y="301.551" width="260.059" height="17.6422"/>
+  <object id="12" x="525.999" y="142.118" width="209.746" height="17.6422"/>
+  <object id="13" x="628.259" y="240.783" width="107.813" height="17.6422"/>
+  <object id="14" x="509.337" y="161.393" width="18.9493" height="139.831"/>
  </objectgroup>
  <objectgroup id="6" name="Enemies">
   <object id="15" x="589.38" y="359.378" width="18.2956" height="30.7105">
