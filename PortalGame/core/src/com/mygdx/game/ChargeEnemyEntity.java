@@ -52,11 +52,7 @@ public class ChargeEnemyEntity extends EnemyEntity {
     public static void operate() {
         for (ChargeEnemyEntity enemy : chargeEnemyEntities) {
             if (enemy.getBody() == null) return;
-            if (enemy.hitWall()) {
-                enemy.wanderDirection *= -1;
-                enemy.speed = enemy.initialSpeed;
-                enemy.currentAnimation = "Walk";
-            }
+
             if (enemy.findEnemy()) {
                 enemy.speed = enemy.doubleSpeed;
                 enemy.currentAnimation = "Run";
