@@ -67,9 +67,6 @@ public class Player extends Entity {
         sounds.put("Jump2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump2.mp3")));
         sounds.put("PortalShoot1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot1.mp3")));
         sounds.put("PortalShoot2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot2.mp3")));
-        sounds.put("EnteringPortal", Gdx.audio.newSound(Gdx.files.internal("music/portal jumping (1).mp3")));
-        sounds.put("PlayerDying", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/losing sound effect (1) (1).mp3")));
-        sounds.put("Walking", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/walking.mp3")));
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override

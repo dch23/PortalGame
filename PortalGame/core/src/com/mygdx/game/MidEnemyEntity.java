@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -35,8 +34,6 @@ public class MidEnemyEntity extends EnemyEntity{
         currentAnimation = "Walk";
 
         midEnemyEntities.add(this);
-        sounds.put("MidEnemyGrowl", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/sounds/enemy2growl.mp3")));
-
     }
 
     public static Vector2 getRegularSize() {

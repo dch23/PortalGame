@@ -49,7 +49,6 @@ public class PMath {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                 if (fixture == null || point == null || normal == null) return 0;
-                if (Entity.entityFromBody(fixture.getBody()).getName() == "exit door") return 0;
                 // Multiple hits
                 raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
                 return 1;

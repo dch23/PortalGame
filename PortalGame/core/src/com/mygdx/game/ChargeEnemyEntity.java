@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import java.util.ArrayList;
 
 public class ChargeEnemyEntity extends EnemyEntity {
-    static public ArrayList<ChargeEnemyEntity> chargeEnemyEntities = new ArrayList<>();
+    static public ArrayList<MidEnemyEntity> chargeEnemyEntities = new ArrayList<>();
     public static Vector2 regularSize = new Vector2(0.3f,0.5f);
 
     float closeEnoughCollisionRange = 0.02f;
@@ -32,8 +31,6 @@ public class ChargeEnemyEntity extends EnemyEntity {
         currentAnimation = "Walk";
 
         chargeEnemyEntities.add(this);
-        sounds.put("AngryScream", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/sounds/angryenemy.mp3")));
-
     }
 
 

@@ -85,83 +85,6 @@ public class GameMap {
 ////        camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
     }
 
-
-
-    private void spawnPlayer(Vector2 enterDoorPosition) {
-        Vector2 playerPosition = enterDoorPosition;
-        RayHitInfo ray = PMath.getClosestRayHitInfo(world, playerPosition, new Vector2(0, -1), 10, false);
-        if (ray != null) {
-            playerPosition = PMath.addVector2(ray.point, new Vector2(0, Player.regularSize.y));
-        }
-        Player player = new Player(camera, "Player", playerPosition, Player.regularSize,
-                BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
-                10f, 0.0f, true, null);
-    }
-
-    public void renderBackground () {
-        if (!loaded) return;
-//        tiledMapRenderer.setView(this.camera);
-        if (backgroundIndexes == null) return;
-//        for (int i=0; i<backgroundIndexes.length; i++) {
-//            System.out.print(backgroundIndexes[i] + " ");
-//        }
-//        System.out.println();
-        tiledMapRenderer.render(backgroundIndexes);
-    }
-
-    public void renderForeground () {
-        if (!loaded) return;
-        tiledMapRenderer.render(this.foregroundIndexes);
-    }
-
-    public void dispose() {
-        this.tiledMap.dispose();
-    }
-
-    private void addEnemy(MapObject object) {
-        // get name
-        String enemyName = (String) object.getProperties().get("name");
-        if (enemyName == null) return;
-
-        // get position and scale it
-        Vector2 position = new Vector2((float) object.getProperties().get("x"), (float) object.getProperties().get("y"));
-        position = PMath.multVector2(position, renderScale);
-
-        // shoot ray down if this enemy isn't a laser
-        if (!enemyName.equals("laser") && !enemyName.equals("Boss")) {
-            RayHitInfo ray = PMath.getClosestRayHitInfo(world, position, new Vector2(0, -1), 10, false);
-            if (ray != null) position = ray.point;
-        }
-
-        Vector2 regularSize = new Vector2(0.5f,0.5f);
-        switch (enemyName) {
-            case "weakEnemy":
-                regularSize = WeakEnemyEntity.getRegularSize();
-                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new WeakEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
-                break;
-            case "midEnemy":
-                regularSize = MidEnemyEntity.getRegularSize();
-                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new MidEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
-                break;
-            case "chargeEnemy":
-                regularSize = ChargeEnemyEntity.getRegularSize();
-                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new ChargeEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
-                break;
-            case "laser":
-                float angle = (float) object.getProperties().get("angle");
-                new Laser(world, position, Color.RED, angle, 0.03f, 10f);
-                break;
-            case "Boss":
-                regularSize = Boss.getRegularSize();
-                position = PMath.addVector2(position, new Vector2(regularSize.x/2f, regularSize.y/2f));
-                new Boss(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, false, null);
-                break;
-        }
-    }
-
     public void load() {
         if (tiledMap == null) return;
         if (loaded) return;
@@ -198,7 +121,6 @@ public class GameMap {
             // can portal on this entity?
             Object canPortalOnProperty = object.getProperties().get("canPortalOn");
             boolean canPortalOn = true;
-
             if (canPortalOnProperty != null) canPortalOn = (boolean) canPortalOnProperty;
             newEntity.canPortalOn = canPortalOn;
         }
@@ -230,7 +152,6 @@ public class GameMap {
             enterDoorPosition = PMath.multVector2(enterDoorPosition, this.renderScale);
             spawnPlayer(enterDoorPosition);
         }
-
         // assign exit door
         if (exitDoor != null) {
             Vector2 exitDoorPosition = new Vector2((float) exitDoor.getProperties().get("x"),
@@ -261,10 +182,69 @@ public class GameMap {
         loaded = true;
     }
 
+    private void spawnPlayer(Vector2 enterDoorPosition) {
+        Vector2 playerPosition = enterDoorPosition;
+        RayHitInfo ray = PMath.getClosestRayHitInfo(world, playerPosition, new Vector2(0, -1), 10, false);
+        if (ray != null) {
+            playerPosition = PMath.addVector2(ray.point, new Vector2(0, Player.regularSize.y));
+        }
+        Player player = new Player(camera, "Player", playerPosition, Player.regularSize,
+                BodyDef.BodyType.DynamicBody, new Color(1,0,0,1),
+                10f, 0.0f, true, null);
+    }
+
+    public void renderBackground () {
+        if (!loaded) return;
+//        tiledMapRenderer.setView(this.camera);
+        if (backgroundIndexes == null) return;
+//        for (int i=0; i<backgroundIndexes.length; i++) {
+//            System.out.print(backgroundIndexes[i] + " ");
+//        }
+//        System.out.println();
+        tiledMapRenderer.render(backgroundIndexes);
+    }
+
+    public void renderForeground () {
+        if (!loaded) return;
+        tiledMapRenderer.render(this.foregroundIndexes);
+    }
+
+    public void dispose() {
+        this.tiledMap.dispose();
+    }
+
+    private void addEnemy(MapObject object) {
+        String enemyName = (String) object.getProperties().get("name");
+        if (enemyName == null) return;
+        Vector2 position = new Vector2((float) object.getProperties().get("x"),
+                (float) object.getProperties().get("y"));
+        position = PMath.multVector2(position, renderScale);
+//        System.out.println(position);
+        RayHitInfo ray = PMath.getClosestRayHitInfo(world, position, new Vector2(0,-1), 10, false);
+        if (ray != null) {
+            position = ray.point;
+        }
+
+        Vector2 regularSize = new Vector2(0.5f,0.5f);
+        switch (enemyName) {
+            case "weakEnemy":
+                regularSize = WeakEnemyEntity.getRegularSize();
+                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
+                new WeakEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
+                break;
+            case "midEnemy":
+                regularSize = MidEnemyEntity.getRegularSize();
+                position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
+                new MidEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
+                break;
+            case "chargeEnemy":
+//                regularSize =
+        }
+    }
+
     public void unload() {
         if (!loaded) return;
         Entity.disposeAll();
-        Laser.disposeALl();
         loaded = false;
     }
 }
