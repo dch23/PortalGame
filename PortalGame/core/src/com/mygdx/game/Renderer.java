@@ -12,12 +12,11 @@ import com.badlogic.gdx.utils.Array;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Renderer {
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
-    public SpriteBatch spriteBatch;
-//    private ArrayList<ArrayList<RenderEntity>> renderLayers = new ArrayList<>(3);
+    private SpriteBatch spriteBatch;
+    private ArrayList<ArrayList<RenderEntity>> renderLayers = new ArrayList<>(3);
 
     public Renderer(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -26,17 +25,17 @@ public class Renderer {
         this.spriteBatch = batch;
 
         // initialize renderLayers
-//        for (int i = 0; i < 3; ++i) renderLayers.add(new ArrayList<RenderEntity>());
+        for (int i = 0; i < 3; ++i) renderLayers.add(new ArrayList<RenderEntity>());
     }
 
-//    public void addToRenderLayer(int index, Entity entity) {
-////        System.out.println(renderLayers.size());
-//        if (index < 0 || index >= renderLayers.size()) return;
-//
-//        RenderEntity renderEntity = new RenderEntity(this.spriteBatch, entity);
-//        renderLayers.get(index).add(renderEntity);
-////        System.out.println(renderLayers.get(index).size());
-//    }
+    public void addToRenderLayer(int index, Entity entity) {
+//        System.out.println(renderLayers.size());
+        if (index < 0 || index >= renderLayers.size()) return;
+
+        RenderEntity renderEntity = new RenderEntity(this.spriteBatch, entity);
+        renderLayers.get(index).add(renderEntity);
+//        System.out.println(renderLayers.get(index).size());
+    }
 
     public void beginRender() {
         this.spriteBatch.begin();
@@ -45,54 +44,13 @@ public class Renderer {
         this.spriteBatch.end();
     }
 
-    // render with white list
-    public void renderWhiteList(String[] whiteList) {
-        beginRender();
-
-        HashMap<String, Boolean> map = new HashMap<>();
-        for (String entityName  : whiteList) map.put(entityName, true);
-
-        for (Entity entity : Entity.allEntities) {
-            Boolean ok = map.get(entity.getName());
-            if (ok != null) {
-                entity.renderEntity.render();
+    public void render() {
+        for (ArrayList<RenderEntity> layer : renderLayers) {
+            for (RenderEntity renderEntity : layer) {
+                renderEntity.render();
             }
         }
-        map.clear();
-
-        endRender();
     }
-
-    public void renderBlackList(String[] blackList) {
-        beginRender();
-
-        HashMap<String, Boolean> map = new HashMap<>();
-        for (String entityName  : blackList) map.put(entityName, true);
-
-        for (Entity entity : Entity.allEntities) {
-            Boolean ok = map.get(entity.getName());
-            if (ok == null) {
-                entity.renderEntity.render();
-            }
-        }
-        map.clear();
-
-        endRender();
-    }
-
-//    // render all
-//    public void render() {
-//        beginRender();
-////        for (ArrayList<RenderEntity> layer : renderLayers) {
-////            for (RenderEntity renderEntity : layer) {
-////                renderEntity.render();
-////            }
-////        }
-//        for (Entity entity : Entity.allEntities) {
-//            entity.renderEntity.render();
-//        }
-//        endRender();
-//    }
 
 
     public SpriteBatch getBatch() {
@@ -169,11 +127,10 @@ class RenderEntity {
 
         // animation
         if (this.entity.currentAnimation != null) {
-            AnimationManager.playAnimation(this.entity, spriteBatch, this.entity.currentAnimation,
-                    entity.animationTextureSizeScale, entity.horizontalFaceDirection, this.entity.renderAngle);
+            AnimationManager.playAnimation(this.entity, spriteBatch, this.entity.currentAnimation, entity.animationTextureSizeScale, entity.horizontalFaceDirection);
             if (this.entity.reflectEntity != null) {
-                AnimationManager.playAnimation(this.entity.reflectEntity, spriteBatch, this.entity.getAnimation(this.entity.currentAnimation),
-                        entity.animationTextureSizeScale, entity.horizontalFaceDirection, this.entity.renderAngle);
+                AnimationManager.playAnimation(this.entity.reflectEntity, spriteBatch,
+                        this.entity.getAnimation(this.entity.currentAnimation), entity.animationTextureSizeScale, entity.horizontalFaceDirection);
             }
         }
     }

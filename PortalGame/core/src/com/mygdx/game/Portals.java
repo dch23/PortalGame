@@ -1,7 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,8 +28,8 @@ public class Portals {
         this.world = world;
 
         portals = new Portal[2];
-        portals[0] = new Portal(world, Color.PURPLE);
-        portals[1] = new Portal(world, Color.BLUE);
+        portals[0] = new Portal(world, Color.BLUE);
+        portals[1] = new Portal(world, Color.PURPLE);
 
         portals[0].setOtherPortal(portals[1]);
         portals[1].setOtherPortal(portals[0]);
@@ -281,11 +280,6 @@ public class Portals {
     }
 
     public void linkPortal(Fixture solid, int portalNumber) {
-        // play sound
-        Sound portalEnterSound = Player.player.sounds.get("EnteringPortal");
-        AudioManager.playSound(portalEnterSound, 1, false);
-
-
 //        System.out.println("link portal");
         Entity entity = Entity.entityFromBody(solid.getBody());
         Portal portalEntering = portals[portalNumber];
@@ -300,23 +294,12 @@ public class Portals {
     public void unlinkPortal(Fixture solid) {
 //        System.out.println("unlink portal");
 
-        // change fireball colour
-        Entity e = Entity.entityFromBody(solid.getBody());
-        if (e.getName().equals("fireball")) {
-            e.currentAnimation = "blue";
-        }
-
         Entity entity = Entity.entityFromBody(solid.getBody());
 
         entity.inPortal = false;
 
         if (entity.reflectEntity != null) {
-            // set angle
-            entity.renderAngle = entity.reflectEntity.renderAngle;
-
-            // set position
             entity.setPosition(entity.reflectEntity.getPosition());
-<<<<<<< Updated upstream
             if (entity.portalExiting.getNormal().y == 0) {
                 //            System.out.println(entity.getBody().getLinearVelocity());
                 entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
@@ -325,19 +308,7 @@ public class Portals {
                 entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
                         Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
             }
-=======
-
-            // set velocity
-//            float velocityMag = PMath.magnitude(entity.getBody().getLinearVelocity());
-            entity.setAngle(0, true);
-            float velocityMag = Math.abs(entity.portalEntering.getNormal().y == 0 ? entity.getBody().getLinearVelocity().x : entity.getBody().getLinearVelocity().y);
-            Vector2 exitingVelocity = PMath.multVector2(entity.portalExiting.getNormal(), velocityMag);
-
-            entity.getBody().setLinearVelocity(exitingVelocity);
-            entity.setAngle(entity.renderAngle, true);
->>>>>>> Stashed changes
         }
-
 //        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);
 
         entity.portalEntering = null;
@@ -353,7 +324,6 @@ public class Portals {
     // renderer.renderSprite(this.sprite, this.body.getPosition(), this.size, new Vector2(this.size.x/2f, this.size.y/2f), (float) Math.toDegrees(this.body.getAngle()));
 
     public boolean isGoingIntoPortal(Entity e, Portal p) {
-
         Float eVelocity = null;
         Integer normal = null;
         if (p.getNormal().y == 0) {
@@ -369,7 +339,6 @@ public class Portals {
             int eDirection = (int) (eVelocity / Math.abs(eVelocity));
             return eDirection == -normal;
         }
-
         return false;
     }
 
@@ -406,8 +375,6 @@ public class Portals {
     }
 
     public boolean properPositionToPortal(Portal portalEntering, Entity entity) {
-        if (portalEntering == null || entity == null) return false;
-        if (portalEntering.getNormal() == null) return false;
         Float ePositionAxis;
         Float topBoundPortal;
         Float botBoundPortal;

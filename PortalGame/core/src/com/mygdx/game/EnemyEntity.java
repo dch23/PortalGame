@@ -20,7 +20,6 @@ public class EnemyEntity extends Entity {
         this.body.setFixedRotation(true);
     }
 
-<<<<<<< Updated upstream
     private boolean onGround() {
         RayCastCallback callback = new RayCastCallback() {
             @Override
@@ -36,32 +35,6 @@ public class EnemyEntity extends Entity {
 
         world.rayCast(callback, bottom, endRay);
         return true;
-=======
-
-    protected boolean hitWall() {
-        if (this.body.getLinearVelocity().x == 0) return false;
-        int xDirection = (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
-
-        RayHitInfo[] rays = new RayHitInfo[] {
-                PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection, 0), maxRayDistance, false),
-                PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(0, getSize().y/2f)), new Vector2(xDirection, 0), maxRayDistance, false),
-                PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(0, -getSize().y/2f)), new Vector2(xDirection, 0), maxRayDistance, false)
-        };
-        RayHitInfo closestRayHitInfo = null;
-        for (RayHitInfo ray : rays) {
-            if (ray == null) continue;
-            if (closestRayHitInfo == null) closestRayHitInfo = ray;
-            else {
-                float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, getPosition()));
-                float distance2 = PMath.magnitude(PMath.subVector2(ray.point, getPosition()));
-                if (distance2 < distance1) closestRayHitInfo = ray;
-            }
-        }
-
-        if (closestRayHitInfo == null) return false;
-        float distanceFromWall = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition())) - this.size.x/2f;
-        return distanceFromWall < closeEnoughCollisionRange;
->>>>>>> Stashed changes
     }
 }
 
