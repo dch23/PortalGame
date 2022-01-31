@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
 	// Window size is initialized at DesktopLauncher Class
+	static float gameElapsedTime = 0f;
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
@@ -30,7 +31,12 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
+<<<<<<< Updated upstream
 	public static int currentLevel = 0;
+=======
+	protected static Vector2 gameBounds;
+	public static int currentLevel = 7;
+>>>>>>> Stashed changes
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -58,6 +64,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	Texture squareTexture;
 	Sprite squareSprite;
 
+	String[] renderAboveForeground = new String[] {"Boss", "fireball", "fireTrail"};
+
 	// Rendering Debug Objects
 	Box2DDebugRenderer b2dr;
 
@@ -68,6 +76,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public MyGdxGame(float screenWidth, float screenHeight) {
 		SCENE_WIDTH = screenWidth;
 		SCENE_HEIGHT = screenHeight;
+		gameBounds = PMath.multVector2(new Vector2(MyGdxGame.SCENE_WIDTH, MyGdxGame.SCENE_HEIGHT), MyGdxGame.GAME_SCALE);
 	}
 
 	public static void changeLevel(int level) {
@@ -79,6 +88,15 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+<<<<<<< Updated upstream
+=======
+
+		// start music
+		Sound music = Gdx.audio.newSound(Gdx.files.internal("music/craz3.mp3"));
+		AudioManager.playSound(music, 0.2f, true);
+
+
+>>>>>>> Stashed changes
 		// Initialize Physics World
 		world = new World(gravity, false);
 		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
@@ -176,6 +194,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		currentMap.renderBackground();
 
 
+<<<<<<< Updated upstream
 		Laser.beginRender();
 		angle+=1f;
 		for (Laser laser : lasers) {
@@ -189,13 +208,35 @@ public class MyGdxGame extends ApplicationAdapter {
 		entityRenderer.beginRender();
 		entityRenderer.render();
 		entityRenderer.endRender();
+=======
+		// operate
+		Entity.operation();
+		Player.operate();
+		WeakEnemyEntity.operate();
+		MidEnemyEntity.operate();
+		ChargeEnemyEntity.operate();
+		Laser.operate();
+		Boss.operate();
+		Fireball.operate();
+		FireTrail.operate();
+
+		// draw entities
+		entityRenderer.renderBlackList(renderAboveForeground);
+>>>>>>> Stashed changes
 
 		currentMap.renderForeground();
 
+<<<<<<< Updated upstream
+=======
+		// render extra
+		entityRenderer.renderWhiteList(renderAboveForeground);
+
+		// draw the portals
+>>>>>>> Stashed changes
 		Player.renderPortals();
 
 		// Render Debug Lines for Physics Object in Physics World
-		b2dr.render(world, camera.combined);
+//		b2dr.render(world, camera.combined);
 
 
 		// Update the Camera
@@ -209,11 +250,20 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Next Physics frame
 		stepWorld();
+
+		// elapse time
+		gameElapsedTime += Gdx.graphics.getDeltaTime();
+
+		// collect
+		System.gc();
+
 	}
 	
 	@Override
 	public void dispose () {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
+		Fireball.disposeAll();
+		FireTrail.disposeAll();
 		Entity.disposeAll();
 		world.dispose();
 		for (GameMap map : maps) {
@@ -229,9 +279,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	// This Scale Methods ARE NECESSARY because of libGDXs poor physics scale. Makes everything small with a small camera to enable uses of small force magnitudes
 	static public float scale(float x) {
 		return x*GAME_SCALE;
-	}
-	static public Vector2 scale(Vector2 v) {
-		return Vector2.Zero.mulAdd(v,GAME_SCALE);
 	}
 
 }

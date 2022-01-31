@@ -15,7 +15,7 @@ public class DesktopLauncher {
 		config.title = "Portal Game";
 //		config.width = 1920;
 //		config.height = 1080;
-		config.fullscreen = true;
+//		config.fullscreen = true;
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 		config.width = size.width;
 		config.height = size.height;
