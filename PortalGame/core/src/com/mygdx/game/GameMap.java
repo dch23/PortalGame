@@ -174,10 +174,17 @@ public class GameMap {
         for (int i = 0; i < collisionObjects.getCount(); i++) {
             MapObject object = collisionObjects.get(i);
 
+            Object nameObject = object.getProperties().get("name");
             Vector2 position = new Vector2((float)object.getProperties().get("x"), (float)object.getProperties().get("y"));
             Vector2 size = new Vector2((float)object.getProperties().get("width"), (float)object.getProperties().get("height"));
             Object angleObject = object.getProperties().get("rotation");
             Float angle = angleObject == null ? null : -(float) angleObject;
+//            Iterator<String> props = object.getProperties().getKeys();
+//            for (String s = props.next(); props.hasNext(); s = props.next()) {
+//                if (s == "rotation") {
+//                    System.out.println("rot: " + object.getProperties().get(s));
+//                }
+//            }
 
             // scale
             position = PMath.multVector2(position, this.renderScale);
@@ -186,21 +193,31 @@ public class GameMap {
             // translate
             position.add(PMath.multVector2(size, 0.5f));
 
+            // configure
             float density = 1;
             float friction = 0.1f;
 
+            // create
             Entity newEntity = new Entity("map object", position, size, BodyDef.BodyType.StaticBody,
                     null, density, friction, false, null);
-            if (angle != null) {
-                newEntity.setAngle(angle, false);
-            }
+
+            // set angle
+            if (angle != null) newEntity.setAngle(angle, false);
 
             // can portal on this entity?
             Object canPortalOnProperty = object.getProperties().get("canPortalOn");
             boolean canPortalOn = true;
-
             if (canPortalOnProperty != null) canPortalOn = (boolean) canPortalOnProperty;
             newEntity.canPortalOn = canPortalOn;
+
+            // is a sharp object
+            if (nameObject != null) {
+                String name = (String) nameObject;
+                if (name.equals("die")) {
+                    newEntity.setName(name);
+                    newEntity.getBody().getFixtureList().first().setSensor(true);
+                }
+            }
         }
 
         // Enemies
@@ -209,6 +226,42 @@ public class GameMap {
         for (int i = 0; i < enemiesObjects.getCount(); i++) {
             MapObject enemyObject = enemiesObjects.get(i);
             addEnemy(enemyObject);
+        }
+
+        // block enemies
+        MapLayer blockEnemyLayer = layers.get("BlockEnemy");
+        if (blockEnemyLayer != null) {
+            MapObjects objects = blockEnemyLayer.getObjects();
+            for (int i = 0; i < objects.getCount(); i++) {
+                MapObject ob = objects.get(i);
+
+                // fetch data
+                Vector2 position = new Vector2((float)ob.getProperties().get("x"), (float)ob.getProperties().get("y"));
+                Vector2 size = new Vector2((float)ob.getProperties().get("width"), (float)ob.getProperties().get("height"));
+                Object angleObject = ob.getProperties().get("rotation");
+                Float angle = angleObject == null ? null : -(float) angleObject;
+
+                // scale
+                position = PMath.multVector2(position, this.renderScale);
+                size = PMath.multVector2(size, this.renderScale);
+
+                // translate
+                position.add(PMath.multVector2(size, 0.5f));
+
+                // density and such
+                float density = 1;
+                float friction = 0.1f;
+
+                // create enemy
+                Entity newEntity = new Entity("block enemy", position, size, BodyDef.BodyType.StaticBody,
+                        null, density, friction, false, null);
+
+                // angle
+                if (angle != null) newEntity.setAngle(angle, false);
+
+                // set sensor
+                newEntity.getBody().getFixtureList().first().setSensor(true);
+            }
         }
 
         // spawn player
@@ -263,6 +316,7 @@ public class GameMap {
 
     public void unload() {
         if (!loaded) return;
+//        System.out.println("unloaded");
         Entity.disposeAll();
         Laser.disposeALl();
         loaded = false;

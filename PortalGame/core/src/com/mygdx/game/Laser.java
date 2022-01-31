@@ -77,6 +77,9 @@ public class Laser {
 
         RayHitInfo ray =  PMath.getClosestRayHitInfo(world, getPosition(), end, false);
         if (ray != null) {
+            if (Entity.entityFromBody(ray.fixture.getBody()).getName().equals("Player")) {
+                Player.player.alive = false;
+            }
             end = ray.point;
         }
 

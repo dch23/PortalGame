@@ -8,13 +8,22 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class EnemyEntity extends Entity {
+import java.util.HashMap;
 
-    protected float speed = 0.6f;
+public class EnemyEntity extends Entity {
+    static final HashMap<String, Boolean> ignoreMap = new HashMap<String, Boolean>() {{
+        put("portal collider", true);
+    }};
+
+
+    protected float closeEnoughCollisionRange = 0.02f;
+
+    protected float maxRayDistance = 100;
+    protected float speed = 1.0f;
     protected float frictionMagnitude = 0.6f;
 
-    float closeEnoughCollisionRange = 0.02f;
-    float maxRayDistance = 100;
+
+
 
     private float groundDistance = 0f;
 
@@ -45,9 +54,9 @@ public class EnemyEntity extends Entity {
         int xDirection = (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
 
         RayHitInfo[] rays = new RayHitInfo[] {
-                PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection, 0), maxRayDistance, false),
-                PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(0, getSize().y/2f)), new Vector2(xDirection, 0), maxRayDistance, false),
-                PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(0, -getSize().y/2f)), new Vector2(xDirection, 0), maxRayDistance, false)
+                PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection, 0), maxRayDistance, true, ignoreMap),
+                PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(0, getSize().y/2f)), new Vector2(xDirection, 0), maxRayDistance, true, ignoreMap),
+                PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(0, -getSize().y/2f)), new Vector2(xDirection, 0), maxRayDistance, true, ignoreMap)
         };
         RayHitInfo closestRayHitInfo = null;
         for (RayHitInfo ray : rays) {

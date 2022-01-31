@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="44">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="49">
  <tileset firstgid="1" source="main_lev_build.tsx"/>
  <tileset firstgid="10241" source="other_and_decorative.tsx"/>
  <group id="10" name="Background">
@@ -138,7 +138,7 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="Doors">
-  <object id="2" x="544" y="336" width="36.0234" height="48">
+  <object id="2" x="542" y="331.333" width="36.0234" height="48">
    <properties>
     <property name="canPortalOn" type="bool" value="false"/>
     <property name="name" value="exit"/>
@@ -167,7 +167,7 @@
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="21" x="369.404" y="175.532" width="29.4737" height="49.1228">
+  <object id="21" x="368" y="176" width="32" height="48">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
@@ -177,17 +177,17 @@
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="24" x="33.4035" y="225.31" width="94.9708" height="12.4444">
+  <object id="24" x="32" y="224" width="96" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="25" x="640" y="223.673" width="95.8598" height="12.4444">
+  <object id="25" x="640" y="224" width="96" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="28" x="736.842" y="0" width="31.158" height="432">
+  <object id="28" x="736" y="0" width="32" height="432">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
@@ -197,7 +197,7 @@
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="30" x="208.281" y="224.982" width="351.064" height="46.5029">
+  <object id="30" x="208.281" y="224" width="351.064" height="47.4849">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
@@ -240,6 +240,21 @@
   <object id="42" x="672" y="112" width="16" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="46" x="80.25" y="337.5" width="59.2273" height="49">
+   <properties>
+    <property name="name" value="die"/>
+   </properties>
+  </object>
+  <object id="47" x="594.992" y="363.015" width="27.6818" height="21.3636">
+   <properties>
+    <property name="name" value="die"/>
+   </properties>
+  </object>
+  <object id="48" x="604.068" y="339.591" width="19.1363" height="21.3636">
+   <properties>
+    <property name="name" value="die"/>
    </properties>
   </object>
  </objectgroup>

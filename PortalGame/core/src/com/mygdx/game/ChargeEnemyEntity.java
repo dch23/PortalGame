@@ -10,14 +10,11 @@ import java.util.ArrayList;
 
 public class ChargeEnemyEntity extends EnemyEntity {
     static public ArrayList<ChargeEnemyEntity> chargeEnemyEntities = new ArrayList<>();
-    public static Vector2 regularSize = new Vector2(0.3f,0.5f);
+    public static Vector2 regularSize = new Vector2(0.18f,0.4f);
 
-    float closeEnoughCollisionRange = 0.02f;
     int wanderDirection = 1;
-    float initialSpeed = 0.0f;
-    float doubleSpeed = 1f;
-    ArrayList<RayHitInfo> raysHitInfo;
-    RayHitInfo closestRayHitInfo;
+    float initialSpeed = 0.6f;
+    float doubleSpeed = 2f;
 
     float maxRayDistance = 100;
 
@@ -33,7 +30,6 @@ public class ChargeEnemyEntity extends EnemyEntity {
 
         chargeEnemyEntities.add(this);
         sounds.put("AngryScream", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/sounds/angryenemy.mp3")));
-
     }
 
 
@@ -68,7 +64,7 @@ public class ChargeEnemyEntity extends EnemyEntity {
             enemy.horizontalFaceDirection = enemy.wanderDirection;
 
             // reflection
-            enemy.updateReflection(((Player) Entity.entityFromName("Player")).portals);
+            enemy.updateReflection(Player.player.portals);
         }
     }
 }

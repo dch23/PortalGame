@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 public class MidEnemyEntity extends EnemyEntity{
     static public ArrayList<MidEnemyEntity> midEnemyEntities = new ArrayList<>();
-    public static Vector2 regularSize = new Vector2(0.3f,0.5f);
+    public static Vector2 regularSize = new Vector2(0.18f,0.4f);
 
     float closeEnoughCollisionRange = 0.02f;
     int wanderDirection = 1;
-    float initialSpeed = 0.5f;
-    float doubleSpeed = 1f;
+    float initialSpeed = 0.3f;
+    float doubleSpeed = 1.2f;
     ArrayList<RayHitInfo> raysHitInfo;
     RayHitInfo closestRayHitInfo;
 
@@ -43,10 +43,10 @@ public class MidEnemyEntity extends EnemyEntity{
         return regularSize;
     }
 
-    private boolean seeEnemy() {
+    private boolean seePlayer() {
         int xDirection = getBody().getLinearVelocity().x == 0 ? 1
                 : (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
-        RayHitInfo sightRay = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection*100,0), maxRayDistance, false);
+        RayHitInfo sightRay = PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection*100,0), maxRayDistance, true);
         if (sightRay == null) return false;
         Entity entity = Entity.entityFromBody(sightRay.fixture.getBody());
         String sight = entity.getName();
@@ -62,7 +62,7 @@ public class MidEnemyEntity extends EnemyEntity{
                 enemy.speed = enemy.initialSpeed;
                 enemy.currentAnimation = "Walk";
             }
-            if (enemy.seeEnemy()) {
+            if (enemy.seePlayer()) {
                 enemy.speed = enemy.doubleSpeed;
                 enemy.currentAnimation = "Run";
             }
@@ -70,7 +70,10 @@ public class MidEnemyEntity extends EnemyEntity{
             enemy.horizontalFaceDirection = enemy.wanderDirection;
 
             // reflection
-            enemy.updateReflection(((Player) Entity.entityFromName("Player")).portals);
+            enemy.updateReflection(Player.player.portals);
+
+
+//            System.out.println(enemy.getBody().getLinearVelocity());
         }
     }
 }

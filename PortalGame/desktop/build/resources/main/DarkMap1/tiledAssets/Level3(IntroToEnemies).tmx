@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="18">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="20">
  <tileset firstgid="1" source="01 background.tsx"/>
  <tileset firstgid="625" source="main_lev_build.tsx"/>
  <tileset firstgid="10865" source="05 background.tsx"/>
@@ -410,6 +410,16 @@
   <object id="17" x="496" y="352" width="23.1161" height="22.474">
    <properties>
     <property name="name" value="midEnemy"/>
+   </properties>
+  </object>
+  <object id="18" x="6.18544" y="75.5004" width="144" height="16" rotation="-27">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="19" x="630.221" y="9.02448" width="144" height="16" rotation="27">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

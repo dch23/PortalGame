@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="22">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="24">
  <tileset firstgid="1" source="01 background.tsx"/>
  <tileset firstgid="625" source="02 background.tsx"/>
  <tileset firstgid="1249" source="03 background A.tsx"/>
@@ -261,9 +261,8 @@
 9019,9020,9024,9025,9026,9027,9028,9029,9030,9031,9041,9042,6716,6716,6716,6709,6709,6716,6709,9019,9020,9025,9024,9025,9026,9027,9028,9029,9030,9028,9029,9041,9042,6716,6716,6716,6716,6716,6716,6716,6716,6716,6716,6716,6716,6716,6716,6716
 </data>
   </layer>
- </group>
- <layer id="9" name="Vines" width="48" height="27">
-  <data encoding="csv">
+  <layer id="9" name="Vines" width="48" height="27">
+   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,14432,14428,14428,14429,14432,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,14472,14468,14468,14469,14472,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -292,7 +291,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
- </layer>
+  </layer>
+ </group>
  <objectgroup id="10" name="Collision">
   <object id="1" x="15.0762" y="399.85" width="158.629" height="15.7318">
    <properties>
@@ -395,14 +395,25 @@
   </object>
  </objectgroup>
  <objectgroup id="12" name="Enemies">
-  <object id="18" x="595.186" y="259.574" width="25.5641" height="26.2197">
+  <object id="18" x="651.686" y="241.324" width="25.5641" height="26.2197">
    <properties>
     <property name="name" value="midEnemy"/>
    </properties>
   </object>
   <object id="19" x="716.452" y="106.19" width="18.3537" height="28.8416">
    <properties>
+    <property name="angle" type="float" value="180"/>
     <property name="name" value="laser"/>
+   </properties>
+  </object>
+  <object id="22" x="630.221" y="9.02448" width="144" height="16" rotation="27">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="23" x="6.18544" y="75.5004" width="144" height="16" rotation="-27">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

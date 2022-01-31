@@ -6,8 +6,11 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PMath {
+
+    static final HashMap<String, Boolean> emptyIgnoreMap = new HashMap<>();
 
     static public float magnitude(Vector2 v) {
         float x = Math.abs(v.x);
@@ -42,14 +45,13 @@ public class PMath {
         return Math.max(min, Math.min(max, val));
     }
 
-    static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 endPoint, boolean detectSensor) {
+    static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 endPoint, boolean detectSensor, HashMap<String, Boolean> ignoreMap) {
         final ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();
 
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                 if (fixture == null || point == null || normal == null) return 0;
-                if (Entity.entityFromBody(fixture.getBody()).getName() == "exit door") return 0;
                 // Multiple hits
                 raysHitInfo.add(new RayHitInfo(fixture, new Vector2(point), new Vector2(normal), fraction));
                 return 1;
@@ -64,6 +66,12 @@ public class PMath {
         if (raysHitInfo != null) {
             for (RayHitInfo rayHitInfo : raysHitInfo) {
                 if (!detectSensor) if (rayHitInfo.fixture.isSensor()) continue;
+
+                String name = Entity.entityFromBody(rayHitInfo.fixture.getBody()).getName();
+                if (name.equals("exit door") || name.equals("fireball") || name.equals("reflect fireball")) continue;
+
+                if (ignoreMap.get(name) != null) continue;
+
                 if (closestRayHitInfo == null) closestRayHitInfo = rayHitInfo;
                 float distance1 = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, startPoint));
                 float distance2 = PMath.magnitude(PMath.subVector2(rayHitInfo.point, startPoint));
@@ -72,11 +80,18 @@ public class PMath {
         }
         return closestRayHitInfo;
     }
-
     static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 direction, float length, boolean detectSensor) {
+        return getClosestRayHitInfo(world, startPoint, direction, length, detectSensor, emptyIgnoreMap);
+    }
+
+    static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 endPoint, boolean detectSensor) {
+        return getClosestRayHitInfo(world, startPoint, endPoint, detectSensor, emptyIgnoreMap);
+    }
+
+    static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 direction, float length, boolean detectSensor, HashMap<String,Boolean> ignoreMap) {
         Vector2 endPoint = addVector2(startPoint, PMath.multVector2(direction, length));
 //        System.out.println("end point found: " + endPoint);
-        return getClosestRayHitInfo(world, startPoint, endPoint, detectSensor);
+        return getClosestRayHitInfo(world, startPoint, endPoint, detectSensor, ignoreMap);
     }
 
     public static int getRandomRangeInt(int min, int max) {
@@ -85,6 +100,35 @@ public class PMath {
 
     public static float getRandomRangeFloat(float min, float max) {
         return (float) (Math.random() * (max - min) + min);
+    }
+
+    public static float dir2Deg(Vector2 direction) {
+        float rad = (float) Math.atan2(direction.y, direction.x);
+        return (float) Math.toDegrees(rad);
+    }
+
+    public static Vector2 deg2dir(float angle) {
+        angle = (float) Math.toRadians(angle);
+        float x = (float) Math.cos(angle);
+        float y = (float) Math.sin(angle);
+        return new Vector2(x,y);
+    }
+
+    public static boolean inBounds(Vector2 pos, Vector2 b1, Vector2 b2) {
+        return (pos.x >= b1.x && pos.x <= b2.x) && (pos.y >= b1.x && pos.y <= b2.y);
+    }
+
+    public static boolean inBounds(Vector2 pos, Vector2 size, Vector2 b1, Vector2 b2) {
+        Vector2[] verticies = new Vector2[] {
+                PMath.addVector2(pos, new Vector2(size.x/2f, size.y/2f)),
+                PMath.addVector2(pos, new Vector2(-size.x/2f, size.y/2f)),
+                PMath.addVector2(pos, new Vector2(-size.x/2f, -size.y/2f)),
+                PMath.addVector2(pos, new Vector2(size.x/2f, -size.y/2f)),
+        };
+        for (Vector2 v : verticies) {
+            if (inBounds(v, b1, b2)) return true;
+        }
+        return false;
     }
 }
 

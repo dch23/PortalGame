@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
 	// Window size is initialized at DesktopLauncher Class
+	static float gameElapsedTime = 0f;
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
@@ -31,7 +32,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-	public static int currentLevel = 7;
+	protected static Vector2 gameBounds;
+	public static int currentLevel = 5;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -47,14 +49,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Camera
 	OrthographicCamera camera;
 
-
-	// Objects in the physics world
-	Player player;
-
 	// Rendered variables for the entities
 	static Renderer entityRenderer;
 	Texture squareTexture;
 	Sprite squareSprite;
+	String[] renderAboveForeground = new String[] {"Boss", "fireball", "fireTrail"};
 
 	// Rendering Debug Objects
 	Box2DDebugRenderer b2dr;
@@ -66,6 +65,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public MyGdxGame(float screenWidth, float screenHeight) {
 		SCENE_WIDTH = screenWidth;
 		SCENE_HEIGHT = screenHeight;
+		gameBounds = PMath.multVector2(new Vector2(MyGdxGame.SCENE_WIDTH, MyGdxGame.SCENE_HEIGHT), MyGdxGame.GAME_SCALE);
 	}
 
 	public static void changeLevel(int level) {
@@ -80,7 +80,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// start music
 		Sound music = Gdx.audio.newSound(Gdx.files.internal("music/craz3.mp3"));
-		AudioManager.playSound(music, 1.4f, true);
+		AudioManager.playSound(music, 0.4f, true, false);
 
 
 		// Initialize Physics World
@@ -110,8 +110,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level2(EasyPuzzle).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
-		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
-		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
+//		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,	"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level8(ElevatorShafts).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level9(FinalBoss).tmx", this.camera, entityRenderer));
 
@@ -130,28 +130,18 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-
-		// next level
-		if (updateLevel) {
-			changeLevel(currentLevel);
-			updateLevel = false;
-		}
-
 		// Set Screen Background Colour to White with an Alpha of 100%
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
+
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
 
-
-
-		// draw background
 		currentMap.renderBackground();
 
-		// draw portal trails
-		PortalTrails.draw();
 
 		// operate
+		Entity.operation();
 		Player.operate();
 		WeakEnemyEntity.operate();
 		MidEnemyEntity.operate();
@@ -159,17 +149,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		Laser.operate();
 		Boss.operate();
 		Fireball.operate();
+		FireTrail.operate();
 
 		// draw entities
-		entityRenderer.beginRender();
-		entityRenderer.render();
-		entityRenderer.endRender();
+		entityRenderer.renderBlackList(renderAboveForeground);
 
-		// draw foreground
 		currentMap.renderForeground();
+
+		// render extra
+		entityRenderer.renderWhiteList(renderAboveForeground);
 
 		// draw the portals
 		Player.renderPortals();
+		PortalTrails.draw();
 
 		// Render Debug Lines for Physics Object in Physics World
 		b2dr.render(world, camera.combined);
@@ -177,13 +169,28 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Update the Camera
 		camera.update();
 
+
+		if (updateLevel) {
+			changeLevel(currentLevel);
+			updateLevel = false;
+		}
+
 		// Next Physics frame
 		stepWorld();
+
+		// elapse time
+		gameElapsedTime += Gdx.graphics.getDeltaTime();
+
+		// collect
+		System.gc();
+
 	}
 	
 	@Override
 	public void dispose () {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
+		Fireball.disposeAll();
+		FireTrail.disposeAll();
 		Entity.disposeAll();
 		world.dispose();
 		for (GameMap map : maps) {
@@ -199,9 +206,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	// This Scale Methods ARE NECESSARY because of libGDXs poor physics scale. Makes everything small with a small camera to enable uses of small force magnitudes
 	static public float scale(float x) {
 		return x*GAME_SCALE;
-	}
-	static public Vector2 scale(Vector2 v) {
-		return Vector2.Zero.mulAdd(v,GAME_SCALE);
 	}
 
 }
