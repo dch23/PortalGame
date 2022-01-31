@@ -50,10 +50,6 @@ public class CollisionListener implements ContactListener {
             case "not sensor Player, not sensor weakEnemy":
 //                e1.alive = false;
                 break;
-<<<<<<< Updated upstream
-            case "is sensor map object, not sensor weakEnemy":
-            case "not sensor Player, is sensor map object":
-=======
 //            case "is sensor map object, not sensor weakEnemy":
 //            case "not sensor Player, is sensor map object":
             case "is sensor fireball, is sensor portal collider":
@@ -66,7 +62,6 @@ public class CollisionListener implements ContactListener {
             case "not sensor Player, is sensor portal collider":
 
 //                System.out.println("EEE");
->>>>>>> Stashed changes
                 // portals
 //                Fixture solidFixture = f1.isSensor() ? f2 : f1;
 //                Fixture wallFixture = f1.isSensor() ? f1 : f2;
@@ -77,31 +72,6 @@ public class CollisionListener implements ContactListener {
                 Entity e = Entity.entityFromBody(solidFixture.getBody());
                 if (e.inPortal) return;
 
-<<<<<<< Updated upstream
-                Portals portals = ((Player) Entity.entityFromName("Player")).portals;
-
-                Integer portalNumber = null;
-                if (portals.portals[0].getSurface() == portals.portals[1].getSurface()) {
-                    float topBoundPortal1 = portals.portals[0].getPosition().y + Portal.portalLength / 2f - e.size.y / 2f;
-                    float botBoundPortal1 = portals.portals[0].getPosition().y - Portal.portalLength / 2f + e.size.y / 2f;
-
-                    float topBoundPortal2 = portals.portals[1].getPosition().y + Portal.portalLength / 2f - e.size.y / 2f;
-                    float botBoundPortal2 = portals.portals[1].getPosition().y - Portal.portalLength / 2f + e.size.y / 2f;
-
-                    if (e.getPosition().y < topBoundPortal1 && e.getPosition().y > botBoundPortal1) portalNumber = 0;
-                    else if (e.getPosition().y < topBoundPortal2 && e.getPosition().y > botBoundPortal2) portalNumber = 1;
-                }
-                else {
-                    portalNumber = wallFixture == portals.portals[0].getSurface() ? 0 : 1;
-                }
-
-                if (portalNumber != null) {
-                    if (!portals.properPositionToPortal(portals.portals[portalNumber], e)) return;
-
-                    Portal portalEntering = portals.portals[portalNumber];
-
-                    boolean goingIntoPortal = portals.isGoingIntoPortal(e, portalEntering);
-=======
 
                 Portals portals = Player.player.portals;
 
@@ -144,7 +114,6 @@ public class CollisionListener implements ContactListener {
 //                    System.out.println("is " + e.getName() + " going into " + portalEntering + "? " + goingIntoPortal);
 //                    if (e1.getName().equals("fireball") || e2.getName().equals("fireball")) System.out.println("should work");
 
->>>>>>> Stashed changes
                     if (goingIntoPortal) {
                         portals.linkPortal(solidFixture, portalNumber);
                     }

@@ -20,7 +20,6 @@ public class EnemyEntity extends Entity {
         this.body.setFixedRotation(true);
     }
 
-<<<<<<< Updated upstream
     private boolean onGround() {
         RayCastCallback callback = new RayCastCallback() {
             @Override
@@ -36,7 +35,7 @@ public class EnemyEntity extends Entity {
 
         world.rayCast(callback, bottom, endRay);
         return true;
-=======
+	}
 
     protected boolean hitWall() {
         if (this.body.getLinearVelocity().x == 0) return false;
@@ -61,7 +60,6 @@ public class EnemyEntity extends Entity {
         if (closestRayHitInfo == null) return false;
         float distanceFromWall = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition())) - this.size.x/2f;
         return distanceFromWall < closeEnoughCollisionRange;
->>>>>>> Stashed changes
     }
 }
 

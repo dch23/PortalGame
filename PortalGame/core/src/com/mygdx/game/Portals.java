@@ -316,16 +316,6 @@ public class Portals {
 
             // set position
             entity.setPosition(entity.reflectEntity.getPosition());
-<<<<<<< Updated upstream
-            if (entity.portalExiting.getNormal().y == 0) {
-                //            System.out.println(entity.getBody().getLinearVelocity());
-                entity.getBody().setLinearVelocity(Math.abs(entity.getBody().getLinearVelocity().x) *
-                        entity.portalExiting.getNormal().x, entity.getBody().getLinearVelocity().y);
-            } else {
-                entity.getBody().setLinearVelocity(entity.getBody().getLinearVelocity().x,
-                        Math.abs(entity.getBody().getLinearVelocity().y) * entity.portalExiting.getNormal().y);
-            }
-=======
 
             // set velocity
 //            float velocityMag = PMath.magnitude(entity.getBody().getLinearVelocity());
@@ -335,7 +325,6 @@ public class Portals {
 
             entity.getBody().setLinearVelocity(exitingVelocity);
             entity.setAngle(entity.renderAngle, true);
->>>>>>> Stashed changes
         }
 
 //        System.out.println("EXITING with an x vel of: " + entity.getBody().getLinearVelocity().x);

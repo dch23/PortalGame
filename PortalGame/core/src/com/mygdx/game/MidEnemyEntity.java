@@ -84,14 +84,11 @@ public class MidEnemyEntity extends EnemyEntity{
         if(getBody()==null) return;
         if(hitWall()) {
 
-<<<<<<< Updated upstream
             wanderDirection *= -1;
             this.speed = initialSpeed;
             currentAnimation = "Walk";
-=======
             // reflection
             enemy.updateReflection(Player.player.portals);
->>>>>>> Stashed changes
         }
         if(seeEnemy()){
             this.speed = doubleSpeed;

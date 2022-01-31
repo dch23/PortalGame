@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,12 +32,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-<<<<<<< Updated upstream
-	public static int currentLevel = 0;
-=======
 	protected static Vector2 gameBounds;
 	public static int currentLevel = 7;
->>>>>>> Stashed changes
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
@@ -88,15 +85,12 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-<<<<<<< Updated upstream
-=======
 
 		// start music
 		Sound music = Gdx.audio.newSound(Gdx.files.internal("music/craz3.mp3"));
 		AudioManager.playSound(music, 0.2f, true);
 
 
->>>>>>> Stashed changes
 		// Initialize Physics World
 		world = new World(gravity, false);
 		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
@@ -194,21 +188,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		currentMap.renderBackground();
 
 
-<<<<<<< Updated upstream
-		Laser.beginRender();
-		angle+=1f;
-		for (Laser laser : lasers) {
-			laser.setAngle(angle);
-			laser.render();
-		}
-		Laser.endRender();
-
-		PortalTrails.draw();
-
-		entityRenderer.beginRender();
-		entityRenderer.render();
-		entityRenderer.endRender();
-=======
 		// operate
 		Entity.operation();
 		Player.operate();
@@ -222,17 +201,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// draw entities
 		entityRenderer.renderBlackList(renderAboveForeground);
->>>>>>> Stashed changes
 
 		currentMap.renderForeground();
 
-<<<<<<< Updated upstream
-=======
 		// render extra
 		entityRenderer.renderWhiteList(renderAboveForeground);
 
 		// draw the portals
->>>>>>> Stashed changes
 		Player.renderPortals();
 
 		// Render Debug Lines for Physics Object in Physics World

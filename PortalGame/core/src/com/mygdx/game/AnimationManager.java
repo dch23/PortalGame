@@ -13,10 +13,6 @@ import java.util.HashMap;
 public class AnimationManager {
     static HashMap<Animation, Float> animationElapseTimes = new HashMap<>();
 
-<<<<<<< Updated upstream
-    static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale, int horizontalFaceDirection) {
-        if (!animationElapseTimes.containsKey(animation)) animationElapseTimes.put(animation, 0f);
-=======
 
     static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale, int horizontalFaceDirection, float angle) {
         if (animation == null) return;
@@ -25,7 +21,6 @@ public class AnimationManager {
 //            System.out.println(animationElapseTimes.size());
             animationElapseTimes.put(animation, 0f);
         }
->>>>>>> Stashed changes
 
         TextureRegion keyFrame = (TextureRegion) animation.getKeyFrame(animationElapseTimes.get(animation),true);
 

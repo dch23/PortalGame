@@ -96,12 +96,8 @@ public class WeakEnemyEntity extends EnemyEntity {
             // animate
             enemy.currentAnimation = "Walk";
             enemy.horizontalFaceDirection = enemy.wanderDirection;
-<<<<<<< Updated upstream
-            enemy.updateReflection(((Player) Entity.entityFromName("Player")).portals);
-=======
             enemy.updateReflection(Player.player.portals);
 
->>>>>>> Stashed changes
         }
     }
 }
