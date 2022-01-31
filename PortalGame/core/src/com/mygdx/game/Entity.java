@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.holidaystudios.tools.GifDecoder;
 import sun.awt.image.GifImageDecoder;
 
@@ -23,8 +24,9 @@ public class Entity {
     static World world;
     static ArrayList<Entity> allEntities = new ArrayList<>();
     static HashMap<Body, Entity> entityFromBodyMap = new HashMap<>();
-    static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
+//    static HashMap<String, Entity> entityFromNameMap = new HashMap<>();
     static float frameRate = 1f/30f;
+    public float renderAngle = 0;
 
     // properties
     protected String name;
@@ -45,6 +47,9 @@ public class Entity {
     String currentAnimation = null;
     float animationTextureSizeScale = 1.5f;
     int horizontalFaceDirection = 1;
+
+    // render
+    RenderEntity renderEntity;
 
 
     // portals
@@ -93,7 +98,7 @@ public class Entity {
 
         // add entity to entity map
         entityFromBodyMap.put(this.body, this);
-        entityFromNameMap.put(this.name, this);
+//        entityFromNameMap.put(this.name, this);
         allEntities.add(this);
 
         // Free memory
@@ -103,11 +108,24 @@ public class Entity {
         if (!gravityEnabled) this.body.setGravityScale(0f);
 
         // add to render layer
-        MyGdxGame.entityRenderer.addToRenderLayer(1, this);
+        int renderLayerIndex = 1;
+        renderEntity = new RenderEntity(MyGdxGame.entityRenderer.spriteBatch, this);
+//        if (!getName().equals("Boss") && !getName().equals("fireball")) {
+//            MyGdxGame.entityRenderer.addToRenderLayer(renderLayerIndex, this);
+//        }
     }
 
     public static void setWorld(World world) {
         Entity.world = world;
+    }
+
+    public static void operation() {
+        for (Entity e : allEntities) {
+            if (e.getName().equals("portal collider")) continue;
+            if (e.alive && e.getBody() != null) {
+                e.setAngle(e.renderAngle, true);
+            }
+        }
     }
 
     public void updateReflection(Portals portals) {
@@ -187,7 +205,14 @@ public class Entity {
                 sizeAxis = size.y;
             }
 
-            //            System.out.println("entering with an x vel of: " + getBody().getLinearVelocity().x);
+            // angle for only fireballs
+            if (getName().equals("fireball")) {
+                float angle = PMath.dir2Deg(portalExiting.getNormal());
+                reflectEntity.renderAngle = angle;
+            }
+            else {
+                reflectEntity.renderAngle = renderAngle;
+            }
 
 
             if (intrudingWidth >= sizeAxis + reflectionExtrudeOffset) {
@@ -308,9 +333,9 @@ public class Entity {
         return entityFromBodyMap.get(body);
     }
 
-    static Entity entityFromName(String name) {
-        return entityFromNameMap.get(name);
-    }
+//    static Entity entityFromName(String name) {
+//        return entityFromNameMap.get(name);
+//    }
 
 
     private Animation animationFromSpriteSheet(String animationDirectory, int numberOfFrames, Animation.PlayMode playMode, float frameRate) {
@@ -347,7 +372,7 @@ public class Entity {
         }
         allEntities = new ArrayList<>();
         entityFromBodyMap = new HashMap<>();
-        entityFromNameMap = new HashMap<>();
+//        entityFromNameMap = new HashMap<>();
         Player.player = null;
         WeakEnemyEntity.weakEnemyEntities = new ArrayList<>();
         // MUST DISPOSE ALL SHAPE RENDERERS
@@ -356,19 +381,48 @@ public class Entity {
     }
 
     public void dispose() {
+
+        // remove from maps
+        entityFromBodyMap.remove(getBody());
+        allEntities.remove(this);
+
         // delete animations
-        animations = new HashMap<>();
+        if (reflectEntity != null) reflectEntity.dispose();
+
+
+        HashMap<Animation, Boolean> removeMap = new HashMap<>();
+
+        Collection<Animation> col = animations.values();
+        Object[] arr = col.toArray();
+        for (Object ob : arr) {
+            Animation a = (Animation) ob;
+
+            Object[] frames = a.getKeyFrames();
+            for (Object frame : frames) {
+                TextureRegion tr = (TextureRegion) frame;
+                Texture t = tr.getTexture();
+                t.getTextureData().disposePixmap();
+                t.dispose();
+            }
+            AnimationManager.animationElapseTimes.remove(a);
+        }
+
+        animations.clear();
+
+        // delete texture regions!!!
+
 
         // delete sounds
-        Set<Map.Entry<String, Sound>> soundSet = sounds.entrySet();
-        Iterator<Map.Entry<String, Sound>> soundsIterator = soundSet.iterator();
-        Object[] array = soundSet.toArray();
-        for (Object object : array) {
-            Map.Entry<String, Sound> e = (Map.Entry<String, Sound>) object;
-            Sound sound = e.getValue();
-            sound.dispose();
+        if (sounds != null) {
+            Set<Map.Entry<String, Sound>> soundSet = sounds.entrySet();
+            Object[] array = soundSet.toArray();
+            for (Object object : array) {
+                Map.Entry<String, Sound> e = (Map.Entry<String, Sound>) object;
+                Sound sound = e.getValue();
+                sound.dispose();
+            }
         }
-        sounds = new HashMap<>();
+        sounds = null;
 
         // delete body
         if(this.body == null) return;

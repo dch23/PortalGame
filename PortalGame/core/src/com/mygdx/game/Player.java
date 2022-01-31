@@ -31,13 +31,11 @@ public class Player extends Entity {
     private float frictionMagnitude = 0.6f;
 
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
-    private Vector2 inputHoriz = Vector2.Zero;
+    private Vector2 inputHoriz = new Vector2(0,0);
 
     // the portal variables
     public Portals portals;
     private float maxShootPortalDistance = 100f;                    // the farthest you can shoot a portal
-    private ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();  // finding a portal surface when shooting a portal is done by constantly adding ray information to this array every time a ray is created when mouse clicked
-    private RayHitInfo closestRayHitInfo;                           // used to set the closest plausible surface to put a portal on
     private Vector2 mousePos; // used to keep track of the position of the mouse
 
     // Player Properties
@@ -121,6 +119,7 @@ public class Player extends Entity {
                     shootPortal(1);
                     portalNumber = 1;
                 }
+//                System.out.println(new Vector2(x,y));
 
                 return true;
             }
@@ -258,10 +257,12 @@ public class Player extends Entity {
     }
 
     static public void operate() {
-        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
+//        Vector2 mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
+
         if (player == null) return;
         if (player.alive) {
-            player.control();
+//            if (!player.inPortal)
+                player.control();
         }
         else {
             player.die();
