@@ -74,7 +74,7 @@ public class Player extends Entity {
         sounds.put("PortalShoot1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot1.mp3")));
         sounds.put("PortalShoot2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot2.mp3")));
         sounds.put("EnteringPortal", Gdx.audio.newSound(Gdx.files.internal("music/portal jumping (1).mp3")));
-        sounds.put("PlayerDying", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/losing sound effect (1) (1).mp3")));
+        sounds.put("Death", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/losing sound effect (1) (1).mp3")));
         sounds.put("Walking", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/walking.mp3")));
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -276,7 +276,7 @@ public class Player extends Entity {
     }
 
     static public void operate() {
-//        player.alive = true;
+        player.alive = true;
         // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
         if (player == null) return;
         if (player.alive) {
@@ -299,6 +299,11 @@ public class Player extends Entity {
 
     private void die() {
 //        getBody().getFixtureList().first().setSensor(true);
+
+        if (currentAnimation != "Death") {
+            // trigger
+            AudioManager.playSound(Player.player.sounds.get("Death"), 1, false, true);
+        }
         currentAnimation = "Death";
     }
 }

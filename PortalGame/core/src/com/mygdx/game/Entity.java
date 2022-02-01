@@ -389,9 +389,6 @@ public class Entity {
         // delete animations
         if (reflectEntity != null) reflectEntity.dispose();
 
-
-        HashMap<Animation, Boolean> removeMap = new HashMap<>();
-
         Collection<Animation> col = animations.values();
         Object[] arr = col.toArray();
         for (Object ob : arr) {

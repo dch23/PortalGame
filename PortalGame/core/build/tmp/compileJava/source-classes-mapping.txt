@@ -1,7 +1,7 @@
-com/mygdx/game/EnemyEntity.java
- com.mygdx.game.EnemyEntity
- com.mygdx.game.EnemyEntity$1
- com.mygdx.game.EnemyEntity$2
+com/holidaystudios/tools/GifDecoder.java
+ com.holidaystudios.tools.GifDecoder
+ com.holidaystudios.tools.GifDecoder$DixieMap
+ com.holidaystudios.tools.GifDecoder$GifFrame
 com/mygdx/game/ReflectEntity.java
  com.mygdx.game.ReflectEntity
 com/mygdx/game/PMath.java
@@ -9,17 +9,6 @@ com/mygdx/game/PMath.java
  com.mygdx.game.PMath$1
 com/mygdx/game/FireTrail.java
  com.mygdx.game.FireTrail
-com/mygdx/game/RayHitInfo.java
- com.mygdx.game.RayHitInfo
-com/holidaystudios/tools/GifDecoder.java
- com.holidaystudios.tools.GifDecoder
- com.holidaystudios.tools.GifDecoder$DixieMap
- com.holidaystudios.tools.GifDecoder$GifFrame
-com/mygdx/game/Inputs.java
- com.mygdx.game.Inputs
- com.mygdx.game.Inputs$Keys
-com/mygdx/game/AudioManager.java
- com.mygdx.game.AudioManager
 com/mygdx/game/Portals.java
  com.mygdx.game.Portal
  com.mygdx.game.PortalTrail
@@ -27,34 +16,45 @@ com/mygdx/game/Portals.java
  com.mygdx.game.Portals
 com/mygdx/game/Laser.java
  com.mygdx.game.Laser
+com/mygdx/game/Renderer.java
+ com.mygdx.game.RenderEntity
+ com.mygdx.game.Renderer
+com/mygdx/game/AnimationManager.java
+ com.mygdx.game.AnimationManager
+com/mygdx/game/Inputs.java
+ com.mygdx.game.Inputs
+ com.mygdx.game.Inputs$Keys
+com/mygdx/game/RayHitInfo.java
+ com.mygdx.game.RayHitInfo
 com/mygdx/game/WeakEnemyEntity.java
  com.mygdx.game.WeakEnemyEntity
-com/mygdx/game/ChargeEnemyEntity.java
- com.mygdx.game.ChargeEnemyEntity
-com/mygdx/game/MidEnemyEntity.java
- com.mygdx.game.MidEnemyEntity
-com/mygdx/game/GameMap.java
- com.mygdx.game.GameMap
 com/mygdx/game/Player.java
  com.mygdx.game.Player
  com.mygdx.game.Player$1
  com.mygdx.game.Player$2
-com/mygdx/game/MyGdxGame.java
- com.mygdx.game.MyGdxGame
+com/mygdx/game/Fireball.java
+ com.mygdx.game.Fireball
+com/mygdx/game/AudioManager.java
+ com.mygdx.game.AudioManager
+com/mygdx/game/EnemyEntity.java
+ com.mygdx.game.EnemyEntity
+ com.mygdx.game.EnemyEntity$1
+ com.mygdx.game.EnemyEntity$2
+com/mygdx/game/MidEnemyEntity.java
+ com.mygdx.game.MidEnemyEntity
 com/mygdx/game/Boss.java
  com.mygdx.game.Boss
  com.mygdx.game.Boss$1
  com.mygdx.game.Boss$AttackCentre
  com.mygdx.game.Boss$AttackTrail
  com.mygdx.game.Boss$State
+com/mygdx/game/ChargeEnemyEntity.java
+ com.mygdx.game.ChargeEnemyEntity
 com/mygdx/game/Entity.java
  com.mygdx.game.Entity
-com/mygdx/game/Renderer.java
- com.mygdx.game.RenderEntity
- com.mygdx.game.Renderer
-com/mygdx/game/AnimationManager.java
- com.mygdx.game.AnimationManager
-com/mygdx/game/Fireball.java
- com.mygdx.game.Fireball
+com/mygdx/game/GameMap.java
+ com.mygdx.game.GameMap
+com/mygdx/game/MyGdxGame.java
+ com.mygdx.game.MyGdxGame
 com/mygdx/game/CollisionListener.java
  com.mygdx.game.CollisionListener

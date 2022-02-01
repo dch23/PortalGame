@@ -215,7 +215,7 @@ public class GameMap {
                 String name = (String) nameObject;
                 if (name.equals("die")) {
                     newEntity.setName(name);
-                    newEntity.getBody().getFixtureList().first().setSensor(true);
+//                    newEntity.getBody().getFixtureList().first().setSensor(true);
                 }
             }
         }

@@ -8,10 +8,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EnemyEntity extends Entity {
-    static final HashMap<String, Boolean> ignoreMap = new HashMap<String, Boolean>() {{
+    static private ArrayList<EnemyEntity> enemies = new ArrayList<>();
+
+    static private final HashMap<String, Boolean> ignoreMap = new HashMap<String, Boolean>() {{
         put("portal collider", true);
     }};
 
@@ -23,13 +26,16 @@ public class EnemyEntity extends Entity {
     protected float frictionMagnitude = 0.6f;
 
 
-
+    // death vars
+    protected float alpha = 1;
+    private float fadeSpeed = 0.02f;
 
     private float groundDistance = 0f;
 
     public EnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
+        enemies.add(this);
     }
 
     private boolean onGround() {
@@ -72,6 +78,16 @@ public class EnemyEntity extends Entity {
         if (closestRayHitInfo == null) return false;
         float distanceFromWall = PMath.magnitude(PMath.subVector2(closestRayHitInfo.point, this.body.getPosition())) - this.size.x/2f;
         return distanceFromWall < closeEnoughCollisionRange;
+    }
+
+
+    protected void die() {
+        if (alpha <= 0) {
+            dispose();
+            alpha = 0;
+        }
+        else alpha -= fadeSpeed;
+        currentAnimation = "Death";
     }
 }
 

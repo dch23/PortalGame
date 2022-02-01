@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ChargeEnemyEntity extends EnemyEntity {
     static public ArrayList<ChargeEnemyEntity> chargeEnemyEntities = new ArrayList<>();
-    public static Vector2 regularSize = new Vector2(0.18f,0.4f);
+    public static Vector2 regularSize = new Vector2(0.3f,0.4f);
 
     int wanderDirection = 1;
     float initialSpeed = 0.6f;
@@ -23,9 +23,11 @@ public class ChargeEnemyEntity extends EnemyEntity {
     public ChargeEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.speed = initialSpeed;
-        animationTextureSizeScale = 3f;
-        addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.16f);
-        addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.3f);
+        animationTextureSizeScale = 4f;
+        addAnimation("Walk", "Characters/NightBorne/NightBorne_run.gif", 6, true, 0.16f);
+        addAnimation("Run", "Characters/NightBorne/NightBorne_run.gif", 6, true, 0.3f);
+        addAnimation("Death", "Characters/NightBorne/NightBorne_death..gif", 0, false, 0.3f);
+
         currentAnimation = "Walk";
 
         chargeEnemyEntities.add(this);
@@ -49,9 +51,20 @@ public class ChargeEnemyEntity extends EnemyEntity {
 
     }
     public static void operate() {
+        // delete dead dudes
+        for (int i=chargeEnemyEntities.size()-1; i>=0; i--) {
+            ChargeEnemyEntity enemy = chargeEnemyEntities.get(i);
+            if (!enemy.alive) {
+                enemy.die();
+                if (enemy.alpha == 0) chargeEnemyEntities.remove(i);
+            }
+        }
+
         for (ChargeEnemyEntity enemy : chargeEnemyEntities) {
-            if (enemy.getBody() == null) return;
+            if (enemy.getBody() == null) continue;
+            if (!enemy.alive) continue;
             if (enemy.hitWall()) {
+                System.out.println("AT WALl");
                 enemy.wanderDirection *= -1;
                 enemy.speed = enemy.initialSpeed;
                 enemy.currentAnimation = "Walk";

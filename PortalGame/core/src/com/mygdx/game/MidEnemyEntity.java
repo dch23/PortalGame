@@ -32,6 +32,8 @@ public class MidEnemyEntity extends EnemyEntity{
         animationTextureSizeScale = 3f;
         addAnimation("Walk", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/ezgif.com-gif-maker.gif", 6, true, 0.16f);
         addAnimation("Run", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/axe_demon_run.gif", 6, true, 0.3f);
+        addAnimation("Death", "Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/dead/axeguyded.gif", 0, false, 0.3f);
+
         currentAnimation = "Walk";
 
         midEnemyEntities.add(this);
@@ -55,8 +57,20 @@ public class MidEnemyEntity extends EnemyEntity{
 
     }
     public static void operate() {
+        // delete dead dudes
+        for (int i=midEnemyEntities.size()-1; i>=0; i--) {
+            MidEnemyEntity enemy = midEnemyEntities.get(i);
+            if (!enemy.alive) {
+                enemy.die();
+                if (enemy.alpha == 0) midEnemyEntities.remove(i);
+            }
+        }
+
+
+        // operate
         for (MidEnemyEntity enemy : midEnemyEntities) {
-            if (enemy.getBody() == null) return;
+            if (enemy.getBody() == null) continue;
+            if (!enemy.alive) continue;
             if (enemy.hitWall()) {
                 enemy.wanderDirection *= -1;
                 enemy.speed = enemy.initialSpeed;

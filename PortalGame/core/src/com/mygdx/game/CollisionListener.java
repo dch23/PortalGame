@@ -51,16 +51,13 @@ public class CollisionListener implements ContactListener {
 
 
         switch (contactString) {
-            case "not sensor Player, not sensor weakEnemy":
-//                e1.alive = false;
-                break;
 //            case "is sensor map object, not sensor weakEnemy":
 //            case "not sensor Player, is sensor map object":
             case "is sensor fireball, is sensor portal collider":
             case "is sensor portal collider, is sensor fireball":
             case "is sensor portal collider, not sensor weakEnemy":
-            case "not sensor weakEnemy, is sensor portal collider":
             case "is sensor portal collider, not sensor midEnemy":
+            case "not sensor chargeEnemy, is sensor portalCollider":
             case "not sensor midEnemy, is sensor portal collider":
             case "is sensor portal collider, not sensor Player":
             case "not sensor Player, is sensor portal collider":
@@ -131,10 +128,18 @@ public class CollisionListener implements ContactListener {
 
             case "is sensor Boss, not sensor Player":
                 Boss.boss.touchedPlayer = true;
+            case "not sensor Player, not sensor weakEnemy":
+            case "not sensor Player, not sensor midEnemy":
+            case "not sensor Player, not sensor chargeEnemy":
             case "is sensor Fireball, not sensor Player":
             case "is sensor FireTrail, not sensor Player":
-            case "is sensor die, not sensor Player":
+            case "not sensor Player, not sensor die":
                 Player.player.alive = false;
+                break;
+            case "not sensor die, not sensor chargeEnemy":
+            case "not sensor die, not sensor midEnemy":
+            case "not sensor die, not sensor weakEnemy":
+                e2.alive = false;
         }
 
 //        if (f1.isSensor() || f2.isSensor()) {
