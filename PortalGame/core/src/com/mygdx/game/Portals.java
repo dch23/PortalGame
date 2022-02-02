@@ -287,7 +287,7 @@ public class Portals {
     public void linkPortal(Fixture solid, int portalNumber) {
         // play sound
         Sound portalEnterSound = Player.player.sounds.get("EnteringPortal");
-        AudioManager.playSound(portalEnterSound, 1, false, false);
+        AudioManager.playSound(portalEnterSound, 0.5f, false, false);
 
 
 //        System.out.println("link portal");
@@ -399,6 +399,9 @@ public class Portals {
     }
 
     public boolean properPositionToPortal(Portal portalEntering, Entity entity) {
+        if (portalEntering == null || entity == null) return false;
+        if (portalEntering.getNormal() == null) return false;
+
         Float ePositionAxis;
         Float topBoundPortal;
         Float botBoundPortal;

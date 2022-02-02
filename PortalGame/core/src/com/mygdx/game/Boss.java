@@ -16,6 +16,7 @@ public class Boss extends EnemyEntity {
 
     // Boss-Player interaction
     public boolean touchedPlayer = false;
+    public boolean isHurt = false;
     private float pushMagnitude = 10f;
 
     // Fireballs
@@ -25,6 +26,9 @@ public class Boss extends EnemyEntity {
     // mine
     private float speed = 2f;
     private float spinSpeed = 1f;
+
+    //death
+    boolean triggerDeath = true;
 
     //state
     enum State {
@@ -49,10 +53,10 @@ public class Boss extends EnemyEntity {
 
         public boolean firedIteration = false;
         public float iterationStartTime;
-        public float iterationDuration = 0.1f;   // 1 second
+        public float iterationDuration = 0.2f;   // 1 second
 
-        public int numFireballs = 4;
-        Vector2 fireballSize = new Vector2(0.1f,0.1f);
+        public int numFireballs = 2;
+        Vector2 fireballSize = new Vector2(0.05f,0.05f);
 
         public void reset() {
             attackStart = false;
@@ -116,22 +120,28 @@ public class Boss extends EnemyEntity {
 
         // animations
         addAnimation("Idle", "Characters/Evil Wizard/Sprites/Idle.png", 8, true, 0.3f);
+        addAnimation("Death", "Characters/Evil Wizard/Sprites/Death.png", 5, false, 0.3f);
         currentAnimation = "Idle";
         animationTextureSizeScale = 3;
         horizontalFaceDirection = -1;
 
         // custom
         getBody().getFixtureList().first().setSensor(true);
+        boss.fadeSpeed = 0.006f;
 
         // sounds
-        sounds.put("I'll crush you", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/bosslaugh.mp3")));
+        sounds.put("crush", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/Ill crush you.mp3")));
         sounds.put("Fire", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/bossfire.mp3")));
         sounds.put("Hurt", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/Grunting-from-Being-Hit-A4-www.fesliyanstudios.com.mp3")));
         sounds.put("Laugh", Gdx.audio.newSound(Gdx.files.internal("Characters/Evil Wizard/sounds/bosslaugh.mp3")));
 
+        // idle sounds
+        idleSounds = new String[] {"crush", "Fire", "Laugh"};
+
+        //set health
+        BossHealth.resetHealth();
+
     }
-
-
 
     public static Vector2 getRegularSize() {
         return regularSize;
@@ -140,95 +150,121 @@ public class Boss extends EnemyEntity {
     public static void operate() {
         if (boss == null) return;
 
-        // hit player
-        if (boss.touchedPlayer) {
-            boss.pushPlayer();
-            boss.touchedPlayer = false;
-//            System.out.println("hit");
-        }
 
-        // states
-        switch (boss.state) {
-            case FOLLOW_PLAYER:
-                boss.spinTo(0);
-                boss.getBody().setLinearVelocity(new Vector2(0,0));
+        if (boss.state != State.ATTACK_CENTRE) boss.spinTo(0);
+
+        if (boss.alive) {
+            // idle sounds
+            boss.playRandomIdleSound();
+
+            // hit player
+            if (boss.touchedPlayer) {
+                boss.pushPlayer();
+                boss.touchedPlayer = false;
+                //            System.out.println("hit");
+            }
+
+            // states
+            switch (boss.state) {
+                case FOLLOW_PLAYER:
+//                    boss.spinTo(0);
+                    boss.getBody().setLinearVelocity(new Vector2(0, 0));
 //                boss.state = State.ATTACK_CENTRE;
-                break;
-            case ATTACK_CENTRE:
-                if (!boss.attackCentre.attackStart) {
-                    boss.attackCentre.attackStartTime = MyGdxGame.gameElapsedTime;
-                    boss.attackCentre.attackStart = true;
-                }
-                else {
-                    float timeElapsed = MyGdxGame.gameElapsedTime - boss.attackCentre.attackStartTime;
-                    if (timeElapsed >= boss.attackCentre.attackDuration) {
-                        // next state!
-                        boss.state = State.ATTACK_TRAIL;
-                        boss.attackCentre.reset();
-                        break;
-                    }
-                }
-
-                // should only be able to do this if not in portal
-                boss.goTo(boss.attackCentre.position, boss.speed);
-                if (boss.atPos(boss.attackCentre.position)) boss.attackCentre.attack = true;
-
-                if (boss.attackCentre.attack) {
-                    spin();
-                    if (boss.attackCentre.iterations < boss.attackCentre.maxIterations) {
-                        if (!boss.attackCentre.firedIteration) {
-                            spawnFireballsInCircle(boss.attackCentre.numFireballs, boss.attackCentre.spawnFireballsDistance);
-                            boss.attackCentre.firedIteration = true;
-                            boss.attackCentre.iterations++;
-
-                            // attacking delay
-                            boss.attackCentre.iterationStartTime = MyGdxGame.gameElapsedTime;
+                    break;
+                case ATTACK_CENTRE:
+                    if (!boss.attackCentre.attackStart) {
+                        boss.attackCentre.attackStartTime = MyGdxGame.gameElapsedTime;
+                        boss.attackCentre.attackStart = true;
+                    } else {
+                        float timeElapsed = MyGdxGame.gameElapsedTime - boss.attackCentre.attackStartTime;
+                        if (timeElapsed >= boss.attackCentre.attackDuration) {
+                            // next state!
+                            boss.state = State.ATTACK_TRAIL;
+                            boss.attackCentre.reset();
+                            break;
                         }
-                        else {
-                            float timeElapsed = MyGdxGame.gameElapsedTime - boss.attackCentre.iterationStartTime;
-                            if (timeElapsed >= boss.attackCentre.iterationDuration) {
-                                boss.attackCentre.firedIteration = false;
+                    }
+
+                    // should only be able to do this if not in portal
+                    boss.goTo(boss.attackCentre.position, boss.speed);
+                    if (boss.atPos(boss.attackCentre.position)) boss.attackCentre.attack = true;
+
+                    if (boss.attackCentre.attack) {
+                        spin();
+                        if (boss.attackCentre.iterations < boss.attackCentre.maxIterations) {
+                            if (!boss.attackCentre.firedIteration) {
+                                spawnFireballsInCircle(boss.attackCentre.numFireballs, boss.attackCentre.spawnFireballsDistance);
+                                boss.attackCentre.firedIteration = true;
+                                boss.attackCentre.iterations++;
+
+                                // attacking delay
+                                boss.attackCentre.iterationStartTime = MyGdxGame.gameElapsedTime;
+                            } else {
+                                float timeElapsed = MyGdxGame.gameElapsedTime - boss.attackCentre.iterationStartTime;
+                                if (timeElapsed >= boss.attackCentre.iterationDuration) {
+                                    boss.attackCentre.firedIteration = false;
+                                }
                             }
                         }
                     }
-                }
-                break;
-            case ATTACK_TRAIL:
-                boss.spinTo(0);
-                boss.goTo(boss.attackTrail.getCurrentPoint(), boss.attackTrail.speed);
-                if (boss.attackTrail.spawnTrail) {
-                    if (!boss.attackTrail.startCoolDown) {
-                        boss.attackTrail.startCoolDown = true;
-                        boss.attackTrail.spawnedTrailStartTime = MyGdxGame.gameElapsedTime;
+                    break;
+                case ATTACK_TRAIL:
+//                    boss.spinTo(0);
+                    boss.goTo(boss.attackTrail.getCurrentPoint(), boss.attackTrail.speed);
+                    if (boss.attackTrail.spawnTrail) {
+                        if (!boss.attackTrail.startCoolDown) {
+                            boss.attackTrail.startCoolDown = true;
+                            boss.attackTrail.spawnedTrailStartTime = MyGdxGame.gameElapsedTime;
+                        }
+                        float elapsedTime = MyGdxGame.gameElapsedTime - boss.attackTrail.spawnedTrailStartTime;
+                        if (elapsedTime >= boss.attackTrail.spawnTrailCoolDown) {
+                            spawnFireTrail();
+                            boss.attackTrail.startCoolDown = false;
+                        }
                     }
-                    float elapsedTime = MyGdxGame.gameElapsedTime - boss.attackTrail.spawnedTrailStartTime;
-                    if (elapsedTime >= boss.attackTrail.spawnTrailCoolDown) {
-                        spawnFireTrail();
-                        boss.attackTrail.startCoolDown = false;
+
+                    int xDir = (boss.getBody().getLinearVelocity().x == 0 ? 0 : (boss.getBody().getLinearVelocity().x > 0 ? 1 : -1));
+                    if (xDir != 0) {
+                        boss.horizontalFaceDirection = xDir;
                     }
-                }
 
-                int xDir = (boss.getBody().getLinearVelocity().x == 0 ? 0 : (boss.getBody().getLinearVelocity().x > 0 ? 1 : -1));
-                if (xDir != 0) {
-                    boss.horizontalFaceDirection = xDir;
-                }
+                    if (boss.atPos(boss.attackTrail.getCurrentPoint())) {
+                        // can the boss spawn trails?
+                        if ((boss.attackTrail.currentPoint + 1) % 2 == 0) {
+                            boss.attackTrail.spawnTrail = false;
+                        } else boss.attackTrail.spawnTrail = true;
 
-                if (boss.atPos(boss.attackTrail.getCurrentPoint())) {
-                    // can the boss spawn trails?
-                    if ((boss.attackTrail.currentPoint + 1) % 2 == 0) {
-                        boss.attackTrail.spawnTrail = false;
+                        if (boss.attackTrail.currentPoint < boss.attackTrail.points.size() - 1)
+                            boss.attackTrail.currentPoint++;
+                        else {
+                            // next state!
+                            boss.state = State.ATTACK_CENTRE;
+                            boss.attackTrail.reset();
+                        }
                     }
-                    else boss.attackTrail.spawnTrail = true;
 
-                    if (boss.attackTrail.currentPoint < boss.attackTrail.points.size() - 1) boss.attackTrail.currentPoint++;
-                    else {
-                        // next state!
-                        boss.state = State.ATTACK_CENTRE;
-                        boss.attackTrail.reset();
-                    }
-                }
+                    break;
+            }
 
-                break;
+
+            // hurt
+            if (boss.isHurt) {
+//            boss.currentAnimation = "Hurt";
+                AudioManager.playSound(boss.sounds.get("Hurt"), 1, false, true);
+                boss.isHurt = false;
+            }
+        }
+        else {
+            if (boss.triggerDeath) {
+                boss.currentAnimation = "Death";
+                boss.getBody().setLinearVelocity(new Vector2(0,0));
+                boss.triggerDeath = false;
+
+                // sound
+                AudioManager.playSound(boss.sounds.get("Hurt"), 1, false, true);
+                boss.isHurt = false;
+            }
+            boss.die();
         }
     }
 
@@ -238,8 +274,6 @@ public class Boss extends EnemyEntity {
         Vector2 trailPosition = PMath.addVector2(boss.getPosition(), PMath.multVector2(behindDirection, boss.attackTrail.trailOffsetMag));
         new FireTrail(trailPosition);
     }
-
-
 
     private static void spawnFireballsInCircle(int numberOfFireballs, float spawnFireBallsDistance) {
         float angleChange = 360 / (float)numberOfFireballs;
@@ -290,5 +324,10 @@ public class Boss extends EnemyEntity {
 
         Vector2 forceVector = PMath.multVector2(direction, pushMagnitude);
         Player.player.getBody().setLinearVelocity(forceVector);
+    }
+
+    public void destroyWeapons() {
+        Fireball.disposeF();
+        FireTrail.disposeF();
     }
 }

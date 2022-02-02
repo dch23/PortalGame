@@ -20,10 +20,11 @@ public class Renderer {
 //    private ArrayList<ArrayList<RenderEntity>> renderLayers = new ArrayList<>(3);
 
     public Renderer(OrthographicCamera camera) {
-        shapeRenderer.setProjectionMatrix(camera.combined);
+//        shapeRenderer.setProjectionMatrix(camera.combined);
     }
-    public Renderer(SpriteBatch batch) {
+    public Renderer(SpriteBatch batch, OrthographicCamera camera) {
         this.spriteBatch = batch;
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
         // initialize renderLayers
 //        for (int i = 0; i < 3; ++i) renderLayers.add(new ArrayList<RenderEntity>());
@@ -103,6 +104,8 @@ public class Renderer {
         //check
         if (sprite == null || position == null) return;
 
+        beginRender();
+
         // Set sprite ready to draw
         sprite.setSize(size.x,size.y);
 
@@ -114,6 +117,7 @@ public class Renderer {
 
         sprite.draw(this.spriteBatch);
 
+        endRender();
 
         // Reset sprite for conformity
 //        sprite.setPosition(0,0);
@@ -124,6 +128,14 @@ public class Renderer {
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         this.shapeRenderer.setColor(color);
         this.shapeRenderer.rectLine(start, end, 0.01f);
+        this.shapeRenderer.end();
+    }
+
+    public void renderRectangle(Vector2 a, Vector2 size, Color color) {
+
+        this.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        this.shapeRenderer.setColor(color);
+        this.shapeRenderer.rect(a.x, a.y, size.x, size.y);
         this.shapeRenderer.end();
     }
 }
@@ -151,20 +163,21 @@ class RenderEntity {
             this.entity.sprite.setSize(this.entity.size.x, this.entity.size.y);
             this.entity.sprite.setPosition(this.entity.getPosition().x - offset.x, this.entity.getPosition().y - offset.y);
             this.entity.sprite.setOriginCenter();
-            this.entity.sprite.setRotation(this.entity.getBody().getAngle());
+            this.entity.sprite.setRotation(this.entity.renderAngle);
+
             this.entity.sprite.draw(this.spriteBatch);
 
-            if (this.entity.reflectEntity == null) return;
-            if (this.entity.reflectEntity.sprite == null) return;
+//            if (this.entity.reflectEntity == null) return;
+//            if (this.entity.reflectEntity.sprite == null) return;
 
-            // render reflect entity
-            offset = PMath.divideVector2(this.entity.reflectEntity.size, 2f);
-            this.entity.reflectEntity.sprite.setSize(this.entity.reflectEntity.size.x, this.entity.reflectEntity.size.y);
-            this.entity.reflectEntity.sprite.setPosition(this.entity.reflectEntity.getPosition().x - offset.x,
-                    this.entity.reflectEntity.getPosition().y - offset.y);
-            this.entity.reflectEntity.sprite.setOriginCenter();
-            this.entity.reflectEntity.sprite.setRotation(this.entity.reflectEntity.getBody().getAngle());
-            this.entity.reflectEntity.sprite.draw(this.spriteBatch);
+//            // render reflect entity
+//            offset = PMath.divideVector2(this.entity.reflectEntity.size, 2f);
+//            this.entity.reflectEntity.sprite.setSize(this.entity.reflectEntity.size.x, this.entity.reflectEntity.size.y);
+//            this.entity.reflectEntity.sprite.setPosition(this.entity.reflectEntity.getPosition().x - offset.x,
+//                    this.entity.reflectEntity.getPosition().y - offset.y);
+//            this.entity.reflectEntity.sprite.setOriginCenter();
+//            this.entity.reflectEntity.sprite.setRotation(this.entity.reflectEntity.getBody().getAngle());
+//            this.entity.reflectEntity.sprite.draw(this.spriteBatch);
         }
 
         // animation

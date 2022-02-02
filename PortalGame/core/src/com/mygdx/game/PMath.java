@@ -40,7 +40,6 @@ public class PMath {
     static public Vector2 absoluteVector2(Vector2 v) {
         return new Vector2(Math.abs(v.x), Math.abs(v.y));
     }
-
     static public float clamp(float val, float min, float max) {
         return Math.max(min, Math.min(max, val));
     }
@@ -83,7 +82,6 @@ public class PMath {
     static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 direction, float length, boolean detectSensor) {
         return getClosestRayHitInfo(world, startPoint, direction, length, detectSensor, emptyIgnoreMap);
     }
-
     static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 endPoint, boolean detectSensor) {
         return getClosestRayHitInfo(world, startPoint, endPoint, detectSensor, emptyIgnoreMap);
     }
@@ -97,7 +95,6 @@ public class PMath {
     public static int getRandomRangeInt(int min, int max) {
         return (int) (Math.random() * (max - min) + min);
     }
-
     public static float getRandomRangeFloat(float min, float max) {
         return (float) (Math.random() * (max - min) + min);
     }
@@ -106,7 +103,6 @@ public class PMath {
         float rad = (float) Math.atan2(direction.y, direction.x);
         return (float) Math.toDegrees(rad);
     }
-
     public static Vector2 deg2dir(float angle) {
         angle = (float) Math.toRadians(angle);
         float x = (float) Math.cos(angle);
@@ -115,9 +111,8 @@ public class PMath {
     }
 
     public static boolean inBounds(Vector2 pos, Vector2 b1, Vector2 b2) {
-        return (pos.x >= b1.x && pos.x <= b2.x) && (pos.y >= b1.x && pos.y <= b2.y);
+        return (pos.x >= b1.x && pos.x <= b2.x) && (pos.y >= b1.y && pos.y <= b2.y);
     }
-
     public static boolean inBounds(Vector2 pos, Vector2 size, Vector2 b1, Vector2 b2) {
         Vector2[] verticies = new Vector2[] {
                 PMath.addVector2(pos, new Vector2(size.x/2f, size.y/2f)),

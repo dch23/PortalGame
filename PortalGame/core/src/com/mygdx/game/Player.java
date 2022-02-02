@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -19,10 +20,11 @@ public class Player extends Entity {
     static final HashMap<String, Boolean> ignoreMapForRays = new HashMap<String, Boolean>() {{
         put("block enemy", true);
         put("portal collider", true);
+        put("fireTrail", true);
     }};
 
     static protected Player player;
-    static public Vector2 regularSize = new Vector2(0.15f,0.35f);
+    static public Vector2 regularSize = new Vector2(0.15f,0.4f);
 
     // used for drawing a debug line for the mouse (line from player to mouse)
     Renderer debugRenderer;
@@ -43,10 +45,10 @@ public class Player extends Entity {
     private RayHitInfo closestRayHitInfo;                           // used to set the closest plausible surface to put a portal on
     private Vector2 mousePos; // used to keep track of the position of the mouse
 
-    // Player Properties
 
-    // Animations
-
+    // return to menu after death delay
+    private float deathTime;
+    private float restartDelay = 3f;
 
 
     public Player(OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
@@ -54,12 +56,12 @@ public class Player extends Entity {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
 
         // configure
-        animationTextureSizeScale = 1.2f;
+        animationTextureSizeScale = 1.4f;
 
         // lock the rotation of the player
         this.body.setFixedRotation(true);
         this.portals = new Portals(this.world);     // create the portals instance
-        this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
+        this.debugRenderer = new Renderer(new SpriteBatch(), camera);  // set a debug renderer to draw lines
 
         // animations
         addAnimation("Idle", "Characters/Wizard Pack/Idle.png", 6, true, 0.3f);
@@ -212,7 +214,7 @@ public class Player extends Entity {
 
             int jumpNumber = PMath.getRandomRangeInt(1,3);
             Sound jumpSound = (jumpNumber==1 ? sounds.get("Jump1") : sounds.get("Jump2"));
-            AudioManager.playSound(jumpSound, 1, false, false);
+            AudioManager.playSound(jumpSound, 0.5f, false, false);
         }
     }
 
@@ -232,13 +234,14 @@ public class Player extends Entity {
 
         //sound
         Sound shootSound = (portalNumber == 1) ? sounds.get("PortalShoot1") : sounds.get("PortalShoot2");
-        AudioManager.playSound(shootSound, 1, false, false);
+        AudioManager.playSound(shootSound, 0.3f, false, false);
+
 
         if (closestRayHitInfo == null) return;
 
         // see if it is a valid place to place a portal
         Entity surfaceEntity = Entity.entityFromBody(closestRayHitInfo.fixture.getBody());
-        if (!surfaceEntity.canPortalOn) return;
+        if (!surfaceEntity.canPortalOn || surfaceEntity.getName().equals("die")) return;
 
         if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
             if (properPortalNormal(closestRayHitInfo.normal)) {
@@ -276,19 +279,23 @@ public class Player extends Entity {
     }
 
     static public void operate() {
-        player.alive = true;
-        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
         if (player == null) return;
+//        player.alive = true;
+
+        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
+
+        player.friction();
+
+//        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
+        player.updateReflection(player.portals);
+
+
         if (player.alive) {
             player.control();
         }
         else {
             player.die();
         }
-        player.friction();
-
-//        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
-        player.updateReflection(player.portals);
 
     }
 
@@ -302,8 +309,15 @@ public class Player extends Entity {
 
         if (currentAnimation != "Death") {
             // trigger
-            AudioManager.playSound(Player.player.sounds.get("Death"), 1, false, true);
+            AudioManager.playSound(Player.player.sounds.get("Death"), 0.5f, false, true);
+            deathTime = MyGdxGame.gameElapsedTime;
         }
         currentAnimation = "Death";
+
+        // return to menu
+        float timeElapsed = MyGdxGame.gameElapsedTime - deathTime;
+        if (timeElapsed >= restartDelay) {
+            MyGdxGame.changeLevel(0);
+        }
     }
 }

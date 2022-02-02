@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -39,6 +40,9 @@ public class MidEnemyEntity extends EnemyEntity{
         midEnemyEntities.add(this);
         sounds.put("MidEnemyGrowl", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/sounds/enemy2growl.mp3")));
 
+        // idle sounds
+        idleSounds = new String[] {"MidEnemyGrowl"};
+
     }
 
     public static Vector2 getRegularSize() {
@@ -70,7 +74,11 @@ public class MidEnemyEntity extends EnemyEntity{
         // operate
         for (MidEnemyEntity enemy : midEnemyEntities) {
             if (enemy.getBody() == null) continue;
-            if (!enemy.alive) continue;
+            if (!enemy.alive) {
+                continue;
+            }
+
+//            System.out.println(enemy.getBody().getLinearVelocity());
             if (enemy.hitWall()) {
                 enemy.wanderDirection *= -1;
                 enemy.speed = enemy.initialSpeed;
@@ -88,6 +96,8 @@ public class MidEnemyEntity extends EnemyEntity{
 
 
 //            System.out.println(enemy.getBody().getLinearVelocity());
+            // idle sounds
+            enemy.playRandomIdleSound();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -28,14 +29,25 @@ public class EnemyEntity extends Entity {
 
     // death vars
     protected float alpha = 1;
-    private float fadeSpeed = 0.02f;
+    protected float fadeSpeed = 0.02f;
 
     private float groundDistance = 0f;
+    private boolean startDeath = true;
+
+    // idle sounds
+    String[] idleSounds;
+    float idleSoundPlayStartTime;
+    float idleSoundPlayCoolDown = 20f;
+    Vector2 idleSoundRandomRange = new Vector2(idleSoundPlayCoolDown-20f, idleSoundPlayCoolDown - 10f);
 
     public EnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.body.setFixedRotation(true);
         enemies.add(this);
+
+        // init
+        idleSoundPlayStartTime = MyGdxGame.gameElapsedTime;
+        idleSoundPlayCoolDown = PMath.getRandomRangeFloat(idleSoundRandomRange.x, idleSoundRandomRange.y);
     }
 
     private boolean onGround() {
@@ -56,8 +68,10 @@ public class EnemyEntity extends Entity {
     }
 
     protected boolean hitWall() {
-        if (this.body.getLinearVelocity().x == 0) return false;
-        int xDirection = (int)(this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x));
+        int xDirection = (getBody ().getLinearVelocity().x != 0 ? (int) (this.body.getLinearVelocity().x/Math.abs(this.body.getLinearVelocity().x)) : horizontalFaceDirection);
+
+//        Vector2 vel = PMath.multVector2(new Vector2(xDirection,0), speed);
+//        getBody().setLinearVelocity(vel.x, vel.y);
 
         RayHitInfo[] rays = new RayHitInfo[] {
                 PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(xDirection, 0), maxRayDistance, true, ignoreMap),
@@ -85,9 +99,39 @@ public class EnemyEntity extends Entity {
         if (alpha <= 0) {
             dispose();
             alpha = 0;
+
+            if (getName().equals("Boss")) MyGdxGame.changeLevel(0);
         }
         else alpha -= fadeSpeed;
-        currentAnimation = "Death";
+
+        if (startDeath) {
+            if (!getName().equals("Boss")) {
+                if (idleSounds.length >= 1) {
+                    Sound sound = sounds.get(idleSounds[0]);
+                    AudioManager.playSound(sound, 0.1f, false, true);
+                }
+            }
+
+            currentAnimation = "Death";
+            startDeath = false;
+        }
+    }
+
+    protected void playRandomIdleSound() {
+        if (idleSounds == null) return;
+
+        float timeElapsed = MyGdxGame.gameElapsedTime - idleSoundPlayStartTime;
+        if (timeElapsed >= idleSoundPlayCoolDown) {
+            // play sound with random index
+            int index = PMath.getRandomRangeInt(0, idleSounds.length);
+            String soundName = idleSounds[index];
+            Sound sound = sounds.get(soundName);
+            AudioManager.playSound(sound, 0.1f, false, true);
+
+            // reset timer
+            idleSoundPlayStartTime = MyGdxGame.gameElapsedTime;
+            idleSoundPlayCoolDown = PMath.getRandomRangeFloat(idleSoundRandomRange.x, idleSoundRandomRange.y);
+        }
     }
 }
 

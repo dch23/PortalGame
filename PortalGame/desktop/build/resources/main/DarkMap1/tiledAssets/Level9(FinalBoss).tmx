@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="49">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="80">
  <tileset firstgid="1" source="main_lev_build.tsx"/>
  <tileset firstgid="10241" source="other_and_decorative.tsx"/>
  <group id="10" name="Background">
@@ -152,22 +152,22 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="Collision">
-  <object id="1" x="48.4678" y="384" width="670.035" height="32">
+  <object id="1" x="32" y="384" width="704" height="4.5">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="13" x="96.2807" y="128" width="127.719" height="16">
+  <object id="13" x="96.2807" y="141.5" width="127.719" height="2.5">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="15" x="544" y="128" width="144" height="16">
+  <object id="15" x="544" y="141.818" width="144" height="2.18182">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="21" x="368" y="176" width="32" height="48">
+  <object id="21" x="368" y="176" width="2.18182" height="48">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
@@ -177,67 +177,62 @@
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="24" x="32" y="224" width="96" height="16">
+  <object id="24" x="32" y="224" width="96" height="2.25">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="25" x="640" y="224" width="96" height="16">
+  <object id="28" x="736" y="0" width="32" height="224">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="28" x="736" y="0" width="32" height="432">
+  <object id="29" x="0" y="0" width="32" height="224">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="29" x="0" y="0" width="32" height="430.971">
+  <object id="30" x="208.281" y="268" width="351.064" height="3.4849">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="30" x="208.281" y="224" width="351.064" height="47.4849">
+  <object id="31" x="144" y="80" width="64" height="2.5">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="33" x="221.636" y="96" width="2.36364" height="48">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="34" x="112" y="112" width="16" height="2.36364">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="35" x="128" y="96" width="16" height="1.81818">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="39" x="544" y="96" width="16" height="1.45455">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="40" x="560" y="80" width="96" height="1.25">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="31" x="128" y="80" width="80" height="16">
+  <object id="41" x="656" y="96" width="16" height="1.75">
    <properties>
     <property name="canPortalOn" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="33" x="208" y="96" width="16" height="32">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="34" x="112" y="112" width="16" height="16">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="35" x="128" y="96" width="16" height="16">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="39" x="544" y="96" width="16" height="32">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="40" x="560" y="80" width="96" height="16">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="41" x="656" y="96" width="16" height="16">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="42" x="672" y="112" width="16" height="16">
+  <object id="42" x="672" y="112" width="16" height="1.75">
    <properties>
     <property name="canPortalOn" type="bool" value="false"/>
    </properties>
@@ -255,6 +250,126 @@
   <object id="48" x="604.068" y="339.591" width="19.1363" height="21.3636">
    <properties>
     <property name="name" value="die"/>
+   </properties>
+  </object>
+  <object id="49" x="654.25" y="80" width="1.75" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="50" x="670.625" y="96" width="1.375" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="51" x="686.75" y="112" width="1.25" height="32">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="52" x="560" y="80" width="1.75" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="53" x="670.875" y="99.25" width="1.25" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="54" x="544" y="96" width="1.75" height="48">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="55" x="144" y="80" width="2.90909" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="56" x="128" y="96" width="2.90909" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="57" x="112" y="112" width="2.90909" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="58" x="96.2807" y="128" width="15.7193" height="3">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="59" x="96" y="128" width="2.90909" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="60" x="208" y="96" width="16" height="2.5">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="63" x="206.364" y="80" width="1.63636" height="16">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="64" x="368" y="176" width="32" height="2.90909">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="68" x="397.818" y="176" width="2.18182" height="48">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="69" x="208" y="224" width="160" height="3.4849">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="70" x="400" y="224" width="160" height="3.4849">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="71" x="557.364" y="224" width="2.63636" height="48">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="72" x="208" y="224" width="2.63636" height="48">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="73" x="30.6483" y="278.271" width="110.315" height="2.25" rotation="330.795">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="74" x="640" y="224" width="97.3517" height="2.25">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="75" x="641.321" y="224.268" width="113.828" height="2.25" rotation="33.7367">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="76" x="736" y="288" width="32" height="144">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="77" x="0" y="272" width="32" height="160">
+   <properties>
+    <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>

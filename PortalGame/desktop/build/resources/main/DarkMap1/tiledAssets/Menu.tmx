@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="20">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="26">
  <tileset firstgid="1" source="main_lev_build.tsx"/>
  <tileset firstgid="10241" source="01 background.tsx"/>
  <tileset firstgid="10865" source="05 background.tsx"/>
@@ -288,51 +288,11 @@
 5518,5519,5520,5521,5522,5523,5524,5525,5526,5527,5528,5527,5528,5526,5527,4879,4880,0,0,0,0,0,0,0,0,4887,4888,5524,5520,5521,5522,5523,5524,5525,5526,5527,5528,5518,5896,5897,5896,5897,5896,5897,5904,5905,5906,5907
 </data>
  </layer>
- <objectgroup id="10" name="Collision">
-  <object id="1" x="0" y="400" width="272.684" height="32">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="2" x="400" y="400" width="208" height="32">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="12" x="704" y="352" width="64" height="80">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="16" x="760" y="96" width="16" height="304">
-   <properties>
-    <property name="canPortalOn" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="17" x="-16" y="-272" width="16" height="672">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="19" x="607.552" y="400.105" width="107.781" height="72.5906" rotation="-26.5">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-   </properties>
-  </object>
- </objectgroup>
- <objectgroup id="15" name="Enemies"/>
- <objectgroup id="12" name="Doors">
-  <object id="13" x="727.667" y="280.159" width="32" height="67.3333">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-    <property name="name" value="exit"/>
-   </properties>
-  </object>
-  <object id="15" x="17.2547" y="325.704" width="45.5" height="75">
-   <properties>
-    <property name="canPortalOn" type="bool" value="false"/>
-    <property name="name" value="enter"/>
-   </properties>
-  </object>
+ <imagelayer id="21" name="MenuImage" offsetx="-214.167" offsety="-23.8333">
+  <image source="menu.png" width="1200" height="492"/>
+ </imagelayer>
+ <objectgroup id="19" name="Buttons">
+  <object id="23" name="play" x="333.333" y="229.333" width="106.167" height="35.6667"/>
+  <object id="24" name="quit" x="346.333" y="271.667" width="81.5" height="28.1667"/>
  </objectgroup>
 </map>

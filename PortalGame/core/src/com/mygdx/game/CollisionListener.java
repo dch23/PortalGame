@@ -57,7 +57,7 @@ public class CollisionListener implements ContactListener {
             case "is sensor portal collider, is sensor fireball":
             case "is sensor portal collider, not sensor weakEnemy":
             case "is sensor portal collider, not sensor midEnemy":
-            case "not sensor chargeEnemy, is sensor portalCollider":
+            case "not sensor chargeEnemy, is sensor portal collider":
             case "not sensor midEnemy, is sensor portal collider":
             case "is sensor portal collider, not sensor Player":
             case "not sensor Player, is sensor portal collider":
@@ -131,15 +131,31 @@ public class CollisionListener implements ContactListener {
             case "not sensor Player, not sensor weakEnemy":
             case "not sensor Player, not sensor midEnemy":
             case "not sensor Player, not sensor chargeEnemy":
-            case "is sensor Fireball, not sensor Player":
-            case "is sensor FireTrail, not sensor Player":
+            case "not sensor Player, is sensor fireTrail":
             case "not sensor Player, not sensor die":
+                if (Player.player == null) break;
                 Player.player.alive = false;
                 break;
             case "not sensor die, not sensor chargeEnemy":
             case "not sensor die, not sensor midEnemy":
             case "not sensor die, not sensor weakEnemy":
                 e2.alive = false;
+                break;
+            case "is sensor Boss, is sensor fireball":
+                Fireball fb = (Fireball) e2;
+                if (fb.currentAnimation.equals("blue")) {
+                    fb.alive = false;
+                    BossHealth.damageBoss(5);
+                    Boss.boss.isHurt = true;
+                }
+                break;
+            case "not sensor Player, is sensor fireball":
+                fb = (Fireball) e2;
+                if (fb.currentAnimation.equals("orange")) {
+                    if (Player.player == null) break;
+                    Player.player.alive = false;
+                }
+                break;
         }
 
 //        if (f1.isSensor() || f2.isSensor()) {

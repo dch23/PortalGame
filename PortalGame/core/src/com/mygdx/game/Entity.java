@@ -280,7 +280,7 @@ public class Entity {
     }
 
     public Vector2 getPosition() {
-//        if (this.body == null) return;
+//        if (this.body == null) return null;
         return this.body.getPosition();
     }
     public Vector2 getSize() {

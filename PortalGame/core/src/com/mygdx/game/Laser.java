@@ -2,10 +2,13 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
@@ -15,13 +18,16 @@ import java.util.ArrayList;
 public class Laser {
     static ShapeRenderer shapeRenderer = new ShapeRenderer();
     static ArrayList<Laser> lasers = new ArrayList<>();
+    static Vector2 regularSize = new Vector2(1f/1.3f, 0.3f/1.3f);
+    private static int circleSegments = 40;
 
     private World world;
     private Vector2 position;
     private Color color;
-    private  int circleSegments = 40;
+
     private float thickness;
     private float maxLength;
+    private Sprite sprite = new Sprite(new Texture("sprites/canon.png"));
 
     private Vector2 direction;
 
@@ -44,6 +50,10 @@ public class Laser {
 
         // add to lasers list
         lasers.add(this);
+
+        Entity laserCanon = new Entity("laser canon", position, regularSize, BodyDef.BodyType.StaticBody, Color.WHITE, 10, 0.1f, false, sprite);
+        laserCanon.renderAngle = angle;
+        laserCanon.setAngle(angle, true);
     }
 
     static public void beginRender() {
@@ -70,6 +80,7 @@ public class Laser {
         shapeRenderer.rectLine(this.position, getLaserEnd(), this.thickness);
         shapeRenderer.circle(getPosition().x, getPosition().y, this.thickness/2f, this.circleSegments);
         shapeRenderer.circle(getLaserEnd().x, getLaserEnd().y, this.thickness/2f, this.circleSegments);
+
     }
 
     private Vector2 getLaserEnd() {

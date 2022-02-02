@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -23,15 +24,18 @@ public class ChargeEnemyEntity extends EnemyEntity {
     public ChargeEnemyEntity(String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
         this.speed = initialSpeed;
-        animationTextureSizeScale = 4f;
+        animationTextureSizeScale = 3.3f;
         addAnimation("Walk", "Characters/NightBorne/NightBorne_run.gif", 6, true, 0.16f);
         addAnimation("Run", "Characters/NightBorne/NightBorne_run.gif", 6, true, 0.3f);
-        addAnimation("Death", "Characters/NightBorne/NightBorne_death..gif", 0, false, 0.3f);
+        addAnimation("Death", "Characters/NightBorne/NightBorne_death.gif", 0, false, 0.3f);
 
         currentAnimation = "Walk";
 
         chargeEnemyEntities.add(this);
         sounds.put("AngryScream", Gdx.audio.newSound(Gdx.files.internal("Characters/imp_axe_demon/imp_axe_demon/demon_axe_red/sounds/angryenemy.mp3")));
+
+        // idle sounds
+        idleSounds = new String[] {"AngryScream"};
     }
 
 
@@ -62,9 +66,12 @@ public class ChargeEnemyEntity extends EnemyEntity {
 
         for (ChargeEnemyEntity enemy : chargeEnemyEntities) {
             if (enemy.getBody() == null) continue;
-            if (!enemy.alive) continue;
+            if (!enemy.alive) {
+                continue;
+            }
+
             if (enemy.hitWall()) {
-                System.out.println("AT WALl");
+//                System.out.println("AT WALl");
                 enemy.wanderDirection *= -1;
                 enemy.speed = enemy.initialSpeed;
                 enemy.currentAnimation = "Walk";
@@ -78,6 +85,9 @@ public class ChargeEnemyEntity extends EnemyEntity {
 
             // reflection
             enemy.updateReflection(Player.player.portals);
+
+            // idle sounds
+            enemy.playRandomIdleSound();
         }
     }
 }

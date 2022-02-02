@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.box2d.*;
 import org.graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
 
@@ -148,10 +149,18 @@ public class GameMap {
             case "chargeEnemy":
                 regularSize = ChargeEnemyEntity.getRegularSize();
                 position = PMath.addVector2(position, new Vector2(0, regularSize.y/2f));
-                new ChargeEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0.1f, true, null);
+                new ChargeEnemyEntity(enemyName, position, regularSize, BodyDef.BodyType.DynamicBody, null, 10f, 0f, true, null);
                 break;
             case "laser":
+                // angle
                 float angle = (float) object.getProperties().get("angle");
+
+                // find spot of wall
+                Vector2 behindDir = PMath.multVector2(PMath.deg2dir(angle), -1);
+                RayHitInfo behindRay = PMath.getClosestRayHitInfo(world, position, behindDir, 100, false);
+                if (behindRay != null) position = behindRay.point;
+
+                // create laser
                 new Laser(world, position, Color.RED, angle, 0.03f, 10f);
                 break;
             case "Boss":
@@ -169,77 +178,23 @@ public class GameMap {
         // collision entities
         MapLayers layers = this.tiledMap.getLayers();
         MapLayer collisionLayer = layers.get("Collision");
-        MapObjects collisionObjects = collisionLayer.getObjects();
+        if (collisionLayer != null) {
+            MapObjects collisionObjects = collisionLayer.getObjects();
 
-        for (int i = 0; i < collisionObjects.getCount(); i++) {
-            MapObject object = collisionObjects.get(i);
+            for (int i = 0; i < collisionObjects.getCount(); i++) {
+                MapObject object = collisionObjects.get(i);
 
-            Object nameObject = object.getProperties().get("name");
-            Vector2 position = new Vector2((float)object.getProperties().get("x"), (float)object.getProperties().get("y"));
-            Vector2 size = new Vector2((float)object.getProperties().get("width"), (float)object.getProperties().get("height"));
-            Object angleObject = object.getProperties().get("rotation");
-            Float angle = angleObject == null ? null : -(float) angleObject;
-//            Iterator<String> props = object.getProperties().getKeys();
-//            for (String s = props.next(); props.hasNext(); s = props.next()) {
-//                if (s == "rotation") {
-//                    System.out.println("rot: " + object.getProperties().get(s));
-//                }
-//            }
-
-            // scale
-            position = PMath.multVector2(position, this.renderScale);
-            size = PMath.multVector2(size, this.renderScale);
-
-            // translate
-            position.add(PMath.multVector2(size, 0.5f));
-
-            // configure
-            float density = 1;
-            float friction = 0.1f;
-
-            // create
-            Entity newEntity = new Entity("map object", position, size, BodyDef.BodyType.StaticBody,
-                    null, density, friction, false, null);
-
-            // set angle
-            if (angle != null) newEntity.setAngle(angle, false);
-
-            // can portal on this entity?
-            Object canPortalOnProperty = object.getProperties().get("canPortalOn");
-            boolean canPortalOn = true;
-            if (canPortalOnProperty != null) canPortalOn = (boolean) canPortalOnProperty;
-            newEntity.canPortalOn = canPortalOn;
-
-            // is a sharp object
-            if (nameObject != null) {
-                String name = (String) nameObject;
-                if (name.equals("die")) {
-                    newEntity.setName(name);
-//                    newEntity.getBody().getFixtureList().first().setSensor(true);
-                }
-            }
-        }
-
-        // Enemies
-        MapLayer enemiesLayer = layers.get("Enemies");
-        MapObjects enemiesObjects = enemiesLayer.getObjects();
-        for (int i = 0; i < enemiesObjects.getCount(); i++) {
-            MapObject enemyObject = enemiesObjects.get(i);
-            addEnemy(enemyObject);
-        }
-
-        // block enemies
-        MapLayer blockEnemyLayer = layers.get("BlockEnemy");
-        if (blockEnemyLayer != null) {
-            MapObjects objects = blockEnemyLayer.getObjects();
-            for (int i = 0; i < objects.getCount(); i++) {
-                MapObject ob = objects.get(i);
-
-                // fetch data
-                Vector2 position = new Vector2((float)ob.getProperties().get("x"), (float)ob.getProperties().get("y"));
-                Vector2 size = new Vector2((float)ob.getProperties().get("width"), (float)ob.getProperties().get("height"));
-                Object angleObject = ob.getProperties().get("rotation");
+                Object nameObject = object.getProperties().get("name");
+                Vector2 position = new Vector2((float) object.getProperties().get("x"), (float) object.getProperties().get("y"));
+                Vector2 size = new Vector2((float) object.getProperties().get("width"), (float) object.getProperties().get("height"));
+                Object angleObject = object.getProperties().get("rotation");
                 Float angle = angleObject == null ? null : -(float) angleObject;
+                //            Iterator<String> props = object.getProperties().getKeys();
+                //            for (String s = props.next(); props.hasNext(); s = props.next()) {
+                //                if (s == "rotation") {
+                //                    System.out.println("rot: " + object.getProperties().get(s));
+                //                }
+                //            }
 
                 // scale
                 position = PMath.multVector2(position, this.renderScale);
@@ -248,61 +203,161 @@ public class GameMap {
                 // translate
                 position.add(PMath.multVector2(size, 0.5f));
 
-                // density and such
+                // configure
                 float density = 1;
                 float friction = 0.1f;
 
-                // create enemy
-                Entity newEntity = new Entity("block enemy", position, size, BodyDef.BodyType.StaticBody,
+                // create
+                Entity newEntity = new Entity("map object", position, size, BodyDef.BodyType.StaticBody,
                         null, density, friction, false, null);
 
-                // angle
+                // set angle
                 if (angle != null) newEntity.setAngle(angle, false);
 
-                // set sensor
-                newEntity.getBody().getFixtureList().first().setSensor(true);
+                // can portal on this entity?
+                Object canPortalOnProperty = object.getProperties().get("canPortalOn");
+                boolean canPortalOn = true;
+                if (canPortalOnProperty != null) canPortalOn = (boolean) canPortalOnProperty;
+                newEntity.canPortalOn = canPortalOn;
+
+                // is a sharp object
+                if (nameObject != null) {
+                    String name = (String) nameObject;
+                    if (name.equals("die")) {
+                        newEntity.setName(name);
+                        //                    newEntity.getBody().getFixtureList().first().setSensor(true);
+                    }
+                }
+            }
+        }
+
+        // Enemies
+        MapLayer enemiesLayer = layers.get("Enemies");
+        if (enemiesLayer != null) {
+            MapObjects enemiesObjects = enemiesLayer.getObjects();
+            for (int i = 0; i < enemiesObjects.getCount(); i++) {
+                MapObject enemyObject = enemiesObjects.get(i);
+                addEnemy(enemyObject);
+            }
+
+            // block enemies
+            MapLayer blockEnemyLayer = layers.get("BlockEnemy");
+            if (blockEnemyLayer != null) {
+                MapObjects objects = blockEnemyLayer.getObjects();
+                for (int i = 0; i < objects.getCount(); i++) {
+                    MapObject ob = objects.get(i);
+
+                    // fetch data
+                    Vector2 position = new Vector2((float) ob.getProperties().get("x"), (float) ob.getProperties().get("y"));
+                    Vector2 size = new Vector2((float) ob.getProperties().get("width"), (float) ob.getProperties().get("height"));
+                    Object angleObject = ob.getProperties().get("rotation");
+                    Float angle = angleObject == null ? null : -(float) angleObject;
+
+                    // scale
+                    position = PMath.multVector2(position, this.renderScale);
+                    size = PMath.multVector2(size, this.renderScale);
+
+                    // translate
+                    position.add(PMath.multVector2(size, 0.5f));
+
+                    // density and such
+                    float density = 1;
+                    float friction = 0.1f;
+
+                    // create enemy
+                    Entity newEntity = new Entity("block enemy", position, size, BodyDef.BodyType.StaticBody,
+                            null, density, friction, false, null);
+
+                    // angle
+                    if (angle != null) newEntity.setAngle(angle, false);
+
+                    // set sensor
+                    newEntity.getBody().getFixtureList().first().setSensor(true);
+                }
             }
         }
 
         // spawn player
         MapLayer doorLayer = layers.get("Doors");
-        MapObjects doorObjects = doorLayer.getObjects();
-        MapObject enterDoor = null, exitDoor = null;
-        for (int i=0; i<doorObjects.getCount(); i++) {
-            MapObject object = doorObjects.get(i);
-            String objectName = (String) object.getProperties().get("name");
-            if (objectName == null) continue;
-            if (objectName.equals("enter")) enterDoor = object;
-            else if (objectName.equals("exit")) exitDoor = object;
-        }
-        if (enterDoor != null) {
-            Vector2 enterDoorPosition = new Vector2((float) enterDoor.getProperties().get("x"),
-                    (float) enterDoor.getProperties().get("y"));
-            Vector2 enterDoorSize = new Vector2((float) enterDoor.getProperties().get("width"), (float) enterDoor.getProperties().get("height"));
-            enterDoorPosition = PMath.addVector2(enterDoorPosition, new Vector2(enterDoorSize.x / 2f, enterDoorSize.y / 2f));
-            enterDoorPosition = PMath.multVector2(enterDoorPosition, this.renderScale);
-            spawnPlayer(enterDoorPosition);
-        }
+        if (doorLayer != null) {
+            MapObjects doorObjects = doorLayer.getObjects();
+            MapObject enterDoor = null, exitDoor = null;
+            for (int i = 0; i < doorObjects.getCount(); i++) {
+                MapObject object = doorObjects.get(i);
+                String objectName = (String) object.getProperties().get("name");
+                if (objectName == null) continue;
+                if (objectName.equals("enter")) enterDoor = object;
+                else if (objectName.equals("exit")) exitDoor = object;
+            }
+            if (enterDoor != null) {
+                Vector2 enterDoorPosition = new Vector2((float) enterDoor.getProperties().get("x"),
+                        (float) enterDoor.getProperties().get("y"));
+                Vector2 enterDoorSize = new Vector2((float) enterDoor.getProperties().get("width"), (float) enterDoor.getProperties().get("height"));
+                enterDoorPosition = PMath.addVector2(enterDoorPosition, new Vector2(enterDoorSize.x / 2f, enterDoorSize.y / 2f));
+                enterDoorPosition = PMath.multVector2(enterDoorPosition, this.renderScale);
+                spawnPlayer(enterDoorPosition);
+            }
 
-        // assign exit door
-        if (exitDoor != null) {
-            Vector2 exitDoorPosition = new Vector2((float) exitDoor.getProperties().get("x"),
-                    (float) exitDoor.getProperties().get("y"));
-            Vector2 exitDoorSize = new Vector2((float) exitDoor.getProperties().get("width"), (float) exitDoor.getProperties().get("height"));
-            exitDoorPosition = PMath.addVector2(exitDoorPosition, new Vector2(exitDoorSize.x / 2f, exitDoorSize.y / 2f));
-            exitDoorPosition = PMath.multVector2(exitDoorPosition, this.renderScale);
-            exitDoorSize = PMath.multVector2(exitDoorSize, this.renderScale);
+            // assign exit door
+            if (exitDoor != null) {
+                Vector2 exitDoorPosition = new Vector2((float) exitDoor.getProperties().get("x"),
+                        (float) exitDoor.getProperties().get("y"));
+                Vector2 exitDoorSize = new Vector2((float) exitDoor.getProperties().get("width"), (float) exitDoor.getProperties().get("height"));
+                exitDoorPosition = PMath.addVector2(exitDoorPosition, new Vector2(exitDoorSize.x / 2f, exitDoorSize.y / 2f));
+                exitDoorPosition = PMath.multVector2(exitDoorPosition, this.renderScale);
+                exitDoorSize = PMath.multVector2(exitDoorSize, this.renderScale);
 
-            Entity exitDoorEntity = new Entity("exit door", exitDoorPosition, exitDoorSize, BodyDef.BodyType.StaticBody,
-                    null, 0.1f, 0.1f, false, null);
-            exitDoorEntity.getBody().getFixtureList().first().setSensor(true);
+                Entity exitDoorEntity = new Entity("exit door", exitDoorPosition, exitDoorSize, BodyDef.BodyType.StaticBody,
+                        null, 0.1f, 0.1f, false, null);
+                exitDoorEntity.getBody().getFixtureList().first().setSensor(true);
+            }
         }
 
         // foreground and background indexes for rendering order
         ArrayList<Integer> backgroundIndexesList = new ArrayList<>();
         ArrayList<Integer> foregroundIndexesList = new ArrayList<>();
-        backgroundIndexesList.add(layers.getIndex("Background"));
-        foregroundIndexesList.add(layers.getIndex("Foreground"));
+
+        Integer backgroundLayerIndex = layers.getIndex("Background");
+        Integer foregroundLayerIndex = layers.getIndex("Foreground");
+        if (backgroundLayerIndex != null && foregroundLayerIndex != null) {
+            backgroundIndexesList.add(backgroundLayerIndex);
+            foregroundIndexesList.add(foregroundLayerIndex);
+        }
+
+        // menu
+        MapLayer menuImage = layers.get("MenuImage");
+        if (menuImage != null) foregroundIndexesList.add(layers.getIndex(menuImage));
+
+        MapLayer buttons = layers.get("Buttons");
+        if (buttons != null) {
+            // configure
+            float density = 1;
+            float friction = 0.1f;
+
+            MapObjects objects = buttons.getObjects();
+            MapObject play = objects.get("play"), quit = objects.get("quit");
+
+            // data
+            Vector2 position = new Vector2((float) play.getProperties().get("x"), (float) play.getProperties().get("y"));
+            Vector2 size = new Vector2((float) play.getProperties().get("width"), (float) play.getProperties().get("height"));
+
+            // scale
+            position = PMath.multVector2(position, this.renderScale);
+            size = PMath.multVector2(size, this.renderScale);
+
+            // create
+            new MenuButton("play", position, PMath.addVector2(position, size));
+
+            // data
+            position = new Vector2((float) quit.getProperties().get("x"), (float) quit.getProperties().get("y"));
+            size = new Vector2((float) quit.getProperties().get("width"), (float) quit.getProperties().get("height"));
+
+            // scale
+            position = PMath.multVector2(position, this.renderScale);
+            size = PMath.multVector2(size, this.renderScale);
+
+            new MenuButton("quit", position, PMath.addVector2(position, size));
+        }
 
         backgroundIndexes = new int[backgroundIndexesList.size()];
         foregroundIndexes = new int[foregroundIndexesList.size()];
@@ -317,6 +372,13 @@ public class GameMap {
     public void unload() {
         if (!loaded) return;
 //        System.out.println("unloaded");
+        if (Boss.boss != null) {
+            Boss.boss.destroyWeapons();
+
+            Boss.boss.dispose();
+            Boss.boss = null;
+            System.out.println("boss disposed");
+        }
         Entity.disposeAll();
         Laser.disposeALl();
         loaded = false;

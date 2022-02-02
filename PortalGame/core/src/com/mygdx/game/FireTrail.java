@@ -7,9 +7,10 @@ import java.util.ArrayList;
 
 public class FireTrail extends Entity {
     static ArrayList<FireTrail> fireTrails = new ArrayList<>();
+    static ArrayList<FireTrail> aliveFireTrails = new ArrayList<>();
 
     float alpha = 1;
-    float alphaSpeed = 0.01f;
+    float alphaSpeed = 0.02f;
 
     public FireTrail(Vector2 position) {
         super("fireTrail", position, new Vector2(0.5f,0.2f), BodyDef.BodyType.DynamicBody, null, 100, 0.1f, false, null);
@@ -29,7 +30,7 @@ public class FireTrail extends Entity {
 
 
     public static void operate() {
-        ArrayList<FireTrail> aliveFireTrails = new ArrayList<>();
+        aliveFireTrails.clear();
         for (int i=0; i<fireTrails.size(); i++) {
             FireTrail ft = fireTrails.get(i);
             if (ft.alive) {
@@ -40,7 +41,14 @@ public class FireTrail extends Entity {
                 ft.dispose();
             }
         }
-        fireTrails = aliveFireTrails;
+        fireTrails.clear();
+        for (FireTrail ft : aliveFireTrails) fireTrails.add(ft);
+    }
+
+    public static void disposeF() {
+        for (FireTrail ft : fireTrails) {
+            ft.alive = false;
+        }
     }
 
     private void operateTrail() {
