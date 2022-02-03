@@ -7,16 +7,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.*;
-import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+//import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.Ray;
+//import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.box2d.*;
-import org.graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
+//import org.graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
+//import java.util.Iterator;
+//import java.util.Properties;
 
 public class GameMap {
     protected TiledMapRenderer tiledMapRenderer;

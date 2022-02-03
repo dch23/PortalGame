@@ -46,7 +46,6 @@ public class PMath {
 
     static public RayHitInfo getClosestRayHitInfo(World world, Vector2 startPoint, Vector2 endPoint, boolean detectSensor, HashMap<String, Boolean> ignoreMap) {
         final ArrayList<RayHitInfo> raysHitInfo = new ArrayList<>();
-
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
@@ -56,7 +55,6 @@ public class PMath {
                 return 1;
             }
         };
-
         world.rayCast(callback, startPoint, endPoint);
 
         // Finding the closest ray hit through a searching algorithm

@@ -13,9 +13,7 @@ import java.util.HashMap;
 
 public class AnimationManager {
     static HashMap<Animation, Float> animationElapseTimes = new HashMap<>();
-
     static Vector2 sizeVector = new Vector2(0,0), positionVector = new Vector2(0,0);
-
 
     static public void playAnimation(Entity entity, SpriteBatch spriteBatch, Animation animation, float textureScale, int horizontalFaceDirection, float angle) {
         if (animation == null) return;
@@ -23,10 +21,6 @@ public class AnimationManager {
 
         // data
         TextureRegion keyFrame = (TextureRegion) animation.getKeyFrame(animationElapseTimes.get(animation),true);
-
-//        Vector2 sizeVector = new Vector2(keyFrame.getRegionWidth() * MyGdxGame.GAME_SCALE * textureScale,
-//                keyFrame.getRegionHeight() * MyGdxGame.GAME_SCALE * textureScale);
-//        Vector2 positionVector = new Vector2(entity.getPosition());
         sizeVector.x = keyFrame.getRegionWidth() * MyGdxGame.GAME_SCALE * textureScale;
         sizeVector.y = keyFrame.getRegionHeight() * MyGdxGame.GAME_SCALE * textureScale;
         positionVector.x = entity.getPosition().x;
@@ -35,8 +29,6 @@ public class AnimationManager {
         positionVector.x -= sizeVector.x/2f;
         positionVector.y -= sizeVector.y/2f;
         if (!entity.getName().equals("fireball") && !entity.getName().equals("Boss")) positionVector.y = positionVector.y - entity.size.y/2f + sizeVector.y/2f;
-
-
 
         // flip
         if (horizontalFaceDirection == 1) {
