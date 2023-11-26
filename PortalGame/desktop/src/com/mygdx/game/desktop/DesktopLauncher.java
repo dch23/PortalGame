@@ -1,5 +1,6 @@
 package com.mygdx.game.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -15,13 +16,18 @@ public class DesktopLauncher {
 		config.title = "Portal Game";
 //		config.width = 1920;
 //		config.height = 1080;
-		config.fullscreen = true;
+//		config.fullscreen = true;
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 		config.width = size.width;
 		config.height = size.height;
 
 //		config.width = Gdx.graphics.getWidth();
 //		config.height = Gdx.graphics.getHeight();
+
+		config.addIcon("sprites/icon_128.png", Files.FileType.Internal);
+		config.addIcon("sprites/icon_32.png", Files.FileType.Internal);
+		config.addIcon("sprites/icon_16.png", Files.FileType.Internal);
+
 
 		new LwjglApplication(new MyGdxGame(size.width, size.height), config);
 	}

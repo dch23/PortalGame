@@ -6,21 +6,25 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
 
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player extends Entity {
+
+    static final HashMap<String, Boolean> ignoreMapForRays = new HashMap<String, Boolean>() {{
+        put("block enemy", true);
+        put("portal collider", true);
+        put("fireTrail", true);
+    }};
+
     static protected Player player;
-    static public Vector2 regularSize = new Vector2(0.3f,0.4f);
+    static public Vector2 regularSize = new Vector2(0.15f,0.4f);
 
     // used for drawing a debug line for the mouse (line from player to mouse)
     Renderer debugRenderer;
@@ -32,7 +36,7 @@ public class Player extends Entity {
     private float airFrictionMagnitude = 0.2f;
 
     // Vector 2's have two values, x and y. y in this case will be = 1 if the left key is pressed and x in this case will be = 1 if the right key is pressed.
-    private Vector2 inputHoriz = Vector2.Zero;
+    private Vector2 inputHoriz = new Vector2(0,0);
 
     // the portal variables
     public Portals portals;
@@ -41,32 +45,39 @@ public class Player extends Entity {
     private RayHitInfo closestRayHitInfo;                           // used to set the closest plausible surface to put a portal on
     private Vector2 mousePos; // used to keep track of the position of the mouse
 
-    // Player Properties
 
-    // Animations
-
+    // return to menu after death delay
+    private float deathTime;
+    private float restartDelay = 3f;
 
 
     public Player(OrthographicCamera camera, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         // constructor similarity to the entity is set with super
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
 
+        // configure
+        animationTextureSizeScale = 1.4f;
+
         // lock the rotation of the player
         this.body.setFixedRotation(true);
         this.portals = new Portals(this.world);     // create the portals instance
-        this.debugRenderer = new Renderer(camera);  // set a debug renderer to draw lines
+        this.debugRenderer = new Renderer(new SpriteBatch(), camera);  // set a debug renderer to draw lines
 
         // animations
         addAnimation("Idle", "Characters/Wizard Pack/Idle.png", 6, true, 0.3f);
         addAnimation("Run", "Characters/Wizard Pack/Run.png", 8, true, 0.3f);
         addAnimation("Jump", "Characters/Wizard Pack/Jump.png", 2, true, 0.3f);
         addAnimation("Fall", "Characters/Wizard Pack/Fall.png", 2, true, 0.3f);
+        addAnimation("Death", "Characters/Wizard Pack/Death.png", 7, false, 0.3f);
 
         // sounds
         sounds.put("Jump1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump1.mp3")));
         sounds.put("Jump2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/WizardJump2.mp3")));
         sounds.put("PortalShoot1", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot1.mp3")));
         sounds.put("PortalShoot2", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/PortalShoot2.mp3")));
+        sounds.put("EnteringPortal", Gdx.audio.newSound(Gdx.files.internal("music/portal jumping (1).mp3")));
+        sounds.put("Death", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/losing sound effect (1) (1).mp3")));
+        sounds.put("Walking", Gdx.audio.newSound(Gdx.files.internal("Characters/Wizard Pack/Sound/walking.mp3")));
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -139,9 +150,9 @@ public class Player extends Entity {
         boolean grounded = false;
         ArrayList<RayHitInfo> rays = new ArrayList<>();
 
-        rays.add(PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(0,-1), maxGroundRayDistance, false));
-        rays.add(PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(-size.x/2f, 0)), new Vector2(0,-1), maxGroundRayDistance, false));
-        rays.add(PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(size.x/2f, 0)), new Vector2(0,-1), maxGroundRayDistance, false));
+        rays.add(PMath.getClosestRayHitInfo(world, getPosition(), new Vector2(0,-1), maxGroundRayDistance, false, ignoreMapForRays));
+        rays.add(PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(-size.x/2f, 0)), new Vector2(0,-1), maxGroundRayDistance, false, ignoreMapForRays));
+        rays.add(PMath.getClosestRayHitInfo(world, PMath.addVector2(getPosition(), new Vector2(size.x/2f, 0)), new Vector2(0,-1), maxGroundRayDistance, false, ignoreMapForRays));
 
         Vector2 bottom = PMath.addVector2(getPosition(), new Vector2(0,-size.y/2f));
         for (RayHitInfo ray : rays) {
@@ -203,14 +214,18 @@ public class Player extends Entity {
 
             int jumpNumber = PMath.getRandomRangeInt(1,3);
             Sound jumpSound = (jumpNumber==1 ? sounds.get("Jump1") : sounds.get("Jump2"));
-            AudioManager.playSound(jumpSound, 1, false);
+            AudioManager.playSound(jumpSound, 0.5f, false, false);
         }
     }
 
     private void shootPortal(final int portalNumber) {
+        // alive?
+        if (!alive) return;
+
+        //data
         Vector2 mousePosition = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, (MyGdxGame.SCENE_HEIGHT - Gdx.input.getY()) * MyGdxGame.GAME_SCALE); // getting the mouse position (MUST USE GAME SCALE)
         Vector2 shootDirection = PMath.normalizeVector2(PMath.subVector2(mousePosition,getPosition()));
-        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, true);
+        RayHitInfo closestRayHitInfo = PMath.getClosestRayHitInfo(world, getPosition(), shootDirection, maxShootPortalDistance, true, ignoreMapForRays);
 
         // trail
         Vector2 trailEndPoint = PMath.addVector2(getPosition(), PMath.multVector2(shootDirection, 100));
@@ -219,13 +234,14 @@ public class Player extends Entity {
 
         //sound
         Sound shootSound = (portalNumber == 1) ? sounds.get("PortalShoot1") : sounds.get("PortalShoot2");
-        AudioManager.playSound(shootSound, 1, false);
+        AudioManager.playSound(shootSound, 0.3f, false, false);
+
 
         if (closestRayHitInfo == null) return;
 
         // see if it is a valid place to place a portal
         Entity surfaceEntity = Entity.entityFromBody(closestRayHitInfo.fixture.getBody());
-        if (!surfaceEntity.canPortalOn) return;
+        if (!surfaceEntity.canPortalOn || surfaceEntity.getName().equals("die")) return;
 
         if (closestRayHitInfo.fixture.getBody().getType() == BodyDef.BodyType.StaticBody) {
             if (properPortalNormal(closestRayHitInfo.normal)) {
@@ -263,18 +279,23 @@ public class Player extends Entity {
     }
 
     static public void operate() {
-        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
         if (player == null) return;
+//        player.alive = true;
+
+        // mousePos = new Vector2(Gdx.input.getX() * MyGdxGame.GAME_SCALE, Gdx.input.getY() * MyGdxGame.GAME_SCALE);
+
+        player.friction();
+
+//        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
+        player.updateReflection(player.portals);
+
+
         if (player.alive) {
             player.control();
         }
         else {
             player.die();
         }
-        player.friction();
-
-//        if (player.mousePos != null) player.debugRenderer.debugLine(player.body.getPosition(), player.mousePos, Color.WHITE);
-        player.updateReflection(player.portals);
 
     }
 
@@ -284,6 +305,19 @@ public class Player extends Entity {
     }
 
     private void die() {
-        getBody().getFixtureList().first().setSensor(true);
+//        getBody().getFixtureList().first().setSensor(true);
+
+        if (currentAnimation != "Death") {
+            // trigger
+            AudioManager.playSound(Player.player.sounds.get("Death"), 0.5f, false, true);
+            deathTime = MyGdxGame.gameElapsedTime;
+        }
+        currentAnimation = "Death";
+
+        // return to menu
+        float timeElapsed = MyGdxGame.gameElapsedTime - deathTime;
+        if (timeElapsed >= restartDelay) {
+            MyGdxGame.changeLevel(0);
+        }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="17">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="48" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="22">
  <tileset firstgid="1" source="main_lev_build.tsx"/>
  <group id="8" name="Background">
   <layer id="2" name="Tile Layer 2" width="48" height="27">
@@ -142,72 +142,87 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="Collision">
-  <object id="3" x="33.3242" y="13.0683" width="190.144" height="17.6422">
+  <object id="3" x="32" y="16" width="191.468" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="4" x="225.101" y="13.395" width="18.9493" height="305.799">
+  <object id="4" x="224" y="16" width="5.5" height="304">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="5" x="124.475" y="113.041" width="18.9493" height="287.503">
+  <object id="5" x="141" y="114.909" width="3" height="285.635">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="6" x="737.379" y="141.138" width="18.9493" height="116.962">
+  <object id="6" x="736" y="144" width="16" height="112">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="7" x="608.656" y="240.456" width="18.9493" height="160.741">
+  <object id="7" x="608" y="256" width="16" height="144">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="8" x="14.0483" y="13.0679" width="18.9493" height="101.28">
+  <object id="8" x="16" y="16" width="16" height="96">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="9" x="123.822" y="400.87" width="503.783" height="17.6422">
+  <object id="9" x="128" y="400" width="496" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="10" x="13.3949" y="113.368" width="110.427" height="17.6422">
+  <object id="10" x="16" y="112" width="128" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="11" x="245.357" y="301.551" width="281.622" height="17.6422">
+  <object id="11" x="225.364" y="313" width="302.636" height="7">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="12" x="510.317" y="142.118" width="225.428" height="17.6422">
+  <object id="12" x="512" y="144" width="224" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="13" x="628.259" y="240.783" width="107.813" height="17.6422">
+  <object id="13" x="624" y="240" width="112" height="16">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="14" x="509.337" y="161.393" width="18.9493" height="139.831">
+  <object id="14" x="512" y="160" width="16" height="144">
    <properties>
     <property name="canPortalOn" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="16" x="731.171" y="-35.2844"/>
+  <object id="17" x="607.999" y="256.006" width="22.6359" height="16" rotation="315">
+   <properties>
+    <property name="canPortalOn" type="bool" value="false"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="6" name="Enemies">
-  <object id="15" x="589.38" y="359.378" width="18.2956" height="30.7105">
+  <object id="15" x="592" y="271.667" width="16" height="16">
    <properties>
     <property name="name" value="laser"/>
+   </properties>
+  </object>
+  <object id="19" x="608" y="224" width="16" height="16">
+   <properties>
+    <property name="angle" type="float" value="135"/>
+    <property name="name" value="laser"/>
+   </properties>
+  </object>
+  <object id="21" x="394" y="353" width="16" height="16">
+   <properties>
+    <property name="name" value="chargeEnemy"/>
    </properties>
   </object>
  </objectgroup>

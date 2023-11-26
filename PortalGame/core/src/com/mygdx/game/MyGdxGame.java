@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,10 +19,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
 	// Window size is initialized at DesktopLauncher Class
+	static float gameElapsedTime = 0f;
 	static final float STEP_TIME = 1f / 60f;
 	static final int VELOCITY_ITERATIONS = 6;
 	static final int POSITION_ITERATIONS = 2;
@@ -30,11 +33,15 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	protected static float SCENE_WIDTH;
 	protected static float SCENE_HEIGHT;
-	public static int currentLevel = 2;
+	protected static Vector2 gameBounds;
+	public static int currentLevel = 0;
 	public static boolean updateLevel = false;
 
 	static ArrayList<GameMap> maps = new ArrayList<>();
 	static GameMap currentMap;
+
+	// music
+
 
 	// Physics World
 	private World world;
@@ -43,14 +50,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	// Camera
 	OrthographicCamera camera;
 
-
-	// Objects in the physics world
-	Player player;
-
 	// Rendered variables for the entities
 	static Renderer entityRenderer;
 	Texture squareTexture;
 	Sprite squareSprite;
+	String[] renderAboveForeground = new String[] {"Boss", "fireball", "fireTrail", "laser canon"};
 
 	// Rendering Debug Objects
 	Box2DDebugRenderer b2dr;
@@ -62,6 +66,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public MyGdxGame(float screenWidth, float screenHeight) {
 		SCENE_WIDTH = screenWidth;
 		SCENE_HEIGHT = screenHeight;
+		gameBounds = PMath.multVector2(new Vector2(MyGdxGame.SCENE_WIDTH, MyGdxGame.SCENE_HEIGHT), MyGdxGame.GAME_SCALE);
 	}
 
 	public static void changeLevel(int level) {
@@ -69,10 +74,21 @@ public class MyGdxGame extends ApplicationAdapter {
 		currentMap = maps.get(level);
 		currentMap.load();
 		currentLevel = level;
+
+		if (level == 0) MenuButton.setup();
 	}
 
 	@Override
 	public void create () {
+
+		// menu set up
+		MenuButton.setup();
+
+		// start music
+		Sound music = Gdx.audio.newSound(Gdx.files.internal("music/craz3.mp3"));
+		AudioManager.playSound(music, 0.3f, true, false);
+
+
 		// Initialize Physics World
 		world = new World(gravity, false);
 		world.setContactListener(MyGdxGame.COLLISION_LISTENER);
@@ -87,37 +103,42 @@ public class MyGdxGame extends ApplicationAdapter {
 		squareTexture = new Texture("shapes/square.jpeg");
 		squareSprite = new Sprite(squareTexture);
 
-		// Initialize Sprite Renderer Variables
-		entityRenderer = new Renderer(new SpriteBatch());
-
 		// Initialize Camera
 		camera = new OrthographicCamera(scale(SCENE_WIDTH), scale(SCENE_HEIGHT));
 		camera.translate(camera.viewportWidth/2f, camera.viewportHeight/2f);
 		camera.update();
 
+		// Initialize Sprite Renderer Variables
+		entityRenderer = new Renderer(new SpriteBatch(), camera);
+
+
+
 		// levels
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Menu.tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level1(Tutorial).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level2(EasyPuzzle).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level3(IntroToEnemies).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level5(BeforeBoss).tmx", this.camera, entityRenderer));
-		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
-		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
+//		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level6(MidBoss).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,	"DarkMap1/tiledAssets/Level7(IntroToLazers).tmx", this.camera, entityRenderer));
 		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level8(ElevatorShafts).tmx", this.camera, entityRenderer));
+		maps.add(new GameMap(world,"DarkMap1/tiledAssets/Level9(FinalBoss).tmx", this.camera, entityRenderer));
+
 
 		currentMap = maps.get(currentLevel);
 		currentMap.load();
 //		map.unload();
 
-
+		// Lasers set up
 		Laser.setProjectionMatrix(camera.combined);
-		lasers = new ArrayList<>();
-//		lasers.add(new Laser(world, new Vector2(2.2f,2.5f), new Color(1,0,0,1), 180f, 0.02f, 10));
-//		lasers.add(new Laser(world, new Vector2(2.2f,3.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
-//		lasers.add(new Laser(world, new Vector2(4.2f,1f), new Color(1,0,0,1), 0f, 0.02f, 10));
-//		lasers.add(new Laser(world, new Vector2(5f,2.5f), new Color(1,0,0,1), 0f, 0.02f, 10));
 
 		// portal trails
 		PortalTrails.setProjectionMatrix(camera.combined);
+
+
+		// set boss health
+		BossHealth.set();
+
 
 	}
 
@@ -127,37 +148,41 @@ public class MyGdxGame extends ApplicationAdapter {
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		// Set the Sprite Batch Renderer Set to The Camera Matrix
+
 		entityRenderer.getBatch().setProjectionMatrix(camera.combined);
-
-		Player.operate();
-
-		WeakEnemyEntity.operate();
-		MidEnemyEntity.operate();
 
 		currentMap.renderBackground();
 
 
-		Laser.beginRender();
-		angle+=1f;
-		for (Laser laser : lasers) {
-			laser.setAngle(angle);
-			laser.render();
-		}
-		Laser.endRender();
+		// operate
+		Entity.operation();
+		Player.operate();
+		WeakEnemyEntity.operate();
+		MidEnemyEntity.operate();
+		ChargeEnemyEntity.operate();
+		Laser.operate();
+		Boss.operate();
+		Fireball.operate();
+		FireTrail.operate();
 
-		PortalTrails.draw();
-
-		entityRenderer.beginRender();
-		entityRenderer.render();
-		entityRenderer.endRender();
+		// draw entities
+		entityRenderer.renderBlackList(renderAboveForeground);
 
 		currentMap.renderForeground();
 
+		// render extra
+		entityRenderer.renderWhiteList(renderAboveForeground);
+
+		// draw the portals
 		Player.renderPortals();
+		PortalTrails.draw();
+
+
+		// draw boss health
+		BossHealth.render();
 
 		// Render Debug Lines for Physics Object in Physics World
-		b2dr.render(world, camera.combined);
-
+//		b2dr.render(world, camera.combined);
 
 		// Update the Camera
 		camera.update();
@@ -170,12 +195,23 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// Next Physics frame
 		stepWorld();
+
+		// elapse time
+		gameElapsedTime += Gdx.graphics.getDeltaTime();
+
+		// collect
+		System.gc();
+
 	}
 	
 	@Override
 	public void dispose () {
 		// MUST LOOK OVER THIS WELL OR ELSE MEMORY LEAKS WILL OCCUR, THROW AWAY EVERYTHING UNNEEDED AFTER GAME IS ENDED
+		Fireball.disposeAll();
+		FireTrail.disposeAll();
 		Entity.disposeAll();
+		MenuButton.clickSound.dispose();
+
 		world.dispose();
 		for (GameMap map : maps) {
 			map.dispose();
@@ -190,9 +226,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	// This Scale Methods ARE NECESSARY because of libGDXs poor physics scale. Makes everything small with a small camera to enable uses of small force magnitudes
 	static public float scale(float x) {
 		return x*GAME_SCALE;
-	}
-	static public Vector2 scale(Vector2 v) {
-		return Vector2.Zero.mulAdd(v,GAME_SCALE);
 	}
 
 }

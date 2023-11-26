@@ -1,0 +1,164 @@
+package tile;
+
+import java.awt.Graphics2D;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+
+import main.GamePanel;
+
+public class TileManager {
+	
+	GamePanel gp;
+	Tile[] tile;
+	int mapTileNum[][];
+	
+	public TileManager(GamePanel gp) {
+		
+		this.gp = gp;
+		
+		tile = new Tile[20];
+		mapTileNum = new int [gp.maxScreenCol][gp.maxScreenRow]; // Store all numbers
+		
+		getTileImage();
+		loadMap("/maps/map01.txt");
+	}
+	
+	public void getTileImage() {
+		
+//		String[] grass = {"/tiles/grass_1.png", "/tiles/grass_2.png", "/tiles/grass_3.png", 
+//				"/tiles/grass_4.png", "/tiles/grass_5.png"};
+//		String[] water = {"/tiles/water_1.png", "/tiles/water_2.png", "/tiles/water_2.png"};
+//		
+//		int max = 4;
+//		int min = 0;
+//		
+//		int randomGrassNumber = (int)Math.floor(Math.random()*(max-min+1)+min);
+//		String randomGrass = grass[randomGrassNumber];
+//		
+//		max = 2;
+//		
+//		int randomWaterNumber = (int)Math.floor(Math.random()*(max-min+1)+min);
+//		String randomWater = water[randomWaterNumber];
+		
+		try {
+			
+			// 0 = Default Grass
+			tile[0] = new Tile();
+			tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_1.png"));
+			tile[1] = new Tile();
+			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_2.png"));
+			tile[2] = new Tile();
+			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_3.png"));
+			tile[3] = new Tile();
+			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_4.png"));
+			tile[4] = new Tile();
+			tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_5.png"));
+			
+			// 5 = Default Brick
+			tile[5] = new Tile();
+			tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/brick.png"));
+			
+			// 6 = Default Water
+			tile[6] = new Tile();
+			tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water_1.png"));
+			tile[7] = new Tile();
+			tile[7].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water_2.png"));
+			tile[8] = new Tile();
+			tile[8].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water_3.png"));
+			//tile[9] = new Tile();
+			//tile[9].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water_4.png"));
+			tile[9] = new Tile();
+			tile[9].image = ImageIO.read(getClass().getResourceAsStream("/tiles/brick.png"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadMap(String filePath) {
+		
+		try {
+			// Import the text file
+			InputStream is = getClass().getResourceAsStream(filePath);
+			// Read the content of text file
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			
+			int col = 0;
+			int row = 0;
+			
+			// TL;DR - Scans the text file line by line, removing spaces and adds it to mapTileNum
+			while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
+				
+				String line = br.readLine(); // Reads single line of text - puts into string
+				
+				while (col < gp.maxScreenCol) {
+					
+					// Splits the string around a set expression
+					String numbers[] = line.split(" "); // In this case it will split at every space
+					for (String s : numbers) System.out.print(s);
+					System.out.println();
+					
+					// Converting from string to integer
+					int num = Integer.parseInt(numbers[col]); // col is an index for the numbers[] array
+					
+					// Store extracted numbers in mapTileNum[][]
+					mapTileNum[col][row] = num;
+					col++; // Continues until everything in numbers[] is in mapTileNum[]
+				}
+				
+				if (col == gp.maxScreenCol) { // If hits 16
+					col = 0;
+					row++;
+				}
+				
+				for (int i = 0; i < mapTileNum.length; i++) {
+					for (int j = 0; j < mapTileNum[i].length; j++) {
+						if (mapTileNum[i][j] == 0) {
+							mapTileNum[i][j] = (int)Math.floor(Math.random()*(4-0+1)+0);
+						} else if (mapTileNum [i][j] == 6) {
+							mapTileNum[i][j] = (int)Math.floor(Math.random()*(8-6+1)+6);
+						}
+					}
+				}
+			}
+			
+			br.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void draw(Graphics2D g2) { 
+		
+		int col = 0;
+		int row = 0;
+		int x = 0;
+		int y = 0;
+		
+		while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
+			
+			// Extracts a tile number that is stores in 0,0
+			int tileNum = mapTileNum[col][row]; //All map data is in mapTileNum[][]
+			
+			// Draw tile at 0,0 (top left)
+			g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize, null);
+			col++;
+			x += gp.tileSize;
+			
+			// If the column reaches the max, start a new row and reset the values
+			if (col == gp.maxScreenCol) {
+				col = 0;
+				x = 0;
+				row++;
+				y += gp.tileSize;
+			}
+		}
+	}
+}

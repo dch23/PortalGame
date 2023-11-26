@@ -9,5 +9,6 @@ import com.badlogic.gdx.physics.box2d.World;
 public class ReflectEntity extends Entity {
     public ReflectEntity(World world, String name, Vector2 position, Vector2 size, BodyDef.BodyType bodyType, Color color, float density, float friction, boolean gravityEnabled, Sprite sprite) {
         super(name, position, size, bodyType, color, density, friction, gravityEnabled, sprite);
+        getBody().getFixtureList().first().setSensor(true);
     }
 }
